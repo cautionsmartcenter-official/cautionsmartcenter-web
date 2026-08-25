@@ -167,35 +167,37 @@ export default function App() {
       {activeTab === 'home' && (
         <main>
           {/* ════════════════ HERO SECTION (우리가 만든 비디오 스크럽 히어로 100% 보존) ════════════════ */}
-          {/* ════════════════ HERO SECTION (풀스크린 100dvh 비디오 + 하단 글래스 카드, 빈 여백 0%) ════════════════ */}
-          <section className="relative h-screen h-[100dvh] flex flex-col justify-end overflow-hidden bg-black">
-            {/* Full-screen Background Video (No black bars, perfectly fills mobile & desktop) */}
-            {VIDEO_URLS.hero && (
-              <video
-                ref={heroVideoRef}
-                src={VIDEO_URLS.hero}
-                className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-center"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                onSeeked={handleSeeked}
-              />
-            )}
+          {/* ════════════════ HERO SECTION ════════════════ */}
+          {/* 모바일: 영상 원본비율 + 카드 밀착 스택 (잘림 없음, 여백 없음) */}
+          {/* 데스크탑: 풀스크린 비디오 오버레이 */}
+          <section className="relative flex flex-col overflow-hidden bg-black sm:h-screen sm:h-[100dvh]">
+            {/* Video: mobile=inline aspect-video / desktop=absolute full-screen */}
+            <div className="relative w-full flex-shrink-0 sm:absolute sm:inset-0 sm:h-full">
+              {VIDEO_URLS.hero && (
+                <video
+                  ref={heroVideoRef}
+                  src={VIDEO_URLS.hero}
+                  className="w-full aspect-video sm:aspect-auto sm:absolute sm:inset-0 sm:h-full object-cover object-center"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  onSeeked={handleSeeked}
+                />
+              )}
+              {/* Gradient: bottom fades to black for seamless card blending */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 pointer-events-none z-10" />
+            </div>
 
-            {/* Cinematic Gradient Overlay for seamless text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/45 pointer-events-none z-10" />
-
-            {/* Hero content: Glassmorphism Floating Card */}
+            {/* Hero Card: sits directly under video on mobile, bottom-positioned on desktop */}
             <motion.div
-              className="relative z-20 px-4 sm:px-12 max-w-7xl mx-auto w-full pb-8 sm:pb-16"
+              className="relative z-20 px-4 sm:px-12 max-w-7xl mx-auto w-full py-6 sm:pb-16 sm:mt-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: entranceComplete ? 1 : 0, y: entranceComplete ? 0 : 20 }}
               transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1.0] }}
             >
-              {/* Glassmorphism Hero Card */}
-              <div className="w-full max-w-xl bg-black/75 backdrop-blur-2xl border border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
+              <div className="w-full max-w-xl bg-black/80 backdrop-blur-2xl border border-white/15 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl">
                 {/* Badge */}
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 bg-primary/90 rounded-full mb-3 shadow-md shadow-primary/30">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
@@ -204,17 +206,17 @@ export default function App() {
                   </span>
                 </div>
 
-                {/* Card Title */}
+                {/* Title */}
                 <h1 className="text-xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight uppercase mb-2 sm:mb-3">
                   PREMIUM <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-white">AUTO SOLUTION</span>
                 </h1>
 
-                {/* Card Description */}
+                {/* Description */}
                 <p className="text-xs sm:text-sm md:text-base text-gray-200 leading-relaxed font-sans mb-4 sm:mb-6">
                   24년 장인정신과 최첨단 AI 로봇기술의 만남. 분당·수원·용인·광주 수입차 사고수리, 판금도색, PPS 및 컬러PPS 완벽 시공 전문 브랜드.
                 </p>
 
-                {/* Card Action Buttons */}
+                {/* Buttons */}
                 <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
                   <a
                     href="#services"
