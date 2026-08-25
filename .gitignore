@@ -26,7 +26,6 @@ dist-ssr
 # Large binary files & backups
 *.zip
 *.pdf
-public/videos/
 dist/
 코션스마트센터_윈도우이동용/
 
