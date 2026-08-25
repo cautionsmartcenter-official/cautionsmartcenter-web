@@ -167,13 +167,26 @@ export default function App() {
       {activeTab === 'home' && (
         <main>
           {/* ════════════════ HERO SECTION (우리가 만든 비디오 스크럽 히어로 100% 보존) ════════════════ */}
-          <section className="relative h-screen h-[100dvh] flex flex-col overflow-hidden bg-black">
-            {/* Video background (Clean Pure Video) */}
+          <section className="relative min-h-[100dvh] flex flex-col overflow-hidden bg-black">
+            {/* Ambient Blurred Video Background for Mobile (Fills vertical screen without harsh black bars) */}
+            {VIDEO_URLS.hero && (
+              <video
+                src={VIDEO_URLS.hero}
+                className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-35 scale-110 pointer-events-none"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+              />
+            )}
+
+            {/* Main Video: object-contain on Mobile so 100% of the building is visible without cropping, object-cover on Desktop */}
             {VIDEO_URLS.hero && (
               <video
                 ref={heroVideoRef}
                 src={VIDEO_URLS.hero}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain sm:object-cover object-center"
                 autoPlay
                 loop
                 muted
@@ -184,47 +197,47 @@ export default function App() {
             )}
 
             {/* Subtle dark gradient for perfect text contrast without obstructing video */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/40 pointer-events-none z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/50 pointer-events-none z-10" />
 
             {/* Hero content: Option 1 Modern Glassmorphism Floating Card */}
             <motion.div
-              className="relative z-20 flex flex-col flex-1 px-6 sm:px-12 max-w-7xl mx-auto w-full pt-28 sm:pt-36 pb-12 sm:pb-16 justify-end"
+              className="relative z-20 flex flex-col flex-1 px-4 sm:px-12 max-w-7xl mx-auto w-full pt-20 sm:pt-36 pb-8 sm:pb-16 justify-end"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: entranceComplete ? 1 : 0, y: entranceComplete ? 0 : 30 }}
               transition={{ duration: 0.9, ease: [0.215, 0.61, 0.355, 1.0] }}
             >
               {/* Glassmorphism Floating Hero Card */}
-              <div className="max-w-xl bg-black/70 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+              <div className="w-full max-w-xl bg-black/75 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
                 {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-primary/90 rounded-full mb-4 shadow-md shadow-primary/30">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 bg-primary/90 rounded-full mb-3 shadow-md shadow-primary/30">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                  <span className="text-[11px] sm:text-xs font-bold text-white tracking-widest uppercase">
+                  <span className="text-[10px] sm:text-xs font-bold text-white tracking-widest uppercase">
                     AI ROBOT MASTER CARE
                   </span>
                 </div>
 
                 {/* Card Title */}
-                <h1 className="text-2xl sm:text-4xl font-black text-white leading-tight tracking-tight uppercase mb-3">
+                <h1 className="text-xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight uppercase mb-2 sm:mb-3">
                   PREMIUM <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-white">AUTO SOLUTION</span>
                 </h1>
 
                 {/* Card Description */}
-                <p className="text-xs sm:text-sm md:text-base text-gray-200 leading-relaxed font-sans mb-6">
+                <p className="text-[11px] sm:text-sm md:text-base text-gray-200 leading-relaxed font-sans mb-4 sm:mb-6">
                   24년 장인정신과 최첨단 AI 로봇기술의 만남. 분당·수원·용인·광주 수입차 사고수리, 판금도색, PPS 및 컬러PPS 완벽 시공 전문 브랜드.
                 </p>
 
                 {/* Card Action Buttons */}
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
                   <a
                     href="#services"
-                    className="px-6 py-3 bg-primary text-white text-xs sm:text-sm font-bold rounded-full hover:bg-primary-dark transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer shadow-lg shadow-primary/30 group"
+                    className="flex-1 sm:flex-initial px-5 py-2.5 sm:px-6 sm:py-3 bg-primary text-white text-xs sm:text-sm font-bold rounded-full hover:bg-primary-dark transition-all flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer shadow-lg shadow-primary/30 group"
                   >
                     <span>서비스 알아보기</span>
-                    <i className="ri-arrow-right-line text-base group-hover:translate-x-1 transition-transform" />
+                    <i className="ri-arrow-right-line text-sm sm:text-base group-hover:translate-x-1 transition-transform" />
                   </a>
                   <button
                     onClick={() => handleNavigateToContact()}
-                    className="px-6 py-3 bg-white/10 hover:bg-white text-white hover:text-black text-xs sm:text-sm font-bold rounded-full border border-white/30 backdrop-blur-md transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
+                    className="flex-1 sm:flex-initial px-5 py-2.5 sm:px-6 sm:py-3 bg-white/10 hover:bg-white text-white hover:text-black text-xs sm:text-sm font-bold rounded-full border border-white/30 backdrop-blur-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer"
                   >
                     <span>무료 상담 신청</span>
                   </button>
