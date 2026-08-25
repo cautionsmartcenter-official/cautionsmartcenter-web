@@ -167,36 +167,35 @@ export default function App() {
       {activeTab === 'home' && (
         <main>
           {/* ════════════════ HERO SECTION (우리가 만든 비디오 스크럽 히어로 100% 보존) ════════════════ */}
-          {/* ════════════════ HERO SECTION (모바일: 상단 와이드 비디오 + 하단 밀착 글래스 카드 / 데스크탑: 풀스크린 비디오) ════════════════ */}
-          <section className="relative min-h-screen sm:h-screen sm:h-[100dvh] flex flex-col justify-between overflow-hidden bg-black pt-16 sm:pt-0">
-            {/* Video Container */}
-            <div className="relative w-full aspect-[16/11] sm:aspect-auto sm:absolute sm:inset-0 sm:h-full overflow-hidden bg-black flex-shrink-0">
-              {VIDEO_URLS.hero && (
-                <video
-                  ref={heroVideoRef}
-                  src={VIDEO_URLS.hero}
-                  className="w-full h-full object-cover object-center"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  onSeeked={handleSeeked}
-                />
-              )}
-              {/* Subtle dark gradient overlay for smooth blend into content */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/40 pointer-events-none z-10" />
-            </div>
+          {/* ════════════════ HERO SECTION (풀스크린 100dvh 비디오 + 하단 글래스 카드, 빈 여백 0%) ════════════════ */}
+          <section className="relative h-screen h-[100dvh] flex flex-col justify-end overflow-hidden bg-black">
+            {/* Full-screen Background Video (No black bars, perfectly fills mobile & desktop) */}
+            {VIDEO_URLS.hero && (
+              <video
+                ref={heroVideoRef}
+                src={VIDEO_URLS.hero}
+                className="absolute inset-0 w-full h-full object-cover object-[center_30%] sm:object-center"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                onSeeked={handleSeeked}
+              />
+            )}
 
-            {/* Hero content: Seamless Glassmorphism Floating Card */}
+            {/* Cinematic Gradient Overlay for seamless text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/45 pointer-events-none z-10" />
+
+            {/* Hero content: Glassmorphism Floating Card */}
             <motion.div
-              className="relative z-20 flex flex-col flex-1 px-4 sm:px-12 max-w-7xl mx-auto w-full pt-2 sm:pt-36 pb-8 sm:pb-16 justify-end -mt-4 sm:mt-0"
+              className="relative z-20 px-4 sm:px-12 max-w-7xl mx-auto w-full pb-8 sm:pb-16"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: entranceComplete ? 1 : 0, y: entranceComplete ? 0 : 20 }}
               transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1.0] }}
             >
               {/* Glassmorphism Hero Card */}
-              <div className="w-full max-w-xl bg-gray-950/85 sm:bg-black/75 backdrop-blur-2xl border border-white/15 sm:border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
+              <div className="w-full max-w-xl bg-black/75 backdrop-blur-2xl border border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
                 {/* Badge */}
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 bg-primary/90 rounded-full mb-3 shadow-md shadow-primary/30">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
