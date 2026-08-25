@@ -1,0 +1,306 @@
+﻿import{
+  c as e,t
+}from"./jsx-runtime-BgeBYMR2.js";
+import{
+  n,r,t as i
+}from"./Footer-C-U-ezfE.js";
+var a=e(t(),1);
+function o(){
+  return(0,a.jsxs)(`section`,{
+    className:`relative min-h-[
+      70vh
+    ] flex items-center justify-center bg-gradient-to-br from-black via-dark to-dark-light`,children:[
+      (0,a.jsxs)(`div`,{
+        className:`absolute inset-0`,children:[
+          (0,a.jsx)(`img`,{
+            src:`https://readdy.ai/api/search-image?query=modern%20automotive%20technology%20center%20exterior%20building%20with%20sleek%20architecture%2C%20professional%20business%20environment%2C%20dramatic%20lighting%2C%20high-end%20facility%2C%20minimalist%20design%20with%20red%20accent%20elements&width=1920&height=900&seq=brand-hero-001&orientation=landscape`,alt:`Brand Story`,className:`w-full h-full object-cover object-center opacity-25`
+          }),(0,a.jsx)(`div`,{
+            className:`absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70`
+          })
+        ]
+      }),(0,a.jsx)(`div`,{
+        className:`relative z-10 mx-auto px-6 lg:px-12 max-w-5xl text-center py-32`,children:(0,a.jsxs)(r.div,{
+          initial:{
+            opacity:0,y:30
+          },animate:{
+            opacity:1,y:0
+          },transition:{
+            duration:.8
+          },children:[
+            (0,a.jsx)(`div`,{
+              className:`inline-block px-4 py-2 bg-primary rounded-full mb-6`,children:(0,a.jsx)(`span`,{
+                className:`text-xs font-semibold text-white tracking-wider`,children:`BRAND STORY`
+              })
+            }),(0,a.jsxs)(`h1`,{
+              className:`text-5xl lg:text-7xl font-black text-white mb-6 leading-tight`,children:[
+                `혁신으로 만드는`,(0,a.jsx)(`br`,{
+                  
+                }),`완벽한 차량 관리`
+              ]
+            }),(0,a.jsxs)(`p`,{
+              className:`text-base lg:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed`,children:[
+                `CAUTION SMART CENTER는 AI 로봇 기술과 전문 기술진의 노하우를 결합하여`,(0,a.jsx)(`br`,{
+                  
+                }),`차량 관리의 새로운 기준을 제시합니다`
+              ]
+            })
+          ]
+        })
+      })
+    ]
+  })
+}function s(){
+  return(0,a.jsx)(`section`,{
+    className:`py-24 lg:py-32 bg-white`,children:(0,a.jsx)(`div`,{
+      className:`mx-auto px-6 lg:px-12 max-w-7xl`,children:(0,a.jsxs)(`div`,{
+        className:`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center`,children:[
+          (0,a.jsxs)(r.div,{
+            initial:{
+              opacity:0,x:-30
+            },whileInView:{
+              opacity:1,x:0
+            },viewport:{
+              once:!0
+            },children:[
+              (0,a.jsx)(`div`,{
+                className:`inline-block px-4 py-2 bg-gray-100 rounded-full mb-6`,children:(0,a.jsx)(`span`,{
+                  className:`text-xs font-semibold text-dark tracking-wider`,children:`OUR STORY`
+                })
+              }),(0,a.jsxs)(`h2`,{
+                className:`text-4xl lg:text-5xl font-black text-dark mb-6 leading-tight`,children:[
+                  `차량 관리의`,(0,a.jsx)(`br`,{
+                    
+                  }),`새로운 패러다임`
+                ]
+              }),(0,a.jsxs)(`div`,{
+                className:`space-y-6 text-base text-gray-600 leading-relaxed`,children:[
+                  (0,a.jsx)(`p`,{
+                    children:`CAUTION SMART CENTER는 수입차 전문 정비의 오랜 경험과 노하우를 바탕으로 설립되었습니다. 우리는 단순한 정비를 넘어, 차량의 가치를 지키고 높이는 토탈 케어 솔루션을 제공합니다.`
+                  }),(0,a.jsx)(`p`,{
+                    children:`특히 AI 로봇 기술을 도입한 PPS/PPCS 서비스는 기존의 페인트 보호 방식을 혁신적으로 개선했습니다. 정밀한 센서와 알고리즘을 통해 균일하고 완벽한 코팅을 실현하며, 이는 사람의 손으로는 불가능한 수준의 품질을 보장합니다.`
+                  }),(0,a.jsx)(`p`,{
+                    children:`우리의 목표는 명확합니다. 고객의 소중한 차량을 최상의 상태로 유지하고, 그 가치를 오래도록 보존하는 것입니다. 이를 위해 끊임없이 기술을 연구하고 서비스를 개선해 나가고 있습니다.`
+                  })
+                ]
+              })
+            ]
+          }),(0,a.jsxs)(r.div,{
+            initial:{
+              opacity:0,x:30
+            },whileInView:{
+              opacity:1,x:0
+            },viewport:{
+              once:!0
+            },className:`relative`,children:[
+              (0,a.jsx)(`div`,{
+                className:`rounded-3xl overflow-hidden shadow-2xl`,children:(0,a.jsx)(`div`,{
+                  className:`w-full h-[
+                    500px
+                  ]`,children:(0,a.jsx)(`img`,{
+                    src:`https://readdy.ai/api/search-image?query=professional%20automotive%20service%20team%20working%20together%20in%20modern%20workshop%2C%20diverse%20technicians%20with%20advanced%20equipment%2C%20collaborative%20work%20environment%2C%20clean%20industrial%20setting%2C%20professional%20atmosphere%20with%20red%20accent%20lighting&width=800&height=800&seq=brand-story-team-001&orientation=squarish`,alt:`Our Story`,className:`w-full h-full object-cover object-center`
+                  })
+                })
+              }),(0,a.jsxs)(r.div,{
+                initial:{
+                  opacity:0,y:20
+                },whileInView:{
+                  opacity:1,y:0
+                },viewport:{
+                  once:!0
+                },transition:{
+                  delay:.3
+                },className:`absolute -bottom-8 -left-8 bg-primary rounded-2xl p-8 shadow-xl`,children:[
+                  (0,a.jsx)(`div`,{
+                    className:`text-5xl font-black text-white mb-2`,children:`10+`
+                  }),(0,a.jsx)(`div`,{
+                    className:`text-sm text-white/90`,children:`Years of Excellence`
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    })
+  })
+}function c(){
+  return(0,a.jsx)(`section`,{
+    id:`technology`,className:`py-24 lg:py-32 bg-gray-50`,children:(0,a.jsxs)(`div`,{
+      className:`mx-auto px-6 lg:px-12 max-w-7xl`,children:[
+        (0,a.jsxs)(r.div,{
+          initial:{
+            opacity:0,y:20
+          },whileInView:{
+            opacity:1,y:0
+          },viewport:{
+            once:!0
+          },className:`text-center mb-16`,children:[
+            (0,a.jsx)(`div`,{
+              className:`inline-block px-4 py-2 bg-primary rounded-full mb-4`,children:(0,a.jsx)(`span`,{
+                className:`text-xs font-semibold text-white tracking-wider`,children:`TECHNOLOGY`
+              })
+            }),(0,a.jsx)(`h2`,{
+              className:`text-4xl lg:text-5xl font-black text-dark mb-4`,children:`첨단 기술력`
+            }),(0,a.jsx)(`p`,{
+              className:`text-base text-gray-600 max-w-2xl mx-auto`,children:`AI 로봇 기술과 전문 노하우의 완벽한 조화`
+            })
+          ]
+        }),(0,a.jsx)(r.div,{
+          initial:{
+            opacity:0,y:30
+          },whileInView:{
+            opacity:1,y:0
+          },viewport:{
+            once:!0
+          },className:`mb-16`,children:(0,a.jsx)(`div`,{
+            className:`rounded-3xl overflow-hidden shadow-2xl`,children:(0,a.jsx)(`div`,{
+              className:`w-full h-[
+                500px
+              ]`,children:(0,a.jsx)(`img`,{
+                src:`https://readdy.ai/api/search-image?query=futuristic%20automotive%20AI%20robotic%20system%20with%20multiple%20precision%20arms%2C%20advanced%20automation%20technology%20in%20modern%20workshop%2C%20red%20accent%20lighting%2C%20high-tech%20control%20panels%2C%20clean%20industrial%20environment%2C%20innovation%20and%20precision%20engineering&width=1400&height=700&seq=brand-tech-main-001&orientation=landscape`,alt:`AI Technology`,className:`w-full h-full object-cover object-center`
+              })
+            })
+          })
+        }),(0,a.jsx)(`div`,{
+          className:`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8`,children:[
+            {
+              icon:`ri-robot-line`,title:`AI 로봇 시스템`,description:`정밀한 센서와 알고리즘으로 완벽한 시공을 실현합니다`
+            },{
+              icon:`ri-eye-line`,title:`실시간 모니터링`,description:`작업 전 과정을 실시간으로 모니터링하고 품질을 관리합니다`
+            },{
+              icon:`ri-shield-check-line`,title:`품질 보증`,description:`철저한 품질 검수와 장기 보증으로 안심을 제공합니다`
+            },{
+              icon:`ri-time-line`,title:`효율적인 작업`,description:`자동화 시스템으로 작업 시간을 단축하고 효율을 높입니다`
+            }
+          ].map((e,t)=>(0,a.jsxs)(r.div,{
+            initial:{
+              opacity:0,y:30
+            },whileInView:{
+              opacity:1,y:0
+            },viewport:{
+              once:!0
+            },transition:{
+              delay:t*.1
+            },className:`bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow`,children:[
+              (0,a.jsx)(`div`,{
+                className:`w-14 h-14 flex items-center justify-center rounded-full bg-primary/10 mb-4`,children:(0,a.jsx)(`i`,{
+                  className:`${
+                    e.icon
+                  } text-primary text-2xl`
+                })
+              }),(0,a.jsx)(`h3`,{
+                className:`text-lg font-bold text-dark mb-2`,children:e.title
+              }),(0,a.jsx)(`p`,{
+                className:`text-sm text-gray-600 leading-relaxed`,children:e.description
+              })
+            ]
+          },t))
+        })
+      ]
+    })
+  })
+}function l(){
+  return(0,a.jsx)(`section`,{
+    className:`py-24 lg:py-32 bg-white`,children:(0,a.jsxs)(`div`,{
+      className:`mx-auto px-6 lg:px-12 max-w-7xl`,children:[
+        (0,a.jsxs)(r.div,{
+          initial:{
+            opacity:0,y:20
+          },whileInView:{
+            opacity:1,y:0
+          },viewport:{
+            once:!0
+          },className:`text-center mb-16`,children:[
+            (0,a.jsx)(`div`,{
+              className:`inline-block px-4 py-2 bg-gray-100 rounded-full mb-4`,children:(0,a.jsx)(`span`,{
+                className:`text-xs font-semibold text-dark tracking-wider`,children:`OUR VALUES`
+              })
+            }),(0,a.jsx)(`h2`,{
+              className:`text-4xl lg:text-5xl font-black text-dark mb-4`,children:`핵심 가치`
+            }),(0,a.jsx)(`p`,{
+              className:`text-base text-gray-600 max-w-2xl mx-auto`,children:`CAUTION SMART CENTER를 만드는 네 가지 핵심 가치`
+            })
+          ]
+        }),(0,a.jsx)(`div`,{
+          className:`grid grid-cols-1 md:grid-cols-2 gap-8`,children:[
+            {
+              title:`혁신`,subtitle:`Innovation`,description:`AI 로봇 기술을 통해 차량 관리의 새로운 기준을 제시합니다`,icon:`ri-lightbulb-flash-line`
+            },{
+              title:`전문성`,subtitle:`Expertise`,description:`수입차 전문 기술진의 풍부한 경험과 노하우를 제공합니다`,icon:`ri-award-line`
+            },{
+              title:`신뢰`,subtitle:`Trust`,description:`투명한 프로세스와 철저한 품질 관리로 신뢰를 구축합니다`,icon:`ri-shield-star-line`
+            },{
+              title:`고객 중심`,subtitle:`Customer First`,description:`고객의 만족과 차량의 가치 보존을 최우선으로 생각합니다`,icon:`ri-heart-line`
+            }
+          ].map((e,t)=>(0,a.jsx)(r.div,{
+            initial:{
+              opacity:0,y:30
+            },whileInView:{
+              opacity:1,y:0
+            },viewport:{
+              once:!0
+            },transition:{
+              delay:t*.1
+            },className:`group`,children:(0,a.jsxs)(`div`,{
+              className:`bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 lg:p-10 border border-gray-100 hover:border-primary/20 transition-all hover:shadow-xl`,children:[
+                (0,a.jsx)(`div`,{
+                  className:`w-16 h-16 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors mb-6`,children:(0,a.jsx)(`i`,{
+                    className:`${
+                      e.icon
+                    } text-primary text-3xl`
+                  })
+                }),(0,a.jsx)(`h3`,{
+                  className:`text-2xl font-black text-dark mb-2`,children:e.title
+                }),(0,a.jsx)(`div`,{
+                  className:`text-sm font-medium text-gray-400 mb-4`,children:e.subtitle
+                }),(0,a.jsx)(`p`,{
+                  className:`text-base text-gray-600 leading-relaxed`,children:e.description
+                })
+              ]
+            })
+          },t))
+        }),(0,a.jsx)(r.div,{
+          initial:{
+            opacity:0,y:20
+          },whileInView:{
+            opacity:1,y:0
+          },viewport:{
+            once:!0
+          },className:`text-center mt-16`,children:(0,a.jsxs)(`a`,{
+            href:`/#contact`,className:`inline-flex items-center gap-2 px-8 py-4 bg-primary text-white text-sm font-semibold rounded-full hover:bg-primary-dark transition-all whitespace-nowrap cursor-pointer group`,children:[
+              `상담 신청하기`,(0,a.jsx)(`i`,{
+                className:`ri-arrow-right-line group-hover:translate-x-1 transition-transform`
+              })
+            ]
+          })
+        })
+      ]
+    })
+  })
+}function u(){
+  return(0,a.jsxs)(`div`,{
+    className:`min-h-screen bg-white`,children:[
+      (0,a.jsx)(n,{
+        
+      }),(0,a.jsxs)(`main`,{
+        children:[
+          (0,a.jsx)(o,{
+            
+          }),(0,a.jsx)(s,{
+            
+          }),(0,a.jsx)(c,{
+            
+          }),(0,a.jsx)(l,{
+            
+          })
+        ]
+      }),(0,a.jsx)(i,{
+        
+      })
+    ]
+  })
+}export{
+  u as default
+};
+
+//# sourceMappingURL=page-BJu8nNG7.js.map

@@ -1,0 +1,35 @@
+{
+  "readdy_page-C7Q6OsRV.js": {
+    "urls": [],
+    "relative": []
+  },
+  "readdy_page-DwlcqPA5.js": {
+    "urls": [],
+    "relative": []
+  },
+  "readdy_page-CLL6ubHe.js": {
+    "urls": [],
+    "relative": []
+  },
+  "readdy_page-BJu8nNG7.js": {
+    "urls": [],
+    "relative": []
+  },
+  "readdy_Footer-C-U-ezfE.js": {
+    "urls": [
+      "https://static.readdy.ai/image/79d8112b087ce886228ca52bfa23dd09/ada289e06d3c7e4c97879e9950c8d87c.png"
+    ],
+    "relative": []
+  },
+  "readdy_index.js": {
+    "urls": [
+      "https://public.readdy.ai/gen_page/readdy-logo.png",
+      "https://public.readdy.ai/gen_page/watermark.png"
+    ],
+    "relative": []
+  },
+  "chunk-EVOBXE3Y-ZbIjXw_o.js": {
+    "urls": [],
+    "relative": []
+  }
+}
