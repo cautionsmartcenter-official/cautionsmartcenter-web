@@ -173,12 +173,11 @@ export default function App() {
         <main>
           {/* ════════════════ HERO SECTION (우리가 만든 비디오 스크럽 히어로 100% 보존) ════════════════ */}
           <section className="relative h-screen h-[100dvh] flex flex-col overflow-hidden bg-black">
-            {/* Video background (Hero main video with poster image) */}
+            {/* Video background (Clean Pure Video) */}
             {VIDEO_URLS.hero && (
               <video
                 ref={heroVideoRef}
                 src={VIDEO_URLS.hero}
-                poster="/images/hero_main.png"
                 className="absolute inset-0 w-full h-full object-cover"
                 autoPlay
                 loop
@@ -189,40 +188,8 @@ export default function App() {
               />
             )}
 
-            {/* Dot grid overlay */}
-            <div
-              className="absolute inset-0 pointer-events-none z-10"
-              style={{
-                backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)',
-                backgroundSize: '24px 24px',
-                opacity: 0.05,
-              }}
-            />
-
-            {/* Watermark text */}
-            <div
-              className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
-              style={{ paddingTop: 50 }}
-            >
-              <span
-                className="uppercase select-none text-white"
-                style={{
-                  fontFamily: '"Anton SC", sans-serif',
-                  fontSize: 'clamp(120px, 30vw, 521px)',
-                  letterSpacing: '-4px',
-                  opacity: 0.1,
-                  background:
-                    'radial-gradient(circle, rgba(142,127,148,0) 0%, #8E7F94 70%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  color: 'transparent',
-                  lineHeight: 1,
-                }}
-              >
-                {hero.watermark}
-              </span>
-            </div>
+            {/* Subtle dark gradient for perfect text contrast without obstructing video */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/40 pointer-events-none z-10" />
 
             {/* Hero content */}
             <motion.div
