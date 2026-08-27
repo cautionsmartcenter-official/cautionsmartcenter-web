@@ -11,6 +11,8 @@ import { ReaddyBrandStory } from './components/ReaddyBrandStory';
 import { ReaddyServices } from './components/ReaddyServices';
 import { ReaddyServiceDetail } from './components/ReaddyServiceDetail';
 import { ReaddyPortfolio } from './components/ReaddyPortfolio';
+import { ReaddyNotice } from './components/ReaddyNotice';
+import { ReaddyFaq } from './components/ReaddyFaq';
 import { VIDEO_URLS } from './config/videos';
 
 export default function App() {
@@ -163,7 +165,33 @@ export default function App() {
         </main>
       )}
 
-      {/* ── 5. Home View: Our Custom Hero + Readdy 1:1 Exact Sections ── */}
+      {/* ── 6. Community: Notice View ── */}
+      {activeTab === 'notice' && (
+        <main>
+          <ReaddyNotice
+            onNavigateToContact={() => handleNavigateToContact()}
+            onNavigateToFaq={() => {
+              setActiveTab('faq');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </main>
+      )}
+
+      {/* ── 7. Community: FAQ View ── */}
+      {activeTab === 'faq' && (
+        <main>
+          <ReaddyFaq
+            onNavigateToContact={() => handleNavigateToContact()}
+            onNavigateToNotice={() => {
+              setActiveTab('notice');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </main>
+      )}
+
+      {/* ── 8. Home View: Our Custom Hero + Readdy 1:1 Exact Sections ── */}
       {activeTab === 'home' && (
         <main>
           {/* ════════════════ HERO SECTION (우리가 만든 비디오 스크럽 히어로 100% 보존) ════════════════ */}

@@ -19,9 +19,9 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
       { name: '오시는 길', id: 'home' }
     ],
     support: [
-      { name: '상담 신청', id: 'contact' },
-      { name: '견적 문의', id: 'contact' },
-      { name: 'FAQ', id: 'contact' }
+      { name: '공지사항', id: 'notice' },
+      { name: '자주묻는질문 (FAQ)', id: 'faq' },
+      { name: '무료 견적 / 상담 신청', id: 'contact' }
     ]
   };
 
@@ -73,17 +73,22 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
 
           {/* Support Column */}
           <div>
-            <h4 className="text-base font-bold mb-4">고객지원</h4>
+            <h4 className="text-base font-bold mb-4">커뮤니티 & 고객지원</h4>
             <div className="w-10 h-0.5 bg-primary mb-6" />
             <ul className="space-y-3">
               {footerLinks.support.map((item) => (
                 <li key={item.name}>
                   <button
                     onClick={() => {
-                      if (onSelectTab) onSelectTab('home');
-                      setTimeout(() => {
-                        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                      }, 100);
+                      if (item.id === 'contact') {
+                        if (onSelectTab) onSelectTab('home');
+                        setTimeout(() => {
+                          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                        }, 100);
+                      } else if (onSelectTab) {
+                        onSelectTab(item.id);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
                     }}
                     className="text-sm text-gray-400 hover:text-primary transition-colors cursor-pointer"
                   >
