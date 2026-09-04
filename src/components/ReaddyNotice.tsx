@@ -29,7 +29,7 @@ const NOTICE_DATA: NoticeItem[] = [
       '작업 시간 50% 단축으로 당일/익일 빠른 출고 가능'
     ],
     content: `
-      코션스마트센터가 더욱 완벽한 프리미엄 시공 퀄리티와 빠른 출고 일정을 위해 '4세대 AI 로봇 자동화 PPS(Peelable Paint Protection Spray) 2호기'를 추가 증설 도입하였습니다.
+      코션스마트센터가 더욱 완벽한 프리미엄 시공 퀄리티와 빠른 출고 일정을 위해 '4세대 AI 로봇 자동화 PPS(Paint Protection Spray) 2호기'를 추가 증설 도입하였습니다.
 
       기존 1호기 대비 3D 레이저 스캐닝 해상도가 200% 향상되어 슈퍼카, 하이퍼카의 복잡한 굴곡과 에어덕트 부위까지 오차 없는 완벽한 두께로 시공됩니다.
 
@@ -144,22 +144,22 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
   });
 
   return (
-    <div className="min-h-screen bg-[#070707] text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 text-slate-900 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header Breadcrumb & Title */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/10 border border-red-600/20 mb-4 shadow-[0_0_15px_rgba(225,29,72,0.15)]">
-            <Bell className="w-4 h-4 text-red-500 animate-bounce" />
-            <span className="text-xs font-bold text-red-500 tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 border border-red-200 mb-4 shadow-sm">
+            <Bell className="w-4 h-4 text-red-600 animate-bounce" />
+            <span className="text-xs font-bold text-red-600 tracking-widest uppercase">
               COMMUNITY & NOTICE
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase mb-4">
-            코션 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-amber-400">공지사항</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">
+            코션스마트센터 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-500">공지사항</span>
           </h1>
 
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
             코션스마트센터의 새로운 기술 소식, 프로모션 혜택, 서비스 안내를 가장 빠르게 전해드립니다.
           </p>
         </div>
@@ -171,63 +171,63 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="bg-[#111] border border-white/15 rounded-2xl sm:rounded-3xl p-6 sm:p-10 mb-12 shadow-2xl relative overflow-hidden"
+              className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-6 sm:p-10 mb-12 shadow-xl relative overflow-hidden ring-1 ring-slate-100"
             >
-              <div className="absolute top-0 right-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-96 h-96 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
 
               <button
                 onClick={() => setActiveNotice(null)}
-                className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-6 transition-colors cursor-pointer group"
+                className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors cursor-pointer group font-medium"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 <span>목록으로 돌아가기</span>
               </button>
 
               <div className="flex flex-wrap items-center gap-2.5 mb-4">
-                <span className="px-3 py-1 bg-red-600/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold">
+                <span className="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-full text-xs font-bold">
                   {activeNotice.category}
                 </span>
                 {activeNotice.tag && (
-                  <span className="px-2.5 py-1 bg-white/10 text-gray-300 rounded-full text-xs font-medium">
+                  <span className="px-2.5 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded-full text-xs font-medium">
                     {activeNotice.tag}
                   </span>
                 )}
-                <span className="text-xs text-gray-500 ml-auto flex items-center gap-1">
+                <span className="text-xs text-slate-400 ml-auto flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5" />
                   {activeNotice.date}
                 </span>
-                <span className="text-xs text-gray-500 flex items-center gap-1">
+                <span className="text-xs text-slate-400 flex items-center gap-1">
                   <Eye className="w-3.5 h-3.5" />
                   조회 {activeNotice.views}
                 </span>
               </div>
 
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white mb-6 leading-snug">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 mb-6 leading-snug">
                 {activeNotice.title}
               </h2>
 
               {activeNotice.highlights && activeNotice.highlights.length > 0 && (
-                <div className="bg-black/60 border border-white/10 rounded-xl p-5 mb-8 space-y-2.5">
-                  <div className="text-xs font-bold text-amber-400 uppercase flex items-center gap-1.5 mb-2">
-                    <Sparkles className="w-4 h-4" />
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-8 space-y-2.5">
+                  <div className="text-xs font-bold text-amber-700 uppercase flex items-center gap-1.5 mb-2">
+                    <Sparkles className="w-4 h-4 text-amber-500" />
                     <span>핵심 안내 포인트</span>
                   </div>
                   {activeNotice.highlights.map((point, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-sm text-gray-200">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                       <span>{point}</span>
                     </div>
                   ))}
                 </div>
               )}
 
-              <div className="text-gray-300 text-sm sm:text-base leading-relaxed whitespace-pre-line border-t border-white/10 pt-6">
+              <div className="text-slate-700 text-sm sm:text-base leading-relaxed whitespace-pre-line border-t border-slate-100 pt-6">
                 {activeNotice.content.trim()}
               </div>
 
-              <div className="mt-10 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <ShieldCheck className="w-4 h-4 text-red-500" />
+              <div className="mt-10 pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <ShieldCheck className="w-4 h-4 text-red-600" />
                   <span>코션스마트센터 공식 공지 | 문의 031-712-6665</span>
                 </div>
                 {onNavigateToContact && (
@@ -253,8 +253,8 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/25'
-                    : 'bg-neutral-900 hover:bg-neutral-800 text-gray-400 hover:text-white border border-white/5'
+                    ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
+                    : 'bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 shadow-sm'
                 }`}
               >
                 {cat}
@@ -269,9 +269,9 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="공지사항 검색..."
-              className="w-full bg-neutral-900 border border-white/10 focus:border-red-500 rounded-full px-4 py-2.5 pl-10 text-xs sm:text-sm text-white placeholder-gray-500 outline-none transition-all"
+              className="w-full bg-white border border-slate-200 focus:border-red-500 focus:ring-2 focus:ring-red-100 rounded-full px-4 py-2.5 pl-10 text-xs sm:text-sm text-slate-900 placeholder-slate-400 outline-none transition-all shadow-sm"
             />
-            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
         </div>
 
@@ -286,18 +286,18 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
                   setActiveNotice(notice);
                   window.scrollTo({ top: 120, behavior: 'smooth' });
                 }}
-                className={`group p-5 sm:p-6 rounded-2xl bg-neutral-900/80 hover:bg-neutral-850 border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                className={`group p-5 sm:p-6 rounded-2xl bg-white border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:shadow-md ${
                   notice.isImportant
-                    ? 'border-red-600/30 bg-gradient-to-r from-red-950/20 to-neutral-900 shadow-md shadow-red-950/20'
-                    : 'border-white/5 hover:border-white/20'
+                    ? 'border-red-200 bg-gradient-to-r from-red-50/40 via-white to-white hover:border-red-300 ring-1 ring-red-100'
+                    : 'border-slate-200 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-start sm:items-center gap-3 sm:gap-4">
                   <span
                     className={`px-2.5 py-1 rounded-md text-xs font-black shrink-0 ${
                       notice.isImportant
-                        ? 'bg-red-600 text-white'
-                        : 'bg-white/10 text-gray-300'
+                        ? 'bg-red-600 text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-700 border border-slate-200'
                     }`}
                   >
                     {notice.category}
@@ -306,46 +306,46 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
                   <div>
                     <div className="flex items-center gap-2 mb-1 sm:mb-0">
                       {notice.isImportant && (
-                        <span className="text-[10px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                          <Tag className="w-3 h-3" /> 중요
+                        <span className="text-[10px] sm:text-xs font-bold text-red-600 uppercase tracking-wider flex items-center gap-1">
+                          <Tag className="w-3 h-3 text-red-500" /> 중요
                         </span>
                       )}
-                      <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-red-400 transition-colors">
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-red-600 transition-colors">
                         {notice.title}
                       </h3>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 text-xs text-gray-400 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
+                <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 text-xs text-slate-500 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                   <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" />
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
                       {notice.date}
                     </span>
                     <span className="hidden sm:flex items-center gap-1">
-                      <Eye className="w-3.5 h-3.5" />
+                      <Eye className="w-3.5 h-3.5 text-slate-400" />
                       {notice.views}
                     </span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-600 group-hover:translate-x-1 transition-all" />
                 </div>
               </motion.div>
             ))
           ) : (
-            <div className="text-center py-16 bg-neutral-900/50 border border-white/5 rounded-2xl text-gray-500 text-sm">
+            <div className="text-center py-16 bg-white border border-slate-200 rounded-2xl text-slate-400 text-sm shadow-sm">
               일치하는 공지사항이 없습니다.
             </div>
           )}
         </div>
 
         {/* Quick Link to FAQ or Consultation */}
-        <div className="mt-16 bg-gradient-to-r from-neutral-900 via-neutral-900 to-neutral-850 border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="mt-16 bg-gradient-to-br from-slate-900 via-slate-900 to-red-950 text-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-slate-800">
           <div>
             <h4 className="text-base sm:text-lg font-bold text-white mb-1">
               더 궁금한 내용이나 빠른 상담이 필요하신가요?
             </h4>
-            <p className="text-xs sm:text-sm text-gray-400">
+            <p className="text-xs sm:text-sm text-slate-300">
               자주 묻는 질문(FAQ)을 확인하시거나 1:1 온라인 견적 상담을 신청해 보세요.
             </p>
           </div>
@@ -353,7 +353,7 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
             {onNavigateToFaq && (
               <button
                 onClick={onNavigateToFaq}
-                className="flex-1 sm:flex-initial px-5 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-white text-xs sm:text-sm font-bold rounded-full border border-white/10 transition-all cursor-pointer whitespace-nowrap"
+                className="flex-1 sm:flex-initial px-5 py-2.5 bg-white/10 hover:bg-white text-white hover:text-slate-900 text-xs sm:text-sm font-bold rounded-full border border-white/20 transition-all cursor-pointer whitespace-nowrap"
               >
                 자주 묻는 질문 보기
               </button>

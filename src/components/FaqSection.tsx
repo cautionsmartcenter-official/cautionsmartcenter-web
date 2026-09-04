@@ -11,7 +11,7 @@ interface FaqItem {
 const FAQ_DATA: FaqItem[] = [
   {
     question: 'AI 로봇 PPS 시공 후 나중에 뗄 때 원래 차량 도장에 손상이 전혀 없나요?',
-    answer: '네, 100% 안전합니다. 코션의 AI 로봇 PPS(Peelable Paint Protection System)는 화학적 본드가 아닌 특수 액상 탄성 수지가 경화되어 보호막을 형성하므로, 제거 시 끈적이는 본드 잔여물이 남지 않고 신차 출고 당시의 원 도장면 그대로 깔끔하게 박리됩니다.',
+    answer: '네, 100% 안전합니다. 코션의 AI 로봇 PPS(Paint Protection Spray)는 화학적 본드가 아닌 특수 액상 탄성 수지가 경화되어 보호막을 형성하므로, 제거 시 끈적이는 본드 잔여물이 남지 않고 신차 출고 당시의 원 도장면 그대로 깔끔하게 박리됩니다.',
     category: 'AI PPS'
   },
   {

@@ -30,6 +30,7 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
   ];
 
   const isCommunityActive = activeTab === 'notice' || activeTab === 'faq' || activeTab === 'community';
+  const isSolidHeader = isScrolled || activeTab === 'notice' || activeTab === 'faq';
 
   const handleMouseEnter = () => {
     if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
@@ -45,8 +46,8 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-black/80 backdrop-blur-md border-b border-white/10 shadow-lg py-0'
+        isSolidHeader
+          ? 'bg-black/85 backdrop-blur-md border-b border-white/10 shadow-lg py-0'
           : 'bg-transparent py-2 sm:py-3'
       }`}
     >

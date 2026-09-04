@@ -150,13 +150,22 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
               </p>
               <div className="flex items-center justify-center lg:justify-end gap-4">
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/cautionsmartcenter_official/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-primary transition-colors cursor-pointer"
                   aria-label="Instagram"
                 >
                   <i className="ri-instagram-line text-xl" />
+                </a>
+                <a
+                  href="https://blog.naver.com/cautionsmartcenter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-[#03C75A] transition-colors cursor-pointer font-black text-sm"
+                  aria-label="Naver Blog"
+                >
+                  N
                 </a>
                 <a
                   href="https://facebook.com"

@@ -33,7 +33,7 @@ const SERVICES_DATA: ServiceItem[] = [
     id: 'ai-pps',
     badge: 'FLAGSHIP INNOVATION',
     title: 'AI 로봇 PPS / PPCS',
-    engTitle: 'AI Robot Peelable Paint Protection',
+    engTitle: 'AI Robot Paint Protection Spray',
     desc: '기존 필름 랩핑의 한계를 완벽히 극복한 스프레이 방식의 차세대 페인트 보호막. AI 로봇이 초미세 노즐로 도막 두께를 100% 균일하게 도포하며, 칼선이나 들뜸 없이 언제든 손상 없이 박리(Peelable) 가능합니다.',
     icon: Bot,
     accentColor: '#EF4444',
