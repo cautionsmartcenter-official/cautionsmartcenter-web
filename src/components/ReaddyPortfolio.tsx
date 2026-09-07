@@ -467,7 +467,9 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                           ? '판금도색'
                           : activeModalItem.category === 'detailing'
                           ? '디테일링'
-                          : 'PPS (Paint Protection Spray)';
+                          : activeModalItem.category === 'color-pps'
+                          ? '컬러PPS'
+                          : '투명PPS';
                       setActiveModalItem(null);
                       onNavigateToContact(serviceTarget);
                     }}

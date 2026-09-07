@@ -365,7 +365,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                       ? '판금도색'
                       : service.id === 'detailing'
                       ? '디테일링'
-                      : 'PPS (Paint Protection Spray)';
+                      : '투명PPS';
                   onNavigateToContact(serviceParam);
                 } else {
                   onNavigateHome();

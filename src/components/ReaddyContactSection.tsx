@@ -6,7 +6,15 @@ interface ReaddyContactSectionProps {
   initialService?: string;
 }
 
+const normalizeService = (srv?: string) => {
+  if (!srv) return '';
+  if (srv.includes('컬러') || srv === 'color-pps') return '컬러PPS';
+  if (srv.includes('PPS') || srv.includes('pps') || srv.includes('투명')) return '투명PPS';
+  return srv;
+};
+
 export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ initialService }) => {
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -15,13 +23,13 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
     model: '',
     codeName: '',
     customModel: '',
-    service: initialService || '',
+    service: normalizeService(initialService),
     message: ''
   });
 
   React.useEffect(() => {
     if (initialService) {
-      setFormData((prev) => ({ ...prev, service: initialService }));
+      setFormData((prev) => ({ ...prev, service: normalizeService(initialService) }));
     }
   }, [initialService]);
 
@@ -336,7 +344,8 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors cursor-pointer text-gray-900"
                 >
                   <option value="">선택해주세요</option>
-                  <option value="PPS (Paint Protection Spray)">PPS (Paint Protection Spray) - CARDIP 뿌리는 페인트</option>
+                  <option value="투명PPS">투명PPS (Paint Protection Spray - 순정 도장 보호)</option>
+                  <option value="컬러PPS">컬러PPS (Color PPS - 컬러 체인지 & 도장 보호)</option>
                   <option value="수입차 정비">수입차 전문 정비 (메인터넌스 / 오버홀)</option>
                   <option value="판금도색">판금도색 (정밀 조색 복원)</option>
                   <option value="디테일링">프리미엄 디테일링 (광택 / 유리막 코팅)</option>

@@ -258,11 +258,11 @@ export function ConsultationFormSection({ initialService }: ConsultationFormSect
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-red-500 transition-colors cursor-pointer"
                     >
-                      <option value="AI 로봇 PPS / PPCS">AI 로봇 PPS / PPCS (신차 보호 & 컬러 체인지)</option>
+                      <option value="투명PPS">투명PPS (순정 도장 보호 & 스톤칩 방어)</option>
+                      <option value="컬러PPS">컬러PPS (원하는 컬러 체인지 & 도장 보호)</option>
                       <option value="수입차 전문 정비">수입차 전문 정비 (엔진/미션/소모품/진단)</option>
                       <option value="정밀 판금도색 / 사고수리">정밀 판금도색 / 사고수리 (자차·대물 보험수리)</option>
                       <option value="하이엔드 디테일링">하이엔드 디테일링 (광택 & 세라믹 코팅)</option>
-                      <option value="마이바흐 듀오톤 도장">마이바흐 듀오톤 컬러PPS 시공</option>
                     </select>
                   </div>
                 </div>
