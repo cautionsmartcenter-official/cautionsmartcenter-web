@@ -7,10 +7,11 @@ interface ReaddyFooterProps {
 export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
   const footerLinks = {
     services: [
+      { name: '투명 PPS (도장 보호)', id: 'pps-clear' },
+      { name: '컬러 PPS (컬러 체인지)', id: 'pps-color' },
       { name: '수입차 정비', id: 'repair' },
       { name: '판금도색', id: 'paint' },
-      { name: '디테일링', id: 'detailing' },
-      { name: 'PPS (Paint Protection Spray)', id: 'ai-tech' }
+      { name: '디테일링', id: 'detailing' }
     ],
     company: [
       { name: '브랜드 스토리', id: 'brand-story' },

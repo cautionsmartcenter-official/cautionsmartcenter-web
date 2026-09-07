@@ -3,9 +3,13 @@ import { motion } from 'framer-motion';
 
 interface ReaddyServicesProps {
   onSelectServiceDetail?: (serviceId: string) => void;
+  onNavigateToContact?: (serviceName?: string) => void;
 }
 
-export const ReaddyServices: React.FC<ReaddyServicesProps> = ({ onSelectServiceDetail }) => {
+export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
+  onSelectServiceDetail,
+  onNavigateToContact
+}) => {
   const serviceList = [
     {
       id: 'repair',
@@ -18,7 +22,8 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({ onSelectServiceD
         '브레이크 시스템 점검',
         '정기 점검 및 소모품 교체'
       ],
-      image: '/images/readdy/service-detail-repair-001.jpg'
+      image: '/images/readdy/service-detail-repair-001.jpg',
+      serviceParam: '수입차 정비'
     },
     {
       id: 'paint',
@@ -31,7 +36,8 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({ onSelectServiceD
         '친환경 도료 사용',
         '완벽한 광택 마감'
       ],
-      image: '/images/readdy/service-detail-paint-001.jpg'
+      image: '/images/readdy/service-detail-paint-001.jpg',
+      serviceParam: '판금도색'
     },
     {
       id: 'detailing',
@@ -44,21 +50,38 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({ onSelectServiceD
         '엔진룸 세척',
         '유리막 코팅'
       ],
-      image: '/images/readdy/service-detail-detailing-001.jpg'
+      image: '/images/readdy/service-detail-detailing-001.jpg',
+      serviceParam: '디테일링'
     },
     {
-      id: 'ai-tech',
-      title: 'PPS (Paint Protection Spray)',
-      subtitle: 'CARDIP Peelable Paint',
-      description: 'CARDIP Peelable Paint 카딥의 뿌리는 페인트. AI 로봇 기술과 프리미엄 수용성/유성 보호 도료를 통해 기존 랩핑 필름을 뛰어넘는 완벽한 페인트 보호 및 컬러 체인지를 제공합니다.',
+      id: 'pps-clear',
+      title: '투명 PPS (Paint Protection Spray)',
+      subtitle: 'CARDIP Peelable Clear Coat',
+      description: 'CARDIP Peelable Paint 카딥의 뿌리는 투명 보호 페인트. AI 로봇 기술과 프리미엄 수용성/유성 보호 도료를 통해 기존 랩핑 필름을 뛰어넘는 완벽한 페인트 보호를 제공하며, 신차 순정 도장 본연의 광택을 100% 보존합니다.',
       features: [
-        'AI 로봇 정밀 분사 시공',
-        '균일한 마이크론 코팅 두께',
+        'AI 로봇 정밀 분사 시공 (무절개 무마감선)',
+        '균일한 마이크론 코팅 두께 & 초고광택',
         '원래 신차 도장 100% 원복 가능 (Peelable)',
-        '초고광택 및 강력한 스톤칩 방어'
+        '초고광택 및 강력한 스톤칩 방어막'
       ],
       image: '/images/readdy/service-detail-ai-001.jpg',
-      highlight: true
+      highlight: true,
+      serviceParam: '투명PPS'
+    },
+    {
+      id: 'pps-color',
+      title: '컬러 PPS (Color Paint Protection Spray)',
+      subtitle: 'CARDIP Peelable Color Paint',
+      description: 'CARDIP Peelable Paint 카딥의 뿌리는 프리미엄 컬러 체인지 솔루션. 단순 랩핑 필름의 한계를 뛰어넘어 슈퍼카 순정 컬러부터 마이바흐 듀오톤까지 완벽한 도색 표면 질감을 구현하며, 원할 때 언제든 원래 색상으로 되돌릴 수 있습니다.',
+      features: [
+        '원하는 모든 슈퍼카 커스텀 컬러 & 마이바흐 듀오톤',
+        '필름의 이질감과 들뜸 없는 실제 순정 도색 수준 질감',
+        '도장면 손상 없는 100% 자유로운 원상 복구 (Peelable)',
+        '컬러 체인지와 강력한 스톤칩 도장 보호를 동시 실현'
+      ],
+      image: '/images/readdy/brand-tech-main-001.jpg',
+      highlight: true,
+      serviceParam: '컬러PPS'
     }
   ];
 
@@ -168,13 +191,23 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({ onSelectServiceD
                         <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
                       </button>
                     )}
-                    <a
-                      href="#contact"
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-dark text-white text-sm font-semibold rounded-full hover:bg-dark-light transition-all whitespace-nowrap cursor-pointer group shadow-md"
-                    >
-                      <span>상담 신청하기</span>
-                      <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
-                    </a>
+                    {onNavigateToContact ? (
+                      <button
+                        onClick={() => onNavigateToContact(srv.serviceParam || srv.title)}
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-dark text-white text-sm font-semibold rounded-full hover:bg-dark-light transition-all whitespace-nowrap cursor-pointer group shadow-md"
+                      >
+                        <span>상담 신청하기</span>
+                        <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
+                      </button>
+                    ) : (
+                      <a
+                        href="#contact"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-dark text-white text-sm font-semibold rounded-full hover:bg-dark-light transition-all whitespace-nowrap cursor-pointer group shadow-md"
+                      >
+                        <span>상담 신청하기</span>
+                        <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>

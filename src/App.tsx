@@ -139,7 +139,10 @@ export default function App() {
       {/* ── 3. Services Overview View ── */}
       {activeTab === 'services' && (
         <main>
-          <ReaddyServices onSelectServiceDetail={handleOpenServiceDetail} />
+          <ReaddyServices
+            onSelectServiceDetail={handleOpenServiceDetail}
+            onNavigateToContact={handleNavigateToContact}
+          />
         </main>
       )}
 

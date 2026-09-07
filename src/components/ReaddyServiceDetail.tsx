@@ -127,13 +127,89 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
       { step: 4, title: '코팅', desc: '프리미엄 코팅제를 적용합니다' },
       { step: 5, title: '실내 클리닝', desc: '실내를 깊이 있게 클리닝합니다' }
     ],
-    relatedServices: ['repair', 'paint', 'ai-tech']
+    relatedServices: ['repair', 'paint', 'pps-clear']
+  },
+  'pps-clear': {
+    id: 'pps-clear',
+    title: '투명 PPS (Paint Protection Spray)',
+    subtitle: 'CARDIP Peelable Clear Coat',
+    description: '순정 본연의 깊은 광택과 색상을 완벽하게 유지하면서, 스톤칩·스크래치·생활오염으로부터 도장면을 빈틈없이 보호하는 차세대 투명 스프레이 보호 솔루션입니다.',
+    heroImage: '/images/readdy/service-hero-ai.jpg',
+    features: [
+      'AI 로봇 정밀 분사 시공 (무절개 무마감선)',
+      '순정 도장 대비 40% 향상된 초고광택 연출',
+      '강력한 스톤칩 및 고속주행 충격 방어막',
+      '신차 순정 도장 100% 원복 가능 (Peelable)',
+      '황변 현상 및 본드 잔여물 완벽 배제',
+      '친환경 수용성 프리미엄 탄성 도료'
+    ],
+    detailImage: '/images/readdy/service-detail-ai-img.jpg',
+    details: [
+      {
+        title: 'AI 로봇 정밀 분사 코팅',
+        desc: '차량의 굴곡과 틈새까지 3차원 스캔 분석하여 사람의 손으로 불가능한 마이크론 단위의 균일한 투명 보호막을 형성합니다.'
+      },
+      {
+        title: '무절개 일체형 시공',
+        desc: '칼을 사용하는 기존 필름과 달리 차량 부품 탈거 없이 액상 분사 후 경화하므로 칼기스 위험이나 모서리 들뜸/때낌이 없습니다.'
+      },
+      {
+        title: '100% 원형 복원 (Peelable)',
+        desc: '원할 때 언제든 도장면 손상 없이 래핑 필름처럼 깔끔하게 벗겨낼 수 있어 신차 컨디션을 평생 그대로 보존할 수 있습니다.'
+      }
+    ],
+    process: [
+      { step: 1, title: '차량 정밀 세척 및 탈지', desc: '도장면 유분과 오염물을 완벽히 정돈합니다' },
+      { step: 2, title: '3D 차량 스캐닝', desc: 'AI가 차량 표면과 굴곡을 정밀 분석합니다' },
+      { step: 3, title: 'AI 로봇 투명 PPS 분사', desc: '마이크론 단위로 균일한 투명 도료를 시공합니다' },
+      { step: 4, title: '열경화 및 피니싱', desc: '안정적인 탄성 보호막 경화 과정을 거칩니다' },
+      { step: 5, title: '최종 검수 및 출고', desc: '도막 두께 및 마감 퀄리티를 확인 후 인도합니다' }
+    ],
+    relatedServices: ['pps-color', 'detailing', 'repair']
+  },
+  'pps-color': {
+    id: 'pps-color',
+    title: '컬러 PPS (Color Paint Protection Spray)',
+    subtitle: 'CARDIP Peelable Color Paint',
+    description: '단순한 필름 랩핑의 한계를 완전히 극복한 프리미엄 컬러 체인지 기술. 슈퍼카 오리지널 컬러부터 마이바흐 듀오톤까지 완벽한 도색 퀄리티를 선사하며 언제든 100% 순정 원복이 가능합니다.',
+    heroImage: '/images/readdy/brand-hero-001.jpg',
+    features: [
+      '원하는 모든 슈퍼카 컬러 & 사틴/메탈릭/펄 구현',
+      '마이바흐 듀오톤 및 커스텀 투톤 완벽 도색',
+      '오렌지필 없는 실제 최고급 도색 수준의 표면 광택',
+      '원래 순정 도장 100% 무손상 원복 (Peelable)',
+      '컬러 체인지와 강력한 스톤칩 도장 보호를 동시 실현',
+      '컴퓨터 정밀 조색 및 AI 로봇 스프레이 시공'
+    ],
+    detailImage: '/images/readdy/brand-tech-main-001.jpg',
+    details: [
+      {
+        title: '슈퍼카급 도색 퀄리티 & 무한한 컬러',
+        desc: '기존 랩핑 필름 특유의 둔탁한 오렌지필과 질감 왜곡이 전혀 없으며, 포르쉐·페라리 순정 조색부터 무광 사틴까지 실제 도색과 구별할 수 없는 완벽한 광택을 연출합니다.'
+      },
+      {
+        title: '마이바흐 정통 듀오톤(Duo-Tone) 기술',
+        desc: '코션스마트센터의 독보적인 코치라인 분할 기술로 마이바흐, 롤스로이스 등의 명품 듀오톤 스타일을 도장면 손상 없이 정교하게 완성합니다.'
+      },
+      {
+        title: '보호와 컬러를 하나로 (2-in-1)',
+        desc: '새로운 컬러로 개성을 표현하는 동시에 고속 주행 시 발생하는 스톤칩과 문콕, 스크래치로부터 원 도장면을 철통 방어합니다.'
+      }
+    ],
+    process: [
+      { step: 1, title: '컬러 상담 및 정밀 조색', desc: '고객이 원하는 최적의 컬러 배합을 결정합니다' },
+      { step: 2, title: '정밀 마스킹 및 전처리', desc: '분할 라인 및 차체를 꼼꼼하게 마스킹합니다' },
+      { step: 3, title: '베이스 보호층 및 컬러 분사', desc: '탄성 보호 베이스와 컬러 도료를 균일하게 분사합니다' },
+      { step: 4, title: '클리어 코트 탑레이어 코팅', desc: '초고광택 또는 사틴 무광 클리어층을 완성합니다' },
+      { step: 5, title: '열경화 및 정밀 검수', desc: '철저한 품질 검수 후 완벽한 상태로 인도합니다' }
+    ],
+    relatedServices: ['pps-clear', 'detailing', 'paint']
   },
   'ai-tech': {
     id: 'ai-tech',
-    title: 'PPS (Paint Protection Spray)',
-    subtitle: 'CARDIP Peelable Paint',
-    description: 'CARDIP Peelable Paint 카딥의 뿌리는 페인트. AI 로봇 기술로 구현하는 차세대 페인트 보호 시스템으로 완벽한 페인트 보호와 컬러 체인지를 제공합니다.',
+    title: '투명 PPS (Paint Protection Spray)',
+    subtitle: 'CARDIP Peelable Clear Coat',
+    description: 'CARDIP Peelable Paint 카딥의 뿌리는 투명 보호 페인트. AI 로봇 기술로 구현하는 차세대 페인트 보호 시스템으로 완벽한 페인트 보호를 제공합니다.',
     heroImage: '/images/readdy/service-hero-ai.jpg',
     features: [
       'AI 로봇 정밀 분사 시공',
@@ -147,15 +223,15 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     details: [
       {
         title: 'AI 정밀 시공',
-        desc: 'AI 로봇이 차량의 곡면과 각도를 실시간으로 분석하여 인간의 한계를 뛰어넘는 정밀한 코팅을 시행합니다. 균일한 두께와 완벽한 마감을 보장합니다.'
+        desc: 'AI 로봇이 차량의 곡면과 각도를 실시간으로 분석하여 인간의 한계를 뛰어넘는 정밀한 코팅을 시행합니다.'
       },
       {
         title: '스마트 품질 관리',
-        desc: '작업 중 실시간으로 코팅 상태를 모니터링하고, AI가 최적의 조건을 자동으로 조정합니다. 완벽한 품질을 데이터로 입증합니다.'
+        desc: '작업 중 실시간으로 코팅 상태를 모니터링하고, AI가 최적의 조건을 자동으로 조정합니다.'
       },
       {
         title: '차세대 보호 솔루션 (CARDIP)',
-        desc: '기존 PPF 필름의 황변과 본드 고착 단점을 완벽히 극복한 수용성/유성 보호 솔루션입니다. 뛰어난 내구성과 투명도로 차량 본연의 아름다움을 살리면서 언제든 원래 상태로 떼어낼 수 있습니다.'
+        desc: '기존 PPF 필름의 황변과 본드 고착 단점을 극복한 친환경 수용성/유성 보호 솔루션입니다.'
       }
     ],
     process: [
@@ -165,7 +241,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
       { step: 4, title: '실시간 품질 체크', desc: '작업 중 실시간 품질을 검증합니다' },
       { step: 5, title: '최종 검수', desc: '완벽한 품질을 확인 후 인도합니다' }
     ],
-    relatedServices: ['repair', 'paint', 'detailing']
+    relatedServices: ['pps-color', 'detailing', 'repair']
   }
 };
 
@@ -350,7 +426,9 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                 ? '지금 수입차 정비를 경험해보세요'
                 : service.id === 'paint'
                 ? '지금 판금도색을 경험해보세요'
-                : '지금 PPS를 경험해보세요'}
+                : service.id === 'pps-color'
+                ? '지금 컬러 PPS를 경험해보세요'
+                : '지금 투명 PPS를 경험해보세요'}
             </h2>
             <p className="text-sm sm:text-base text-gray-300 mb-9 leading-relaxed max-w-2xl mx-auto">
               전문가 상담부터 최고의 서비스까지, CAUTION SMART CENTER가 함께합니다
@@ -365,6 +443,8 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                       ? '판금도색'
                       : service.id === 'detailing'
                       ? '디테일링'
+                      : service.id === 'pps-color'
+                      ? '컬러PPS'
                       : '투명PPS';
                   onNavigateToContact(serviceParam);
                 } else {

@@ -29,12 +29,20 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
       bgColor: 'bg-gray-50'
     },
     {
-      id: 'ai-tech',
-      title: 'PPS (Paint Protection Spray)',
-      description: 'CARDIP Peelable Paint 카딥의 뿌리는 페인트',
-      image: '/images/readdy/service-ai-001.jpg',
+      id: 'pps-clear',
+      title: '투명 PPS',
+      description: '순정 도장면의 완벽한 보호 & AI 로봇 초고광택 스프레이',
+      image: '/images/readdy/service-detail-ai-001.jpg',
       bgColor: 'bg-gradient-to-br from-red-50 to-gray-50',
-      badge: 'NEW'
+      badge: 'NEW TECH'
+    },
+    {
+      id: 'pps-color',
+      title: '컬러 PPS',
+      description: '슈퍼카 조색부터 듀오톤까지 도장 손상 없는 컬러 체인지',
+      image: '/images/readdy/brand-tech-main-001.jpg',
+      bgColor: 'bg-gradient-to-br from-amber-50 to-gray-50',
+      badge: 'NEW TECH'
     }
   ];
 
@@ -58,7 +66,7 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           {services.map((service, index) => (
             <motion.div
               key={service.id}
