@@ -146,8 +146,22 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
             </div>
 
             <div className="text-center lg:text-right">
-              <p className="text-sm text-gray-500 mb-4">
-                © 2025 CAUTION SMART CENTER. All rights reserved.
+              <p className="text-sm text-gray-500 mb-4 flex items-center justify-center lg:justify-end gap-2 flex-wrap">
+                <span>© 2026 CAUTION SMART CENTER. All rights reserved.</span>
+                <button
+                  onClick={() => {
+                    if (onSelectTab) {
+                      onSelectTab('admin');
+                    } else {
+                      window.location.hash = '#admin';
+                    }
+                  }}
+                  className="text-gray-600 hover:text-gray-400 transition-colors inline-flex items-center gap-1 text-[11px] font-mono cursor-pointer ml-1 border-b border-transparent hover:border-gray-500"
+                  title="관리자 대시보드 로그인"
+                >
+                  <i className="ri-lock-2-line text-xs" />
+                  <span>Admin</span>
+                </button>
               </p>
               <div className="flex items-center justify-center lg:justify-end gap-4">
                 <a
@@ -187,7 +201,7 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
                   <i className="ri-youtube-fill text-xl" />
                 </a>
                 <a
-                  href="http://pf.kakao.com/_FxINhX"
+                  href="http://pf.kakao.com/_FxlNhX/chat"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 flex items-center justify-center text-amber-400 hover:text-amber-300 transition-colors cursor-pointer font-bold"

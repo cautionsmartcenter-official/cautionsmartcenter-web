@@ -13,6 +13,8 @@ import { ReaddyServiceDetail } from './components/ReaddyServiceDetail';
 import { ReaddyPortfolio } from './components/ReaddyPortfolio';
 import { ReaddyNotice } from './components/ReaddyNotice';
 import { ReaddyFaq } from './components/ReaddyFaq';
+import { FloatingContactBar } from './components/FloatingContactBar';
+import { AdminDashboard } from './components/AdminDashboard';
 import { VIDEO_URLS } from './config/videos';
 
 export default function App() {
@@ -117,6 +119,32 @@ export default function App() {
     const timer = setTimeout(() => setEntranceComplete(true), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  /* ── Hash routing (e.g. #admin) ── */
+  useEffect(() => {
+    const checkHash = () => {
+      if (window.location.hash === '#admin') {
+        setActiveTab('admin');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
+    return () => window.removeEventListener('hashchange', checkHash);
+  }, []);
+
+  /* ── 0. Admin Dashboard View ── */
+  if (activeTab === 'admin') {
+    return (
+      <AdminDashboard
+        onExit={() => {
+          window.location.hash = '';
+          setActiveTab('home');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans text-dark antialiased">
@@ -295,6 +323,9 @@ export default function App() {
           }
         }}
       />
+
+      {/* ── 9. Right Floating Quick Contact Bar (카카오톡 채널 & 전화 상담) ── */}
+      <FloatingContactBar />
     </div>
   );
 }

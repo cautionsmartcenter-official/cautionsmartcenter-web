@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CAR_DATABASE } from '../config/carData';
+import { saveConsultation, type ConsultationItem } from '../lib/consultationStorage';
 
 interface ReaddyContactSectionProps {
   initialService?: string;
@@ -35,6 +36,8 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [lastSubmitted, setLastSubmitted] = useState<ConsultationItem | null>(null);
+  const [copiedToast, setCopiedToast] = useState(false);
 
   // 현재 선택된 브랜드의 모델 리스트
   const currentBrandObj = CAR_DATABASE.find((b) => b.id === formData.brand);
@@ -77,8 +80,24 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
     setStatus('idle');
 
     setTimeout(() => {
+      // 1. 상담 데이터 로컬 저장소에 영구 저장 (관리자 페이지에서 즉시 조회 가능)
+      const saved = saveConsultation({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        brand: formData.brand,
+        model: formData.model,
+        codeName: formData.codeName,
+        customModel: formData.customModel,
+        service: formData.service || '상담 문의',
+        message: formData.message
+      });
+
+      setLastSubmitted(saved);
       setIsSubmitting(false);
       setStatus('success');
+
+      // 폼 초기화
       setFormData({
         name: '',
         phone: '',
@@ -90,7 +109,7 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
         service: '',
         message: ''
       });
-    }, 600);
+    }, 500);
   };
 
   return (
@@ -381,16 +400,92 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
 
               {status === 'success' && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-4 bg-green-50 border border-green-200 rounded-xl text-center"
+                  className="p-6 bg-emerald-50/90 border border-emerald-200 rounded-2xl text-left shadow-lg space-y-4"
                 >
-                  <p className="text-sm text-green-800 font-bold">
-                    ✓ 섀시 코드 기반 맞춤 견적 문의가 성공적으로 접수되었습니다.
-                  </p>
-                  <p className="text-xs text-green-700 mt-1">
-                    담당 마스터 엔지니어가 확인 후 빠르게 연락드리겠습니다.
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/30">
+                      <i className="ri-checkbox-circle-fill text-2xl" />
+                    </div>
+                    <div>
+                      <h4 className="text-base font-black text-emerald-950">
+                        상담 신청이 정상 접수되었습니다!
+                      </h4>
+                      <p className="text-xs text-emerald-700">
+                        본사 관리 전산망에 안전하게 등록되었으며, 담당 엔지니어가 빠르게 검토합니다.
+                      </p>
+                    </div>
+                  </div>
+
+                  {lastSubmitted && (
+                    <div className="p-3.5 bg-white/90 rounded-xl border border-emerald-100 text-xs text-slate-700 space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">신청 고객:</span>
+                        <span className="font-bold text-slate-900">{lastSubmitted.name} ({lastSubmitted.phone})</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">차량/코드:</span>
+                        <span className="font-semibold text-slate-800">
+                          {lastSubmitted.customModel || lastSubmitted.model} {lastSubmitted.codeName ? `[${lastSubmitted.codeName}]` : ''}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">관심 서비스:</span>
+                        <span className="font-bold text-primary">{lastSubmitted.service}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── 1. 카카오톡 실시간 상담 & 사진 전송 버튼 ── */}
+                  <div className="space-y-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (lastSubmitted) {
+                          const summary = `[코션스마트센터 견적상담]\n- 고객명: ${lastSubmitted.name}\n- 연락처: ${lastSubmitted.phone}\n- 차종: ${lastSubmitted.customModel || lastSubmitted.model} (${lastSubmitted.codeName || '코드명 직접입력'})\n- 서비스: ${lastSubmitted.service}\n- 문의내용: ${lastSubmitted.message || '상담 요청'}`;
+                          if (navigator.clipboard) {
+                            navigator.clipboard.writeText(summary);
+                            setCopiedToast(true);
+                            setTimeout(() => setCopiedToast(false), 4000);
+                          }
+                        }
+                        window.open('http://pf.kakao.com/_FxlNhX/chat', '_blank');
+                      }}
+                      className="w-full py-3.5 px-4 bg-[#FEE500] hover:bg-[#FDD835] text-[#371D1E] font-black text-sm rounded-xl flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+                    >
+                      <i className="ri-chat-3-fill text-xl" />
+                      <span>카카오톡으로 사진 보내고 빠른 견적 받기</span>
+                    </button>
+
+                    {copiedToast && (
+                      <p className="text-[11px] text-center text-amber-900 font-semibold bg-amber-100 py-1 rounded-md">
+                        ✓ 차량 정보가 복사되었습니다! 카톡 채팅창에 붙여넣고 사진을 보내주세요.
+                      </p>
+                    )}
+
+                    {/* ── 2. 유선 전화 즉시 연결 버튼 ── */}
+                    <a
+                      href="tel:031-712-6665"
+                      className="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    >
+                      <i className="ri-phone-fill text-emerald-400" />
+                      <span>031-712-6665 유선 전화로 빠른 통화 상담</span>
+                    </a>
+                  </div>
+
+                  <div className="text-center pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStatus('idle');
+                        setLastSubmitted(null);
+                      }}
+                      className="text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer"
+                    >
+                      새로운 견적 문의 다시 작성하기
+                    </button>
+                  </div>
                 </motion.div>
               )}
 
