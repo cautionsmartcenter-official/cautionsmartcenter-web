@@ -56,13 +56,13 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
     {
       id: 'pps-clear',
       title: '투명 PPS (Paint Protection Spray)',
-      subtitle: 'CARDIP Peelable Clear Coat',
-      description: 'CARDIP Peelable Paint 카딥의 뿌리는 투명 보호 페인트. AI 로봇 기술과 프리미엄 수용성/유성 보호 도료를 통해 기존 랩핑 필름을 뛰어넘는 완벽한 페인트 보호를 제공하며, 신차 순정 도장 본연의 광택을 100% 보존합니다.',
+      subtitle: '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
+      description: '독일 Colosol Coatings GmbH의 공식 테크니컬 파트너이자 한국 공식 디스트리뷰터로서, 독일에서 연구·생산되는 CARDIP® PPS를 기반으로 전문 시공 서비스를 제공합니다. 250µm+의 도막 두께로 스톤칩과 외부 오염으로부터 도장면을 보호하며, 필요 시 도장면에서 제거할 수 있는 박리형 시스템입니다.',
       features: [
-        'AI 로봇 정밀 분사 시공 (무절개 무마감선)',
-        '균일한 마이크론 코팅 두께 & 초고광택',
-        '원래 신차 도장 100% 원복 가능 (Peelable)',
-        '초고광택 및 강력한 스톤칩 방어막'
+        '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
+        '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
+        '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
+        '무접착 방식의 박리 시스템 (도장면 손상 없는 제거)'
       ],
       image: '/images/readdy/service-detail-ai-001.jpg',
       highlight: true,
@@ -71,13 +71,13 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
     {
       id: 'pps-color',
       title: '컬러 PPS (Color Paint Protection Spray)',
-      subtitle: 'CARDIP Peelable Color Paint',
-      description: 'CARDIP Peelable Paint 카딥의 뿌리는 프리미엄 컬러 체인지 솔루션. 단순 랩핑 필름의 한계를 뛰어넘어 슈퍼카 순정 컬러부터 마이바흐 듀오톤까지 완벽한 도색 표면 질감을 구현하며, 원할 때 언제든 원래 색상으로 되돌릴 수 있습니다.',
+      subtitle: '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
+      description: '독일 Colosol Coatings GmbH 본사의 기술 기준을 바탕으로 구현하는 Peelable Color Paint 시스템입니다. 전 세계 슈퍼카 순정 컬러부터 마이바흐 듀오톤까지 도색 표면 질감을 완성도 높게 구현하며, 필요 시 도장면에서 제거할 수 있는 혁신적인 컬러 체인지 솔루션입니다.',
       features: [
-        '원하는 모든 슈퍼카 커스텀 컬러 & 마이바흐 듀오톤',
-        '필름의 이질감과 들뜸 없는 실제 순정 도색 수준 질감',
-        '도장면 손상 없는 100% 자유로운 원상 복구 (Peelable)',
-        '컬러 체인지와 강력한 스톤칩 도장 보호를 동시 실현'
+        '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
+        '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 듀오톤 구현',
+        '칼을 사용하지 않는 분사 방식으로 차량 손상 방지',
+        '무접착 방식의 박리 시스템 (원도장면 보존)'
       ],
       image: '/images/readdy/brand-tech-main-001.jpg',
       highlight: true,

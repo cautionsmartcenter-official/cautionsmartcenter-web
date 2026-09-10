@@ -31,18 +31,18 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
     {
       id: 'pps-clear',
       title: '투명 PPS',
-      description: '순정 도장면의 완벽한 보호 & AI 로봇 초고광택 스프레이',
+      description: '독일 CARDIP® PPS · 250µm+ 도막의 스톤칩 보호 및 투명 마감',
       image: '/images/readdy/service-detail-ai-001.jpg',
       bgColor: 'bg-gradient-to-br from-red-50 to-gray-50',
-      badge: 'NEW TECH'
+      badge: '🇩🇪 CARDIP® PPS'
     },
     {
       id: 'pps-color',
       title: '컬러 PPS',
-      description: '슈퍼카 조색부터 듀오톤까지 도장 손상 없는 컬러 체인지',
+      description: '독일 CARDIP® Color · 정밀 조색 및 박리형 컬러 시스템',
       image: '/images/readdy/brand-tech-main-001.jpg',
       bgColor: 'bg-gradient-to-br from-amber-50 to-gray-50',
-      badge: 'NEW TECH'
+      badge: '🇩🇪 CARDIP® PPS'
     }
   ];
 

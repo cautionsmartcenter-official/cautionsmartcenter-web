@@ -167,6 +167,56 @@ export const AboutPage: React.FC = () => {
         </div>
       </section>
 
+      {/* ── 2.5 CARDIP Official Technical Partnership & Korean Distributor ── */}
+      <section className="py-20 px-6 sm:px-12 max-w-7xl mx-auto border-t border-white/10">
+        <div className="rounded-3xl bg-gradient-to-br from-neutral-900 via-neutral-950 to-black border border-white/15 p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 pb-8 border-b border-white/10">
+            <div>
+              <span className="text-xs font-bold font-roboto text-cardip-red bg-red-50 px-3.5 py-1.5 rounded-lg border border-red-200 uppercase tracking-widest">
+                General Distributor South Korea
+              </span>
+              <h3 className="text-2xl sm:text-4xl font-black font-roboto text-white mt-3 leading-tight">
+                독일 <span className="text-cardip-red">CARDIP®</span> 한국 공식 디스트리뷰터
+              </h3>
+              <p className="text-gray-300 text-sm sm:text-base mt-2 max-w-3xl font-sans leading-relaxed">
+                코션스마트센터는 독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터(General Distributor South Korea)입니다.<br className="hidden sm:inline" />
+                독일에서 연구·생산되는 CARDIP® PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
+              </p>
+            </div>
+            <div className="flex-shrink-0 bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex items-center justify-center">
+              <img
+                src="/images/cardip/cardip_logo_white.png"
+                alt="CARDIP Germany Official Logo"
+                className="h-10 sm:h-12 w-auto object-contain"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+            <div className="p-5 rounded-xl bg-black/40 border border-white/10">
+              <div className="text-xs font-mono text-red-400 font-bold mb-1">GERMAN HERITAGE</div>
+              <div className="text-base font-bold text-white font-mono">Made in Germany</div>
+              <p className="text-xs text-gray-400 mt-2">독일 본사 품질 기준에 따라 연구·생산되는 규격 도료 시스템</p>
+            </div>
+            <div className="p-5 rounded-xl bg-black/40 border border-white/10">
+              <div className="text-xs font-mono text-amber-400 font-bold mb-1">STRIKE RESISTANCE</div>
+              <div className="text-base font-bold text-white font-mono">DIN ISO 스톤칩 & 무황변</div>
+              <p className="text-xs text-gray-400 mt-2">DIN ISO 20567-1 고속 충격 시험 기준 스톤칩 저항성 및 Non-Yellowing 특성</p>
+            </div>
+            <div className="p-5 rounded-xl bg-black/40 border border-white/10">
+              <div className="text-xs font-mono text-emerald-400 font-bold mb-1">SEAMLESS FINISH</div>
+              <div className="text-base font-bold text-white font-mono">칼 없이 완성하는 Seamless 시공</div>
+              <p className="text-xs text-gray-400 mt-2">차량 표면에 칼을 대지 않는 분사 도포 방식으로 이음새 없는 자연스러운 마감</p>
+            </div>
+            <div className="p-5 rounded-xl bg-black/40 border border-white/10">
+              <div className="text-xs font-mono text-blue-400 font-bold mb-1">PEELABLE SYSTEM</div>
+              <div className="text-base font-bold text-white font-mono">무접착 방식의 박리 시스템</div>
+              <p className="text-xs text-gray-400 mt-2">접착제 없이 도포되어 필요 시 도장면에서 깔끔하게 제거되는 박리형 보호 시스템</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── 3. Our History Banner Section (history.png) ── */}
       <section className="py-20 bg-gradient-to-b from-black via-[#0c0505] to-black border-y border-white/10">
         <div className="max-w-7xl mx-auto px-6 sm:px-12">

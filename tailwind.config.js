@@ -13,12 +13,17 @@ export default {
           DEFAULT: '#111827',
           light: '#1F2937',
           pure: '#0B0F17'
+        },
+        cardip: {
+          red: '#C2181C',
+          dark: '#0F1C25',
         }
       },
       fontFamily: {
         sans: ['"Noto Sans KR"', '"Inter"', 'sans-serif'],
         serif: ['"Noto Sans KR"', 'serif'],
         mono: ['"Space Mono"', 'monospace'],
+        roboto: ['"Roboto"', 'sans-serif'],
       },
     },
   },

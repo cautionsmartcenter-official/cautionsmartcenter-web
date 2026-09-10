@@ -145,6 +145,253 @@ export const ReaddyBrandStory: React.FC = () => {
         </div>
       </section>
 
+      {/* 2.5 CARDIP Official Technical Partnership & Korean Distributor Section */}
+      <section className="py-24 lg:py-32 bg-white text-gray-900 relative overflow-hidden border-y border-gray-200">
+        {/* Subtle Brand Ambient Lighting */}
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#C2181C]/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#0F1C25]/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
+          {/* Section Header */}
+          <div className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-red-50 border border-red-200 rounded-full mb-6 shadow-sm"
+            >
+              <span className="w-2.5 h-2.5 rounded-full bg-cardip-red animate-pulse" />
+              <span className="text-xs sm:text-sm font-bold font-roboto text-cardip-red tracking-wider">
+                General Distributor South Korea
+              </span>
+            </motion.div>
+
+            {/* Title: Exactly '독일 CARDIP® 한국 공식 디스트리뷰터' */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-[52px] font-black text-cardip-dark tracking-tight leading-tight mb-6"
+            >
+              <span className="block break-keep">
+                독일 <span className="text-cardip-red font-roboto">CARDIP®</span> 한국 공식 디스트리뷰터
+              </span>
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-base sm:text-xl text-gray-700 leading-relaxed font-sans font-normal max-w-3xl mx-auto break-keep"
+            >
+              코션스마트센터는 독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터(General Distributor South Korea)입니다.<br className="hidden md:inline" />
+              독일에서 연구·생산되는 CARDIP® PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
+            </motion.p>
+          </div>
+
+          {/* 3-Column Expanded Showcase Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {/* Column 1: CARDIP System Overview & Official Application */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-gray-50/80 rounded-3xl p-8 sm:p-10 border border-gray-200 shadow-sm flex flex-col justify-start hover:shadow-md transition-all"
+            >
+              {/* Enlarged CARDIP Dark Logo */}
+              <div className="mb-8 pt-2">
+                <img
+                  src="/images/cardip/cardip_logo_dark.png"
+                  alt="CARDIP Official Logo"
+                  className="h-16 sm:h-20 lg:h-22 w-auto object-contain drop-shadow-sm"
+                />
+              </div>
+
+              {/* Body Explanation (Retained exact user requested text) */}
+              <div className="space-y-6 text-base sm:text-lg text-gray-800 leading-relaxed font-sans font-normal">
+                <p>
+                  차량 표면에 도료를 직접 분사 도포하는 방식으로 칼을 대지 않고 복잡한 곡면과 파츠까지 완벽한 일체형 마감을 구현하며, 필요에 따라 도장면 손상 없이 언제든 제거할 수 있는 박리형 시스템입니다.
+                </p>
+                <p>
+                  코션스마트센터는 독일 본사의 엄격한 기술 기준과 공인 마스터 테크니션의 시공 노하우를 바탕으로, 최고 품질의 정품 도료 공급 및 책임 시공을 제공합니다.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Column 2: Aqua+ PPS Pro Clear 5050 (PPS Base & Clear) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
+            >
+              <div>
+                {/* Large Product Can Showcase */}
+                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-6 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-red-50/30 transition-colors">
+                  <img
+                    src="/images/cardip/image10.png"
+                    alt="CARDIP Aqua+ PPS Pro Clear 5050"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-lg"
+                  />
+                </div>
+
+                {/* Product Badge & Title */}
+                <div className="space-y-2 mb-4">
+                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                    PPS BASE & CLEAR MATERIAL
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
+                    Aqua+ PPS Pro Clear 5050
+                  </h3>
+                </div>
+
+                {/* Product Description */}
+                <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
+                  <strong className="text-cardip-dark">250µm+의 압도적인 도막 두께</strong>와 탁월한 스톤칩 저항성을 갖춘 PPS 베이스 도료입니다. 투명하고 매끄러운 고광택 마감을 완성하며, 시공 후 차량 원도장 손상 없이 언제든 완벽하게 박리할 수 있는 친환경 수성 시스템입니다.
+                </p>
+              </div>
+
+              {/* Key Specs */}
+              <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">250µm+ 고강도 박리형 보호 도막 형성</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">칼 없이 완성하는 100% 무절개 분사 시공</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">도장면 잔여물 없는 깔끔한 원상복구</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Column 3: Reflow+ ClearCoat 9080 (Self-Healing Clear) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-dark/50 transition-all shadow-md flex flex-col justify-between group"
+            >
+              <div>
+                {/* Large Product Can Showcase */}
+                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-6 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-slate-100/50 transition-colors">
+                  <img
+                    src="/images/cardip/image11.png"
+                    alt="CARDIP Reflow+ ClearCoat 9080"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-lg"
+                  />
+                </div>
+
+                {/* Product Badge & Title */}
+                <div className="space-y-2 mb-4">
+                  <span className="inline-block text-xs font-bold font-roboto text-cardip-dark bg-slate-100 border border-slate-300 px-3 py-1 rounded-full uppercase tracking-wider">
+                    SELF-HEALING CLEARCOAT
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
+                    Reflow+ ClearCoat 9080
+                  </h3>
+                </div>
+
+                {/* Product Description */}
+                <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
+                  PPS 도막 표면을 완벽히 보호하는 <strong className="text-cardip-dark">Self-Healing(자가복원) 프리미엄 클리어코트</strong> 시스템입니다. 주행 중 발생하는 미세 스크래치가 상온 및 열에 의해 자연 치유되며, 깊고 선명한 쇼카 수준의 광택과 UV 차단 성능을 제공합니다.
+                </p>
+              </div>
+
+              {/* Key Specs */}
+              <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-dark text-base" />
+                  <span className="font-medium">미세 스크래치 셀프 힐링(자가복원) 기술</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-dark text-base" />
+                  <span className="font-medium">최고급 도장 수준의 깊은 하이글로시 광택</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-dark text-base" />
+                  <span className="font-medium">DIN ISO 기준 자외선 차단 및 무황변 특성</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* 4 Key Pillars of CARDIP Technology (White Theme High-Contrast Cards) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-2xl p-7 border border-gray-200 shadow-sm hover:border-cardip-red/40 hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-cardip-red text-2xl font-black font-roboto mb-4">
+                01
+              </div>
+              <h3 className="text-lg font-bold text-cardip-dark mb-2 font-roboto">Made in Germany</h3>
+              <p className="text-base text-gray-600 leading-relaxed font-sans">
+                독일 Colosol Coatings GmbH 본사에서 직접 연구·생산되는 최고 규격 정품 도료로, 독일 본사의 품질 기준에 따라 공급됩니다.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-2xl p-7 border border-gray-200 shadow-sm hover:border-cardip-dark/40 hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-center text-cardip-dark text-2xl font-black font-roboto mb-4">
+                02
+              </div>
+              <h3 className="text-lg font-bold text-cardip-dark mb-2">칼 없이 완성하는 Seamless 시공</h3>
+              <p className="text-base text-gray-600 leading-relaxed font-sans">
+                차량 표면에 칼을 대지 않는 정밀 분사 도포 방식으로, 복잡한 곡면과 틈새까지 이음새 없이 자연스럽고 완벽하게 마감됩니다.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-2xl p-7 border border-gray-200 shadow-sm hover:border-cardip-red/40 hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-cardip-red text-2xl font-black font-roboto mb-4">
+                03
+              </div>
+              <h3 className="text-lg font-bold text-cardip-dark mb-2">무접착 방식의 박리 시스템</h3>
+              <p className="text-base text-gray-600 leading-relaxed font-sans">
+                접착제 없이 도료가 자체 형성되어 도포되며, 필요 시 원도장면 손상이나 잔여물 없이 깔끔하게 제거할 수 있어 원형을 안전하게 보존합니다.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="bg-white rounded-2xl p-7 border border-gray-200 shadow-sm hover:border-cardip-dark/40 hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-center text-cardip-dark text-2xl font-black font-roboto mb-4">
+                04
+              </div>
+              <h3 className="text-lg font-bold text-cardip-dark mb-2 font-roboto">DIN ISO 스톤칩 & 무황변</h3>
+              <p className="text-base text-gray-600 leading-relaxed font-sans">
+                DIN ISO 20567-1 고속 충격 시험을 통과한 강력한 스톤칩 저항성과 Non-Yellowing 무황변 특성으로 오랜 시간 투명도와 보호 성능을 유지합니다.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* 3. Technology Section */}
       <section id="technology" className="py-24 lg:py-32 bg-gray-50">
         <div className="mx-auto px-6 lg:px-12 max-w-7xl">
@@ -158,7 +405,7 @@ export const ReaddyBrandStory: React.FC = () => {
               <span className="text-xs font-semibold text-white tracking-wider">TECHNOLOGY</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4 tracking-tight">
-              첨단 기술력
+              첨단 기술력 <span className="text-primary font-roboto">CurveRobot</span>
             </h2>
             <p className="text-base text-gray-600 max-w-2xl mx-auto">
               AI 로봇 기술과 전문 노하우의 완벽한 조화
@@ -171,11 +418,11 @@ export const ReaddyBrandStory: React.FC = () => {
             viewport={{ once: true }}
             className="mb-16"
           >
-            <div className="rounded-3xl overflow-hidden shadow-2xl bg-black">
-              <div className="w-full h-[500px]">
+            <div className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-gray-200">
+              <div className="w-full h-[450px] sm:h-[550px] lg:h-[620px]">
                 <img
-                  src="/images/readdy/brand-tech-main-001.jpg"
-                  alt="AI Technology"
+                  src="/images/curverobot_urus_booth.jpg"
+                  alt="도장 부스 내 CurveRobot 지능형 로봇팔의 람보르기니 우루스 정밀 도장"
                   className="w-full h-full object-cover object-center"
                 />
               </div>

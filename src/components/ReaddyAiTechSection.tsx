@@ -1,7 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export const ReaddyAiTechSection: React.FC = () => {
+interface ReaddyAiTechSectionProps {
+  onNavigateToBrandTech?: () => void;
+}
+
+export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavigateToBrandTech }) => {
   const points = [
     '정밀한 AI 로봇 시공',
     '균일한 코팅 두께',
@@ -53,8 +57,13 @@ export const ReaddyAiTechSection: React.FC = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="inline-block px-4 py-2 bg-primary rounded-full mb-6 shadow-sm">
-              <span className="text-xs font-semibold text-white tracking-wider">AI TECHNOLOGY</span>
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="inline-block px-4 py-2 bg-primary rounded-full shadow-sm">
+                <span className="text-xs font-semibold text-white tracking-wider">AI TECHNOLOGY</span>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-200 rounded-full">
+                <span className="text-[11px] font-bold text-gray-800">🇩🇪 독일 CARDIP® 한국 공식 디스트리뷰터</span>
+              </div>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6 tracking-tight">
@@ -62,8 +71,11 @@ export const ReaddyAiTechSection: React.FC = () => {
               완벽한 페인트 보호막
             </h2>
 
-            <p className="text-base text-gray-600 leading-relaxed mb-8">
-              기존 필름 랩핑을 뛰어넘는 혁신 솔루션, <strong>CARDIP Peelable Paint</strong> (카딥의 뿌리는 페인트). CAUTION의 AI 로봇 기술은 미세한 부분까지 완벽하게 시공하여 차량의 페인트를 완벽히 보호하며, 언제든 신차 본래 도장으로 100% 원복이 가능합니다.
+            <p className="text-base text-gray-600 leading-relaxed mb-6">
+              코션스마트센터는 독일 <strong className="text-gray-900">Colosol Coatings GmbH</strong>의 <strong>한국 공식 디스트리뷰터</strong>입니다. 독일에서 연구·생산되는 <strong className="text-gray-900">CARDIP® PPS</strong> 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 전문 시공 서비스를 제공합니다.
+            </p>
+            <p className="text-sm text-gray-500 leading-relaxed mb-8">
+              AI 로봇 스프레이 시스템을 통해 차량의 굴곡과 디테일에 맞춰 도료를 정밀 도포하며, 칼을 대지 않는 Seamless 시공으로 도장면을 보호하고 필요 시 도장면에서 제거할 수 있는 박리형 시스템을 구현합니다.
             </p>
 
             <div className="space-y-4 mb-10">
@@ -84,13 +96,13 @@ export const ReaddyAiTechSection: React.FC = () => {
               ))}
             </div>
 
-            <a
-              href="#contact"
+            <button
+              onClick={onNavigateToBrandTech}
               className="inline-flex items-center gap-3 px-8 py-4 bg-white border-2 border-dark text-dark text-sm font-semibold rounded-full hover:bg-dark hover:text-white transition-all whitespace-nowrap cursor-pointer group shadow-sm hover:shadow-md"
             >
               <span>기술 상세보기</span>
               <i className="ri-arrow-right-up-line text-lg group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </a>
+            </button>
           </motion.div>
         </div>
       </div>
