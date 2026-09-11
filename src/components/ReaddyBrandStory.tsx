@@ -200,12 +200,12 @@ export const ReaddyBrandStory: React.FC = () => {
               viewport={{ once: true }}
               className="bg-gray-50/80 rounded-3xl p-8 sm:p-10 border border-gray-200 shadow-sm flex flex-col justify-start hover:shadow-md transition-all"
             >
-              {/* Enlarged CARDIP Dark Logo */}
+              {/* CARDIP Official Color Logo */}
               <div className="mb-8 pt-2">
                 <img
-                  src="/images/cardip/cardip_logo_dark.png"
+                  src="/images/cardip/cardip_official_color_logo.svg"
                   alt="CARDIP Official Logo"
-                  className="h-16 sm:h-20 lg:h-22 w-auto object-contain drop-shadow-sm"
+                  className="h-12 sm:h-14 lg:h-16 w-auto object-contain drop-shadow-sm"
                 />
               </div>
 
