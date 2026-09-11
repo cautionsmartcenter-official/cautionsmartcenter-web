@@ -197,25 +197,53 @@ export const ReaddyBrandStory: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-gray-50/80 rounded-3xl p-8 sm:p-10 border border-gray-200 shadow-sm flex flex-col justify-start hover:shadow-md transition-all"
+              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
-              {/* CARDIP Official Color Logo */}
-              <div className="mb-8 pt-2">
-                <img
-                  src="/images/cardip/cardip_official_color_logo.svg"
-                  alt="CARDIP Official Logo"
-                  className="h-12 sm:h-14 lg:h-16 w-auto object-contain drop-shadow-sm"
-                />
+              <div>
+                {/* Large Product Showcase Container */}
+                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-6 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-red-50/30 transition-colors">
+                  <img
+                    src="/images/cardip/cardip_system_showcase.svg"
+                    alt="CARDIP Peelable Paint System"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-lg"
+                  />
+                </div>
+
+                {/* Product Badge & Title */}
+                <div className="space-y-2 mb-4">
+                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                    PEELABLE PAINT SYSTEM
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
+                    CARDIP® Peelable PPS
+                  </h3>
+                </div>
+
+                {/* Body Explanation */}
+                <div className="space-y-3 text-base text-gray-700 leading-relaxed font-sans mb-6">
+                  <p>
+                    차량 표면에 도료를 직접 분사 도포하는 방식으로 칼을 대지 않고 복잡한 곡면과 파츠까지 완벽한 일체형 마감을 구현하며, 필요에 따라 도장면 손상 없이 언제든 제거할 수 있는 Peelable Paint 시스템입니다.
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    코션스마트센터는 독일 본사의 엄격한 기술 기준과 공인 마스터 테크니션의 시공 노하우를 바탕으로, 최고 품질의 정품 도료 공급 및 책임 시공을 제공합니다.
+                  </p>
+                </div>
               </div>
 
-              {/* Body Explanation (Retained exact user requested text) */}
-              <div className="space-y-6 text-base sm:text-lg text-gray-800 leading-relaxed font-sans font-normal">
-                <p>
-                  차량 표면에 도료를 직접 분사 도포하는 방식으로 칼을 대지 않고 복잡한 곡면과 파츠까지 완벽한 일체형 마감을 구현하며, 필요에 따라 도장면 손상 없이 언제든 제거할 수 있는 Peelable Paint 시스템입니다.
-                </p>
-                <p>
-                  코션스마트센터는 독일 본사의 엄격한 기술 기준과 공인 마스터 테크니션의 시공 노하우를 바탕으로, 최고 품질의 정품 도료 공급 및 책임 시공을 제공합니다.
-                </p>
+              {/* Key Specs */}
+              <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">칼 없이 완성하는 100% 무절개 분사 시공</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">독일 본사 엄격한 품질 기준 정품 도료 공급</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">원도장 손상 없는 100% 무손상 박리 원상복구</span>
+                </div>
               </div>
             </motion.div>
 
