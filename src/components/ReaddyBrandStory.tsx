@@ -186,7 +186,6 @@ export const ReaddyBrandStory: React.FC = () => {
               transition={{ delay: 0.2 }}
               className="text-base sm:text-xl text-gray-700 leading-relaxed font-sans font-normal max-w-3xl mx-auto break-keep"
             >
-              코션스마트센터는 독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터(General Distributor South Korea)입니다.<br className="hidden md:inline" />
               독일에서 연구·생산되는 CARDIP® PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
             </motion.p>
           </div>

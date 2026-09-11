@@ -179,7 +179,6 @@ export const AboutPage: React.FC = () => {
                 독일 <span className="text-cardip-red">CARDIP®</span> 한국 공식 디스트리뷰터
               </h3>
               <p className="text-gray-300 text-sm sm:text-base mt-2 max-w-3xl font-sans leading-relaxed">
-                코션스마트센터는 독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터(General Distributor South Korea)입니다.<br className="hidden sm:inline" />
                 독일에서 연구·생산되는 CARDIP® PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
               </p>
             </div>
