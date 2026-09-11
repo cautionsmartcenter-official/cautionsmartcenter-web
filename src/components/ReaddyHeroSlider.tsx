@@ -15,33 +15,33 @@ const HERO_SLIDES: SlideItem[] = [
     id: 1,
     image: '/images/hero/slide1.png',
     tag: 'SIGNATURE COLOR CHANGE PPS',
-    title: '마이바흐 듀오톤 컬러PPS',
-    subtitle: 'MAYBACH S-CLASS DUO-TONE',
-    description: '순정 듀오톤의 품격과 도장면 보호를 동시에 완성하는 최고급 박리형 컬러PPS'
+    title: '마이바흐 투톤 컬러PPS',
+    subtitle: 'MAYBACH S-CLASS TWO-TONE',
+    description: '순정 투톤의 품격과 도장면 보호를 동시에 완성하는 최고급 Peelable Paint 피러블페인트 컬러PPS 노틱블루 | 라이트로즈골드'
   },
   {
     id: 2,
     image: '/images/hero/slide2.png',
-    tag: 'ULTRA HIGH-GLOSS CLEAR PPS',
-    title: '마이바흐 퓨어 화이트 & 광택 복원',
-    subtitle: 'MAYBACH S-CLASS PURE WHITE',
-    description: '쇼카 수준의 깊고 선명한 리플렉션과 스톤칩 완벽 차단 투명 PPS 솔루션'
+    tag: 'SIGNATURE COLOR CHANGE PPS',
+    title: '마이바흐 투톤 컬러PPS',
+    subtitle: 'MAYBACH S-CLASS TWO-TONE',
+    description: '순정 투톤의 품격과 도장면 보호를 동시에 완성하는 최고급 Peelable Paint 피러블페인트 컬러PPS 베르데실버 | 오팔라이트화이트'
   },
   {
     id: 3,
     image: '/images/hero/slide3.png',
     tag: 'MATTE PROTECTION SYSTEM',
-    title: 'BMW X7 사틴 매트 블랙 PPS',
-    subtitle: 'BMW X7 SATIN MATTE BLACK',
-    description: '원도장 손상 없이 고급스러운 반무광 사틴 질감으로 전환하는 무절개 보호막'
+    title: 'BMW X7 무광PPS',
+    subtitle: 'BMW X7 MATT PPS',
+    description: '원도장 손상 없이 고급스러운 반무광 사틴 질감으로 전환하는 무광 보호 솔루션 MATT PPS'
   },
   {
     id: 4,
     image: '/images/hero/slide4.png',
     tag: 'SUPERCAR SEAMLESS PROTECTION',
-    title: '람보르기니 아벤타도르 SVJ 컬러 커스텀',
-    subtitle: 'LAMBORGHINI AVENTADOR SVJ PURPLE',
-    description: '복잡한 에어로 파츠와 극단적 곡면까지 칼 없이 완성하는 AI 로봇 정밀 시공'
+    title: '람보르기니 아벤타도르 컬러PPS',
+    subtitle: 'LAMBORGHINI AVENTADOR AD PERSONAM',
+    description: '복잡한 에어로 파츠와 극단적 곡면까지 칼 없이 완성하는 컬러PPS 비올라피네오 | 비올라 헤스티아'
   }
 ];
 

@@ -263,26 +263,31 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                       </div>
 
                       {/* Action */}
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span className="text-xs font-bold text-gray-500 group-hover:text-primary transition-colors flex items-center gap-1">
-                          {item.linkType === 'instagram' ? (
-                            <>
-                              <i className="ri-instagram-line text-pink-600" />
-                              <span>인스타 시공 릴스 보기</span>
-                            </>
-                          ) : item.linkType === 'blog' ? (
-                            <>
-                              <span className="text-[#03C75A] font-black text-[11px]">N</span>
-                              <span>블로그 상세 복원기</span>
-                            </>
-                          ) : (
-                            <span>상세 시공기 보기</span>
-                          )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const serviceTarget =
+                            item.category === 'repair'
+                              ? '수입차 정비'
+                              : item.category === 'paint'
+                              ? '판금도색'
+                              : item.category === 'detailing'
+                              ? '디테일링'
+                              : item.category === 'color-pps'
+                              ? '컬러PPS'
+                              : '투명PPS';
+                          onNavigateToContact(serviceTarget);
+                        }}
+                        className="w-full flex items-center justify-between pt-4 border-t border-gray-100 cursor-pointer group/btn"
+                      >
+                        <span className="text-xs font-bold text-gray-500 group-hover/btn:text-primary transition-colors flex items-center gap-1">
+                          <i className="ri-message-3-line text-primary" />
+                          <span>이 시공 상담하기</span>
                         </span>
-                        <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover/btn:bg-primary group-hover/btn:text-white transition-all">
                           <i className="ri-arrow-right-up-line text-base font-bold" />
                         </div>
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </motion.div>
@@ -417,45 +422,7 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                   </ul>
                 </div>
 
-                {/* External Post Direct Link Button if available */}
-                {activeModalItem.linkUrl && (
-                  <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      {activeModalItem.linkType === 'instagram' ? (
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 text-white flex items-center justify-center text-xl shrink-0">
-                          <i className="ri-instagram-line" />
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 rounded-xl bg-[#03C75A] text-white flex items-center justify-center text-lg font-black shrink-0">
-                          N
-                        </div>
-                      )}
-                      <div>
-                        <div className="text-xs font-bold text-slate-900">
-                          {activeModalItem.linkType === 'instagram'
-                            ? '인스타그램 공식 시공 릴스/게시물'
-                            : '네이버 블로그 상세 복원 포스팅'}
-                        </div>
-                        <div className="text-[11px] text-slate-500">
-                          실제 작업 과정 사진과 영상을 원문으로 바로 확인하실 수 있습니다.
-                        </div>
-                      </div>
-                    </div>
-                    <a
-                      href={activeModalItem.linkUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`px-4 py-2 text-xs font-bold rounded-full text-white transition-all shrink-0 flex items-center gap-1.5 shadow ${
-                        activeModalItem.linkType === 'instagram'
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
-                          : 'bg-[#03C75A] hover:bg-[#02b350]'
-                      }`}
-                    >
-                      <span>원문 보기</span>
-                      <i className="ri-external-link-line" />
-                    </a>
-                  </div>
-                )}
+
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <button

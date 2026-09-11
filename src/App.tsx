@@ -28,6 +28,22 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /* ── Navigate to Service Section on Services Page ── */
+  const handleNavigateToServiceSection = (serviceId: string) => {
+    setActiveTab('services');
+    setTimeout(() => {
+      const el = document.getElementById(serviceId);
+      if (el) {
+        // Adjust for header offset + extra padding
+        const yOffset = -140; 
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 150);
+  };
+
   /* ── Navigate to Contact Section with Service Pre-Selected ── */
   const handleNavigateToContact = (serviceName?: string) => {
     if (serviceName) {
@@ -46,7 +62,9 @@ export default function App() {
       setTimeout(() => {
         const el = document.getElementById(targetId);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+          const yOffset = -140;
+          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -91,6 +109,8 @@ export default function App() {
           setActiveTab(tab);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
+        onSelectService={handleNavigateToServiceSection}
+        onSelectBrandStory={handleNavigateToBrandStory}
       />
 
       {/* ── 2. Brand Story View ── */}

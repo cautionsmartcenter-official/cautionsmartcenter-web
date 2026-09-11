@@ -75,7 +75,7 @@ export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavi
               코션스마트센터는 독일 <strong className="text-gray-900">Colosol Coatings GmbH</strong>의 <strong>한국 공식 디스트리뷰터</strong>입니다. 독일에서 연구·생산되는 <strong className="text-gray-900">CARDIP® PPS</strong> 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 전문 시공 서비스를 제공합니다.
             </p>
             <p className="text-sm text-gray-500 leading-relaxed mb-8">
-              AI 로봇 스프레이 시스템을 통해 차량의 굴곡과 디테일에 맞춰 도료를 정밀 도포하며, 칼을 대지 않는 Seamless 시공으로 도장면을 보호하고 필요 시 도장면에서 제거할 수 있는 박리형 시스템을 구현합니다.
+              AI 로봇 스프레이 시스템을 통해 차량의 굴곡과 디테일에 맞춰 도료를 정밀 도포하며, 칼을 대지 않는 Seamless 시공으로 도장면을 보호하고 필요 시 도장면에서 제거할 수 있는 Peelable Paint 시스템을 구현합니다.
             </p>
 
             <div className="space-y-4 mb-10">

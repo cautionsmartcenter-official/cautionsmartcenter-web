@@ -87,7 +87,7 @@ export const ReaddyBrandStory: React.FC = () => {
       </section>
 
       {/* 2. Our Story Section */}
-      <section className="py-24 lg:py-32 bg-white">
+      <section id="our-story" className="py-24 lg:py-32 bg-white">
         <div className="mx-auto px-6 lg:px-12 max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -146,7 +146,7 @@ export const ReaddyBrandStory: React.FC = () => {
       </section>
 
       {/* 2.5 CARDIP Official Technical Partnership & Korean Distributor Section */}
-      <section className="py-24 lg:py-32 bg-white text-gray-900 relative overflow-hidden border-y border-gray-200">
+      <section id="distributor" className="py-24 lg:py-32 bg-white text-gray-900 relative overflow-hidden border-y border-gray-200">
         {/* Subtle Brand Ambient Lighting */}
         <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#C2181C]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#0F1C25]/5 rounded-full blur-3xl pointer-events-none" />
@@ -212,7 +212,7 @@ export const ReaddyBrandStory: React.FC = () => {
               {/* Body Explanation (Retained exact user requested text) */}
               <div className="space-y-6 text-base sm:text-lg text-gray-800 leading-relaxed font-sans font-normal">
                 <p>
-                  차량 표면에 도료를 직접 분사 도포하는 방식으로 칼을 대지 않고 복잡한 곡면과 파츠까지 완벽한 일체형 마감을 구현하며, 필요에 따라 도장면 손상 없이 언제든 제거할 수 있는 박리형 시스템입니다.
+                  차량 표면에 도료를 직접 분사 도포하는 방식으로 칼을 대지 않고 복잡한 곡면과 파츠까지 완벽한 일체형 마감을 구현하며, 필요에 따라 도장면 손상 없이 언제든 제거할 수 있는 Peelable Paint 시스템입니다.
                 </p>
                 <p>
                   코션스마트센터는 독일 본사의 엄격한 기술 기준과 공인 마스터 테크니션의 시공 노하우를 바탕으로, 최고 품질의 정품 도료 공급 및 책임 시공을 제공합니다.
@@ -258,7 +258,7 @@ export const ReaddyBrandStory: React.FC = () => {
               <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">250µm+ 고강도 박리형 보호 도막 형성</span>
+                  <span className="font-medium">250µm+ 고강도 Peelable Paint 보호 도막 형성</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
@@ -451,7 +451,7 @@ export const ReaddyBrandStory: React.FC = () => {
       </section>
 
       {/* 4. Core Values Section */}
-      <section className="py-24 lg:py-32 bg-white">
+      <section id="core-values" className="py-24 lg:py-32 bg-white">
         <div className="mx-auto px-6 lg:px-12 max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

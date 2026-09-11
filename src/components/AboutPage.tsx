@@ -211,7 +211,7 @@ export const AboutPage: React.FC = () => {
             <div className="p-5 rounded-xl bg-black/40 border border-white/10">
               <div className="text-xs font-mono text-blue-400 font-bold mb-1">PEELABLE SYSTEM</div>
               <div className="text-base font-bold text-white font-mono">무접착 방식의 박리 시스템</div>
-              <p className="text-xs text-gray-400 mt-2">접착제 없이 도포되어 필요 시 도장면에서 깔끔하게 제거되는 박리형 보호 시스템</p>
+              <p className="text-xs text-gray-400 mt-2">접착제 없이 도포되어 필요 시 도장면에서 깔끔하게 제거되는 Peelable Paint 보호 시스템</p>
             </div>
           </div>
         </div>

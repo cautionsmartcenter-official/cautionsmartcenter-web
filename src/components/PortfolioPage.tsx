@@ -53,7 +53,7 @@ export const PortfolioPage: React.FC = () => {
       category: 'maybach',
       categoryLabel: 'Maybach',
       image: '/images/portfolio_maybach_detail.png',
-      desc: '상단 바디에 컬러PPS 적용으로 순정 듀오톤 표현과 마이바흐 품격 완성',
+      desc: '상단 바디에 컬러PPS 적용으로 순정 투톤 표현과 마이바흐 품격 완성',
     },
     {
       id: 'maybach_2',

@@ -39,7 +39,7 @@ const REVIEWS_DATA: Review[] = [
     name: '박지영 고객님',
     avatar: '/images/readdy/customer-002.jpg',
     vehicle: '메르세데스-마이바흐 S580 (Mercedes-Benz Maybach)',
-    service: '마이바흐 듀오톤 컬러PPS & 판금도색',
+    service: '마이바흐 투톤 컬러PPS & 판금도색',
     rating: 5,
     date: '2024.10',
     comment: '수입차 정비부터 디테일링까지 한 곳에서 모두 해결할 수 있어서 너무 편리합니다. 특히 판금도색 작업이 정말 완벽했어요. 색상 매칭도 정확하고 마감도 깔끔해서 사고 전보다 더 좋아 보입니다. 강력 추천합니다!',

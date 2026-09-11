@@ -39,7 +39,7 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
     {
       id: 'pps-color',
       title: '컬러 PPS',
-      description: '독일 CARDIP® Color · 정밀 조색 및 박리형 컬러 시스템',
+      description: '독일 CARDIP® Color · 정밀 조색 및 Peelable Paint 컬러 시스템',
       image: '/images/readdy/brand-tech-main-001.jpg',
       bgColor: 'bg-gradient-to-br from-amber-50 to-gray-50',
       badge: '🇩🇪 CARDIP® PPS'

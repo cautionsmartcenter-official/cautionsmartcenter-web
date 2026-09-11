@@ -132,11 +132,11 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
   'pps-clear': {
     id: 'pps-clear',
     title: '투명 PPS (Paint Protection Spray)',
-    subtitle: '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
-    description: '독일 Colosol Coatings GmbH의 공식 테크니컬 파트너이자 한국 공식 디스트리뷰터로서, 독일에서 연구·생산되는 CARDIP® PPS를 기반으로 전문 시공 서비스를 제공합니다. 250µm+의 도막 두께로 스톤칩과 외부 오염으로부터 도장면을 보호하며, 필요 시 도장면에서 제거할 수 있는 박리형 시스템입니다.',
+    subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
+    description: '독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터로서, 독일에서 연구·생산되는 CARDIP® PPS를 기반으로 전문 시공 서비스를 제공합니다. 250µm+의 도막 두께로 스톤칩과 외부 오염으로부터 도장면을 보호하며, 필요 시 도장면에서 제거할 수 있는 Peelable Paint 시스템입니다.',
     heroImage: '/images/readdy/service-hero-ai.jpg',
     features: [
-      '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
+      '독일 CARDIP® 한국 공식 디스트리뷰터',
       '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
       '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
       '무접착 방식의 박리 시스템 (도장면 손상 없는 제거)',
@@ -155,7 +155,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
       },
       {
         title: '무접착 방식의 박리 시스템',
-        desc: '접착제 없이 도포되어 필요 시 도장면에서 깔끔하게 제거할 수 있는 박리형 시스템으로 원도장면을 안전하게 보존합니다.'
+        desc: '접착제 없이 도포되어 필요 시 도장면에서 깔끔하게 제거할 수 있는 Peelable Paint 시스템으로 원도장면을 안전하게 보존합니다.'
       }
     ],
     process: [
@@ -170,12 +170,12 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
   'pps-color': {
     id: 'pps-color',
     title: '컬러 PPS (Color Paint Protection Spray)',
-    subtitle: '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
-    description: '독일 Colosol Coatings GmbH 본사의 기술 기준을 바탕으로 구현하는 Peelable Color Paint 시스템입니다. 전 세계 슈퍼카 순정 컬러부터 마이바흐 듀오톤까지 도색 표면 질감을 완성도 높게 구현하며, 필요 시 도장면에서 제거할 수 있는 혁신적인 컬러 체인지 솔루션입니다.',
+    subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
+    description: '독일 Colosol Coatings GmbH 본사의 기술 기준을 바탕으로 구현하는 Peelable Color Paint 시스템입니다. 전 세계 슈퍼카 순정 컬러부터 마이바흐 투톤까지 도색 표면 질감을 완성도 높게 구현하며, 필요 시 도장면에서 제거할 수 있는 혁신적인 컬러 체인지 솔루션입니다.',
     heroImage: '/images/readdy/brand-hero-001.jpg',
     features: [
-      '독일 CARDIP® 공식 테크니컬 파트너 & 한국 공식 디스트리뷰터',
-      '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 듀오톤 구현',
+      '독일 CARDIP® 한국 공식 디스트리뷰터',
+      '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 투톤 구현',
       '칼을 사용하지 않는 분사 방식으로 차량 손상 방지',
       '실제 도색 수준의 표면 질감과 깊이 있는 광택',
       '무접착 방식의 박리 시스템 (원도장면 보존)',
@@ -188,7 +188,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
         desc: '포르쉐·페라리 등 순정 컬러코드부터 사틴, 메탈릭, 펄 등 고객이 원하는 맞춤 색상을 도색 수준의 깊이 있는 질감으로 구현합니다.'
       },
       {
-        title: '마이바흐 듀오톤(Duo-Tone) 기술',
+        title: '마이바흐 투톤(Two-Tone) 기술',
         desc: '코션스마트센터의 정밀 코치라인 분할 기술을 통해 마이바흐, 롤스로이스 등의 명품 투톤 스타일을 도장면 손상 없이 완성합니다.'
       },
       {
@@ -209,7 +209,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     id: 'ai-tech',
     title: '투명 PPS (Paint Protection Spray)',
     subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터 정품 (Aqua+ Pro Clear 5050)',
-    description: '독일 Colosol Coatings GmbH 본사 공식 테크니컬 파트너십 및 한국 공식 디스트리뷰터 정품 도료. AI 로봇 스프레이 셀로 구현하는 차세대 페인트 보호 시스템으로 완벽한 무절개 보호를 제공합니다.',
+    description: '독일 Colosol Coatings GmbH 본사 한국 공식 디스트리뷰터 정품 도료. AI 로봇 스프레이 셀로 구현하는 차세대 페인트 보호 시스템으로 완벽한 무절개 보호를 제공합니다.',
     heroImage: '/images/readdy/service-hero-ai.jpg',
     features: [
       'AI 로봇 정밀 분사 시공',
@@ -373,94 +373,44 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
 
       {/* 3.5 CARDIP Official Material Tech Spec & 3-Way Comparison Table (Only for PPS & AI-Tech) */}
       {(service.id === 'pps-clear' || service.id === 'pps-color' || service.id === 'ai-tech') && (
-        <section className="py-20 sm:py-28 bg-[#090b10] text-white relative overflow-hidden border-y border-white/10">
-          <div className="absolute top-0 right-1/3 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <section className="py-20 sm:py-28 bg-white text-gray-900 relative overflow-hidden border-y border-gray-100">
+          <div className="absolute top-0 right-1/3 w-96 h-96 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-red-600/20 to-amber-500/20 border border-red-500/30 rounded-full mb-4">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-50 border border-gray-200 rounded-full mb-4">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                <span className="text-xs font-bold text-amber-300 tracking-wider uppercase">
+                <span className="text-xs font-bold text-gray-700 tracking-wider uppercase">
                   GERMAN CARDIP® GENUINE MATERIAL
                 </span>
               </div>
-              <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
-                독일 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-white">CARDIP®</span> 공식 테크니컬 파트너<br className="hidden sm:inline" />
-                & 한국 공식 디스트리뷰터
+              <h2 className="text-3xl sm:text-5xl font-black text-gray-900 tracking-tight leading-tight mb-4">
+                독일 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-amber-500">CARDIP®</span> 한국 공식 디스트리뷰터
               </h2>
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-sans">
-                코션스마트센터는 독일 Colosol Coatings GmbH의 공식 테크니컬 파트너이자 한국 공식 디스트리뷰터(Official Korean Distributor)입니다.<br className="hidden sm:inline" />
+              <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-sans">
+                코션스마트센터는 독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터(Official Korean Distributor)입니다.<br className="hidden sm:inline" />
                 독일에서 연구·생산되는 CARDIP® PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
               </p>
             </div>
 
-            {/* Genuine Product Cans Showcase */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-              <div className="bg-gradient-to-br from-neutral-900 to-neutral-950 p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-red-500/40 transition-all shadow-xl flex flex-col sm:flex-row items-center gap-6">
-                <div className="w-36 h-36 flex-shrink-0 bg-white rounded-2xl p-3 flex items-center justify-center overflow-hidden shadow-inner">
-                  <img
-                    src="/images/cardip/image10.png"
-                    alt="CARDIP Aqua+ PPS Pro Clear 5050"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">
-                      🇩🇪 GERMANY 1K 수성
-                    </span>
-                    <span className="text-[10px] font-mono text-gray-400">DIN ISO 20567-1</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white">Aqua+ PPS Pro Clear 5050</h3>
-                  <p className="text-xs text-amber-300/90 font-mono mt-1 mb-2">PPS Base Protection Material</p>
-                  <p className="text-xs text-gray-400 leading-relaxed font-sans">
-                    250µm+의 도막 두께와 높은 스톤칩 저항성을 갖춘 PPS 베이스 제품. 투명한 마감과 박리 가능한 도료 시스템
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-neutral-900 to-neutral-950 p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-amber-500/40 transition-all shadow-xl flex flex-col sm:flex-row items-center gap-6">
-                <div className="w-36 h-36 flex-shrink-0 bg-white rounded-2xl p-3 flex items-center justify-center overflow-hidden shadow-inner">
-                  <img
-                    src="/images/cardip/image11.png"
-                    alt="CARDIP Reflow+ ClearCoat 9080"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                      🇩🇪 GERMANY 2K 수성
-                    </span>
-                    <span className="text-[10px] font-mono text-gray-400">SELF-HEALING</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white">Reflow+ ClearCoat 9080</h3>
-                  <p className="text-xs text-amber-300/90 font-mono mt-1 mb-2">Self-Healing Automotive ClearCoat</p>
-                  <p className="text-xs text-gray-400 leading-relaxed font-sans">
-                    PPS 표면을 보호하는 Self-Healing ClearCoat. 높은 광택과 표면 보호 성능을 위한 클리어코트 시스템
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* 4-Layer Precision System Graphic */}
-            <div className="rounded-3xl bg-neutral-950/80 border border-white/15 p-8 sm:p-12 mb-20 shadow-2xl">
+            <div className="rounded-3xl bg-gray-50 border border-gray-200 p-8 sm:p-12 mb-20 shadow-lg">
               <div className="text-center max-w-2xl mx-auto mb-10">
-                <span className="text-xs font-mono font-bold text-red-400 uppercase tracking-widest block mb-2">
+                <span className="text-xs font-mono font-bold text-red-500 uppercase tracking-widest block mb-2">
                   MULTI-LAYER ARCHITECTURE
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-white font-mono">
+                <h3 className="text-2xl sm:text-3xl font-black text-gray-900 font-mono">
                   CARDIP® 정밀 4단계 멀티레이어 구조
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-400 mt-2">
-                  차량 도장면을 보호하고 필요 시 도장면에서 제거할 수 있는 박리형 다층 도료 시스템
+                <p className="text-xs sm:text-sm text-gray-600 mt-2">
+                  차량 도장면을 보호하고 필요 시 도장면에서 제거할 수 있는 Peelable Paint 다층 도료 시스템
                 </p>
               </div>
 
               {/* Layer Diagram Image */}
-              <div className="bg-black/60 rounded-2xl p-4 sm:p-8 border border-white/10 mb-8 flex items-center justify-center overflow-hidden">
+              <div className="bg-white rounded-2xl p-4 sm:p-8 border border-gray-200 mb-8 flex items-center justify-center overflow-hidden shadow-sm">
                 <img
                   src="/images/cardip/image12.png"
                   alt="CARDIP Multi-Layer Process"
@@ -470,135 +420,121 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
 
               {/* Layer Step Breakdown */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-xs font-mono text-gray-400 font-bold mb-1">STEP 00</div>
-                  <div className="text-sm font-bold text-white mb-1">신차 도장면 (Original Paint)</div>
-                  <p className="text-xs text-gray-400 leading-snug">
+                <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                  <div className="text-xs font-mono text-gray-500 font-bold mb-1">STEP 00</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">신차 도장면 (Original Paint)</div>
+                  <p className="text-xs text-gray-600 leading-snug">
                     샌딩 없이 원형 그대로 안전하게 보존되는 베이스 원도장면
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-xs font-mono text-red-400 font-bold mb-1">STEP 01</div>
-                  <div className="text-sm font-bold text-white mb-1">Aqua+ PPS BaseCoat</div>
-                  <p className="text-xs text-gray-400 leading-snug">
+                <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                  <div className="text-xs font-mono text-red-500 font-bold mb-1">STEP 01</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">Aqua+ PPS BaseCoat</div>
+                  <p className="text-xs text-gray-600 leading-snug">
                     250µm+ 도막 두께를 형성하고 박리를 지원하는 PPS 베이스 도료
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-xs font-mono text-amber-400 font-bold mb-1">STEP 02 (선택)</div>
-                  <div className="text-sm font-bold text-white mb-1">Aqua+ Color Coat</div>
-                  <p className="text-xs text-gray-400 leading-snug">
-                    슈퍼카 순정 색상부터 듀오톤까지 다양한 맞춤 컬러를 구현하는 컬러 도료
+                <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                  <div className="text-xs font-mono text-amber-500 font-bold mb-1">STEP 02 (선택)</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">Aqua+ Color Coat</div>
+                  <p className="text-xs text-gray-600 leading-snug">
+                    슈퍼카 순정 색상부터 투톤까지 다양한 맞춤 컬러를 구현하는 컬러 도료
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="text-xs font-mono text-blue-400 font-bold mb-1">STEP 03</div>
-                  <div className="text-sm font-bold text-white mb-1">Reflow+ ClearCoat 9080</div>
-                  <p className="text-xs text-gray-400 leading-snug">
+                <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                  <div className="text-xs font-mono text-blue-500 font-bold mb-1">STEP 03</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">Reflow+ ClearCoat 9080</div>
+                  <p className="text-xs text-gray-600 leading-snug">
                     고광택 표면 마감, Self-Healing 기능, 샌딩·광택(폴리싱) 지원
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* 3-Way Comparison Table */}
+            {/* Comparison Table */}
             <div>
               <div className="text-center max-w-3xl mx-auto mb-10">
-                <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-3.5 py-1.5 rounded-lg border border-amber-500/30 uppercase tracking-widest inline-block mb-3">
+                <span className="text-xs font-mono font-bold text-red-500 bg-red-50 px-3.5 py-1.5 rounded-lg border border-red-100 uppercase tracking-widest inline-block mb-3">
                   COMPREHENSIVE COMPARISON
                 </span>
-                <h3 className="text-2xl sm:text-4xl font-black text-white font-mono">
-                  전통 필름(PPF) vs 일반 랩핑(Wrap) vs 독일 CARDIP® PPS 비교
+                <h3 className="text-2xl sm:text-4xl font-black text-gray-900 font-mono">
+                  필름(PPF) vs 독일 CARDIP® PPS 비교
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-400 mt-2 font-sans">
-                  독일 본사 공식 비교 데이터(Comparison-wrap-paint-CARDIP) 기반 비교 분석
-                </p>
               </div>
 
               {/* Comparison Table */}
-              <div className="overflow-x-auto rounded-2xl border border-white/15 bg-neutral-950/90 shadow-2xl">
+              <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-lg">
                 <table className="w-full text-left border-collapse min-w-[700px]">
                   <thead>
-                    <tr className="border-b border-white/15 bg-black/80">
-                      <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-gray-400 uppercase">
+                    <tr className="border-b border-gray-200 bg-gray-50">
+                      <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-gray-600 uppercase">
                         비교 항목
                       </th>
-                      <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-gray-400 uppercase">
-                        전통 필름 (PPF)
+                      <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-gray-600 uppercase border-l border-gray-200">
+                        필름 (PPF)
                       </th>
-                      <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-gray-400 uppercase">
-                        일반 필름 랩핑 (Wrap)
-                      </th>
-                      <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-amber-300 uppercase bg-red-950/40 border-l border-red-500/30">
+                      <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-red-600 uppercase bg-red-50/50 border-l border-red-100">
                         독일 CARDIP® PPS (코션)
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/10 text-xs sm:text-sm font-sans">
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">시공 방식 (칼 사용)</td>
-                      <td className="py-4 px-6 text-gray-400">차량 표면 위 칼(나이프) 컷팅 방식</td>
-                      <td className="py-4 px-6 text-gray-400">칼 컷팅 및 필름 열성형 방식</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                  <tbody className="divide-y divide-gray-100 text-xs sm:text-sm font-sans">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">시공 방식 (칼 사용)</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">차량 표면 위 칼(나이프) 컷팅 방식</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ 칼을 사용하지 않는 Seamless 시공 (AI 분사)
                       </td>
                     </tr>
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">마감 이음새 (모서리)</td>
-                      <td className="py-4 px-6 text-gray-400">모서리 경계선 노출 및 때낌 우려</td>
-                      <td className="py-4 px-6 text-gray-400">마감 부위 열 수축 및 모서리 들뜸 우려</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">마감 이음새 (모서리)</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">모서리 경계선 노출 및 때낌 우려</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ 이음새 없는 자연스러운 마감
                       </td>
                     </tr>
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">복잡한 3D 형상 시공</td>
-                      <td className="py-4 px-6 text-gray-400">에어로 파츠, 그릴 등 부위 분할 시공</td>
-                      <td className="py-4 px-6 text-gray-400">깊은 곡면 시공 한계 및 필름 늘어남</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">복잡한 3D 형상 시공</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">에어로 파츠, 그릴 등 부위 분할 시공</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ 라디에이터 그릴, 엠블럼 등 3D 형상 일체형 도포
                       </td>
                     </tr>
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">도막 두께 & 스톤칩 저항</td>
-                      <td className="py-4 px-6 text-gray-400">약 150~180µm 필름 두께</td>
-                      <td className="py-4 px-6 text-gray-400">약 80~100µm (보호 목적 외 필름)</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">도막 두께 & 스톤칩 저항</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">약 150~180µm 필름 두께</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ 250µm+ 도막 두께 (DIN ISO 20567-1 시험 기준)
                       </td>
                     </tr>
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">표면 질감 & 광택</td>
-                      <td className="py-4 px-6 text-gray-400">필름 표면 오렌지필 및 광택 저하</td>
-                      <td className="py-4 px-6 text-gray-400">필름 소재 특유의 표면 질감</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">표면 질감 & 광택</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">필름 표면 오렌지필 및 광택 저하</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ 균일한 표면 레벨링 및 고광택 마감
                       </td>
                     </tr>
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">제거 (박리) 시 특성</td>
-                      <td className="py-4 px-6 text-gray-400">점착제 잔여물 발생 및 제거 작업 소요</td>
-                      <td className="py-4 px-6 text-gray-400">경화된 접착제 잔여 및 도장 영향 우려</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">제거 (박리) 시 특성</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">점착제 잔여물 발생 및 제거 작업 소요</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ 무접착 방식의 박리 시스템 (도장면 손상 없는 제거)
                       </td>
                     </tr>
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">사후 관리 및 광택</td>
-                      <td className="py-4 px-6 text-gray-400">광택 작업 불가, 손상 시 재시공</td>
-                      <td className="py-4 px-6 text-gray-400">광택기 사용 불가, 내구 연한 고려 필요</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">사후 관리 및 광택</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">광택 작업 불가, 손상 시 재시공</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ 샌딩, 광택(폴리싱), 코팅 작업 지원
                       </td>
                     </tr>
-                    <tr className="hover:bg-white/5 transition-colors">
-                      <td className="py-4 px-6 font-bold text-white bg-white/5">스크래치 자가치유</td>
-                      <td className="py-4 px-6 text-gray-400">열 반응 코팅층 적용</td>
-                      <td className="py-4 px-6 text-gray-400">자가치유 기능 없음</td>
-                      <td className="py-4 px-6 text-white font-bold bg-red-950/30 border-l border-red-500/30 text-amber-300">
+                    <tr className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">스크래치 자가치유</td>
+                      <td className="py-4 px-6 text-gray-600 border-l border-gray-100">열 반응 코팅층 적용</td>
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
                         ✓ Reflow+ 9080 Self-Healing (열 반응 자가치유)
                       </td>
                     </tr>
