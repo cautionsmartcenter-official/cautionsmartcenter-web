@@ -21,7 +21,7 @@ export function ConsultationFormSection({ initialService }: ConsultationFormSect
     phone: '',
     carModel: '',
     carType: 'sedan',
-    service: initialService || 'AI 로봇 PPS / PPCS',
+    service: initialService || '투명PPS',
     notes: '',
   });
 
@@ -104,7 +104,7 @@ export function ConsultationFormSection({ initialService }: ConsultationFormSect
               </span>
             </h2>
             <p className="text-gray-400 text-sm sm:text-base mt-4 leading-relaxed font-sans">
-              차량 관리, 판금도색, AI PPS 시공 등 궁금하신 사항을 남겨주시면 24년 경력의 전문 어드바이저가 빠르고 친절하게 맞춤 견적을 안내해 드립니다.
+              차량 관리, 판금도색, PPS 시공, CurveRobot 도장 등 궁금하신 사항을 남겨주시면 24년 경력의 전문 어드바이저가 빠르고 친절하게 맞춤 견적을 안내해 드립니다.
             </p>
 
             {/* Quick Contact Cards */}

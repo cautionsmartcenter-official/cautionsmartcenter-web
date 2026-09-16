@@ -15,12 +15,12 @@ export const SITE_CONFIG = {
     titleRight: ['CAUTION', 'SMART CENTER'],
     watermark: 'CAUTION SMART',
     description:
-      '24년 장인정신과 최첨단 AI 로봇기술의 만남. 분당·수원·용인·광주 수입차 사고수리, 판금도색, PPS 및 컬러PPS 완벽 시공 전문 브랜드.',
+      '24년 장인정신과 최첨단 CurveRobot 기술의 만남. 분당·수원·용인·광주 수입차 사고수리, 판금도색, PPS 및 컬러PPS 완벽 시공 전문 브랜드.',
   },
 
   // 시네마틱 텍스트 섹션
   cinematic: {
-    text: '단순한 정비를 넘어 슈퍼카 본연의 가치를 보존합니다. 독일 카딥(Cardip) 및 엑소쉴드(Exoshield) 독점 기술력과 24년 장인 정신, 최첨단 AI 로봇 분사 시스템으로 이질감 없는 완성도를 약속드립니다. 분당, 수원, 용인 등 수도권 전 지역 무료 픽업 & 드랍 서비스를 제공합니다.',
+    text: '단순한 정비를 넘어 슈퍼카 본연의 가치를 보존합니다. 독일 카딥(Cardip) 독점 기술력과 24년 장인 정신, 최첨단 CurveRobot 지능형 로봇 시스템으로 이질감 없는 완성도를 약속드립니다. 분당, 수원, 용인 등 수도권 전 지역 무료 픽업 & 드랍 서비스를 제공합니다.',
   },
 
   // 성능 지표 섹션
@@ -37,15 +37,15 @@ export const SITE_CONFIG = {
   technology: {
     title: ['Next-Gen', 'PPS Technology'],
     description:
-      '필름이 아닌 도장 기반 차세대 스피레이 보호막(PPS). 들뜸과 황변 없는 완벽한 내구성을 제공합니다.',
+      '필름이 아닌 도장 기반 차세대 스프레이 보호막(PPS). 들뜸과 황변 없는 완벽한 내구성을 제공합니다.',
     features: [
       {
-        title: 'AI Robot Spray',
-        desc: 'AI 로봇을 이용한 미세 단차 제로 정밀 분사 코팅',
+        title: 'CurveRobot Spray',
+        desc: 'CurveRobot을 이용한 미세 단차 제로 정밀 로봇 도장',
       },
       {
         title: 'Original Defense',
-        desc: '차량 원도장 손상 없는 깔끔한 박리 및 복원',
+        desc: '차량 원도장 손상 없이 깔끔하게 벗겨지는 복원력',
       },
       {
         title: 'Color Change PPS',
@@ -63,11 +63,11 @@ export const SITE_CONFIG = {
     subtitle: 'Work Process',
     heading: '4단계 맞춤형 정밀 시공 프로세스',
     description:
-      '차량 정밀 진단부터 원도장 케어, AI 분사 보호 레이어 적용, 최종 고광택 수제 마감까지 철저한 품질 관리를 보증합니다.',
+      '차량 정밀 진단부터 원도장 케어, 정밀 PPS 분사 보호 레이어 적용, 최종 고광택 수제 마감까지 철저한 품질 관리를 보증합니다.',
     layers: [
       { num: 1, name: '정밀 진단 (Diagnosis)' },
       { num: 2, name: '표면 연마 (Preparation)' },
-      { num: 3, name: 'AI PPS 분사 (Spray Layer)' },
+      { num: 3, name: '정밀 PPS 분사 (Spray Layer)' },
       { num: 4, name: '핸드메이드 마감 (Hand Finish)' },
     ],
   },

@@ -7,10 +7,10 @@ interface ReaddyAiTechSectionProps {
 
 export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavigateToBrandTech }) => {
   const points = [
-    '정밀한 AI 로봇 시공',
-    '균일한 코팅 두께',
-    '빠른 작업 시간',
-    '완벽한 마감 품질'
+    'CurveRobot 지능형 로봇 스프레이 공정',
+    '3D 스캐닝 기반 미세 단차 제로 정밀도',
+    'CARDIP® PPS 무칼 Seamless 도장 보호막',
+    '순정 도장면 100% 보존 및 깔끔하게 벗겨지는 특성'
   ];
 
   return (
@@ -27,7 +27,7 @@ export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavi
             <div className="relative rounded-3xl sm:rounded-[40px] overflow-hidden shadow-2xl bg-black aspect-square max-h-[500px]">
               <img
                 src="/images/readdy/ai-tech-main-001.jpg"
-                alt="AI Robot Technology"
+                alt="CurveRobot Technology"
                 className="w-full h-full object-cover object-center"
               />
             </div>
@@ -45,7 +45,7 @@ export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavi
                 <div>
                   <div className="text-3xl sm:text-4xl font-black text-white mb-0.5 sm:mb-1">99.9%</div>
                   <div className="text-xs sm:text-sm text-gray-300 font-medium">정밀도</div>
-                  <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5 sm:mt-1">AI 로봇 기술</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5 sm:mt-1">CurveRobot 자동화</div>
                 </div>
               </div>
             </motion.div>
@@ -59,23 +59,23 @@ export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavi
           >
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <div className="inline-block px-4 py-2 bg-primary rounded-full shadow-sm">
-                <span className="text-xs font-semibold text-white tracking-wider">AI TECHNOLOGY</span>
+                <span className="text-xs font-semibold text-white tracking-wider">CURVEROBOT & PPS</span>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-200 rounded-full">
-                <span className="text-[11px] font-bold text-gray-800">🇩🇪 독일 CARDIP® 한국 공식 디스트리뷰터</span>
+                <span className="text-[11px] font-bold text-gray-800">🇩🇪 독일 <span className="font-cardip font-black text-black">CARDIP®</span> 한국 공식 디스트리뷰터</span>
               </div>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6 tracking-tight">
-              AI 로봇이 만드는 <br />
-              완벽한 페인트 보호막
+              CurveRobot 지능형 로봇 도장과 <br />
+              <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS 시공 기술
             </h2>
 
             <p className="text-base text-gray-600 leading-relaxed mb-6">
-              코션스마트센터는 독일 <strong className="text-gray-900">Colosol Coatings GmbH</strong>의 <strong>한국 공식 디스트리뷰터</strong>입니다. 독일에서 연구·생산되는 <strong className="text-gray-900">CARDIP® PPS</strong> 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 전문 시공 서비스를 제공합니다.
+              코션스마트센터는 독일 <strong className="text-gray-900">Colosol Coatings GmbH</strong>의 <strong>한국 공식 디스트리뷰터</strong>입니다. 독일에서 연구·생산되는 <strong className="text-gray-900 font-cardip font-black">CARDIP®</strong> PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 전문 시공 서비스를 제공합니다.
             </p>
             <p className="text-sm text-gray-500 leading-relaxed mb-8">
-              AI 로봇 스프레이 시스템을 통해 차량의 굴곡과 디테일에 맞춰 도료를 정밀 도포하며, 칼을 대지 않는 Seamless 시공으로 도장면을 보호하고 필요 시 도장면에서 제거할 수 있는 Peelable Paint 시스템을 구현합니다.
+              지능형 <strong className="text-gray-900">CurveRobot</strong> 스프레이 시스템을 통해 차량의 굴곡과 디테일에 맞춰 정밀 도포하며, 칼을 대지 않는 Seamless 시공으로 도장면을 완벽 보호하고 필요 시 언제든 깔끔하게 제거할 수 있는 Peelable Paint 시스템을 구현합니다.
             </p>
 
             <div className="space-y-4 mb-10">

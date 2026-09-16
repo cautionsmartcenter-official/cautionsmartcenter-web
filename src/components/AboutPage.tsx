@@ -101,7 +101,7 @@ export const AboutPage: React.FC = () => {
               CAUTION SMART CENTER는 수입차 전문 정비의 오랜 경험과 노하우를 바탕으로 설립되었습니다. 우리는 단순한 정비를 넘어, 차량의 가치를 지키고 높이는 토탈 케어 솔루션을 제공합니다.
             </p>
             <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-              특히 AI 로봇 기술을 도입한 PPS/PPCS 서비스는 기존의 페인트 보호 방식을 혁신적으로 개선했습니다. 정밀한 센서와 알고리즘을 통해 균일하고 완벽한 코팅을 실현하며 사람의 손으로는 불가능한 수준의 품질을 보장합니다.
+              특히 CurveRobot 도장 시스템과 <span className="font-cardip font-bold text-white">CARDIP®</span> PPS 서비스는 기존의 도장 보호 및 외장 관리 방식을 혁신적으로 개선했습니다. 정밀한 센서와 알고리즘을 통해 균일하고 완벽한 코팅을 실현하며 최상의 품질을 보장합니다.
             </p>
           </motion.div>
         </div>
@@ -175,11 +175,11 @@ export const AboutPage: React.FC = () => {
               <span className="text-xs font-bold font-roboto text-cardip-red bg-red-50 px-3.5 py-1.5 rounded-lg border border-red-200 uppercase tracking-widest">
                 General Distributor South Korea
               </span>
-              <h3 className="text-2xl sm:text-4xl font-black font-roboto text-white mt-3 leading-tight">
-                독일 <span className="text-cardip-red">CARDIP®</span> 한국 공식 디스트리뷰터
+              <h3 className="text-2xl sm:text-4xl font-black font-cardip text-white mt-3 leading-tight">
+                독일 <span className="text-cardip-red font-cardip font-black">CARDIP®</span> 한국 공식 디스트리뷰터
               </h3>
               <p className="text-gray-300 text-sm sm:text-base mt-2 max-w-3xl font-sans leading-relaxed">
-                독일에서 연구·생산되는 CARDIP® PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
+                독일에서 연구·생산되는 <span className="font-cardip font-bold text-white">CARDIP®</span> PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
               </p>
             </div>
             <div className="flex-shrink-0 bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex items-center justify-center">
@@ -209,7 +209,7 @@ export const AboutPage: React.FC = () => {
             </div>
             <div className="p-5 rounded-xl bg-black/40 border border-white/10">
               <div className="text-xs font-mono text-blue-400 font-bold mb-1">PEELABLE SYSTEM</div>
-              <div className="text-base font-bold text-white font-mono">무접착 방식의 박리 시스템</div>
+              <div className="text-base font-bold text-white font-mono">무접착 방식으로 깔끔하게 벗겨지는 시스템</div>
               <p className="text-xs text-gray-400 mt-2">접착제 없이 도포되어 필요 시 도장면에서 깔끔하게 제거되는 Peelable Paint 보호 시스템</p>
             </div>
           </div>

@@ -141,7 +141,7 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
               </div>
               <div className="flex items-center gap-3 mt-3">
                 <div className="w-16 h-0.5 bg-primary" />
-                <span className="text-xs text-gray-500 font-mono">AI 로봇 자동차 외장관리 시스템</span>
+                <span className="text-xs text-gray-500 font-mono">CurveRobot 자동화 & 프리미엄 외장관리</span>
               </div>
             </div>
 
@@ -192,10 +192,10 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
                   <i className="ri-facebook-fill text-xl" />
                 </a>
                 <a
-                  href="https://youtube.com"
+                  href="https://www.youtube.com/@cautionsmartcenter_official"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                  className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
                   aria-label="YouTube"
                 >
                   <i className="ri-youtube-fill text-xl" />

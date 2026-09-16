@@ -28,10 +28,10 @@ const REVIEWS_DATA: Review[] = [
     name: '김민수 고객님',
     avatar: '/images/readdy/customer-001.jpg',
     vehicle: '람보르기니 우루스 (Lamborghini Urus)',
-    service: 'AI 로봇 바이올렛 컬러PPS 시공',
+    service: '바이올렛 컬러PPS 시공',
     rating: 5,
     date: '2024.11',
-    comment: 'AI 로봇 PPS 시공을 받았는데 정말 놀라웠습니다. 기존 랩핑과는 차원이 다른 마감 품질이에요. 균일한 코팅과 완벽한 광택, 그리고 무엇보다 내구성이 뛰어나서 매우 만족스럽습니다. CAUTION의 기술력은 정말 최고입니다.',
+    comment: 'PPS 시공을 받았는데 정말 놀라웠습니다. 기존 랩핑과는 차원이 다른 마감 품질이에요. 균일한 코팅과 완벽한 광택, 그리고 무엇보다 내구성이 뛰어나서 매우 만족스럽습니다. CAUTION의 기술력은 정말 최고입니다.',
     verified: true
   },
   {

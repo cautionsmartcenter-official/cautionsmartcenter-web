@@ -93,8 +93,8 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
                     />
                   </div>
                   {service.badge && (
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-primary rounded-full shadow-md">
-                      <span className="text-xs font-bold text-white">{service.badge}</span>
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-cardip-red rounded-full shadow-md">
+                      <span className="text-xs font-cardip font-bold text-white tracking-wide">{service.badge}</span>
                     </div>
                   )}
                 </div>

@@ -29,7 +29,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     title: '포르쉐 911 GT3 RS 풀바디 투명 PPS 시공',
     carModel: 'Porsche 911 GT3 RS (992)',
     image: '/images/readdy/service-hero-ai.jpg',
-    tags: ['투명 PPS', '무황변', '자가 복원', 'AI 로봇 시공'],
+    tags: ['투명 PPS', '무황변', '자가 복원', 'CARDIP 정품'],
     summary: '초고속 트랙 주행에 최적화된 완벽한 스톤칩 방어 및 굴곡 부위 무절개 일체형 시공',
     details: [
       '스톤칩 및 미세 스크래치 100% 자가 치유(Self-Healing)',

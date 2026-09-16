@@ -55,14 +55,15 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
     },
     {
       id: 'pps-clear',
-      title: '투명 PPS (Paint Protection Spray)',
+      title: '투명 PPS',
+      engTitle: '(Paint Protection Spray)',
       subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
       description: '독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터로서, 독일에서 연구·생산되는 CARDIP® PPS를 기반으로 전문 시공 서비스를 제공합니다. 250µm+의 도막 두께로 스톤칩과 외부 오염으로부터 도장면을 보호하며, 필요 시 도장면에서 제거할 수 있는 Peelable Paint 시스템입니다.',
       features: [
         '독일 CARDIP® 한국 공식 디스트리뷰터',
         '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
         '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
-        '무접착 방식의 박리 시스템 (도장면 손상 없는 제거)'
+        '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)'
       ],
       image: '/images/readdy/service-detail-ai-001.jpg',
       highlight: true,
@@ -70,14 +71,15 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
     },
     {
       id: 'pps-color',
-      title: '컬러 PPS (Color Paint Protection Spray)',
+      title: '컬러 PPS',
+      engTitle: '(Color Paint Protection Spray)',
       subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
       description: '독일 Colosol Coatings GmbH 본사의 기술 기준을 바탕으로 구현하는 Peelable Color Paint 시스템입니다. 전 세계 슈퍼카 순정 컬러부터 마이바흐 투톤까지 도색 표면 질감을 완성도 높게 구현하며, 필요 시 도장면에서 제거할 수 있는 혁신적인 컬러 체인지 솔루션입니다.',
       features: [
         '독일 CARDIP® 한국 공식 디스트리뷰터',
         '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 투톤 구현',
         '칼을 사용하지 않는 분사 방식으로 차량 손상 방지',
-        '무접착 방식의 박리 시스템 (원도장면 보존)'
+        '무접착 방식으로 깔끔하게 벗겨지는 시스템 (원도장면 보존)'
       ],
       image: '/images/readdy/brand-tech-main-001.jpg',
       highlight: true,
@@ -163,8 +165,13 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
                 {/* Content */}
                 <div className={`${idx % 2 === 1 ? 'lg:order-1' : ''}`}>
 
-                  <h2 className="text-4xl lg:text-5xl font-black text-dark mb-6 tracking-tight">
-                    {srv.title}
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-dark mb-6 tracking-tight">
+                    <span className="block">{srv.title}</span>
+                    {srv.engTitle && (
+                      <span className="block text-xl sm:text-2xl lg:text-3xl font-bold text-gray-600 mt-2 break-keep tracking-normal">
+                        {srv.engTitle}
+                      </span>
+                    )}
                   </h2>
                   <p className="text-base text-gray-600 leading-relaxed mb-8">
                     {srv.description}

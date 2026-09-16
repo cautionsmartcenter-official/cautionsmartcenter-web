@@ -181,6 +181,59 @@ export const FloatingContactBar: React.FC = () => {
           )}
         </AnimatePresence>
       </motion.div>
+
+      {/* ── 3. 공식 유튜브 시공 영상 버튼 ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, x: 20 }}
+        animate={{ opacity: 1, scale: 1, x: 0 }}
+        transition={{ duration: 0.4, delay: 0.4 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        className="relative group flex flex-col items-center"
+      >
+        <a
+          href="https://www.youtube.com/@cautionsmartcenter_official"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="코션스마트센터 공식 유튜브 시공 영상 보기"
+          className="flex flex-col items-center no-underline cursor-pointer group"
+        >
+          {/* 유튜브 레드 원형 아이콘 */}
+          <div 
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:shadow-red-500/40"
+            style={{
+              backgroundColor: '#FF0000',
+              boxShadow: '0 4px 14px 0 rgba(255, 0, 0, 0.45), 0 2px 6px 0 rgba(0, 0, 0, 0.15)'
+            }}
+          >
+            {/* 유튜브 재생 아이콘 */}
+            <svg
+              viewBox="0 0 24 24"
+              className="w-7 h-7 sm:w-8 sm:h-8 text-white fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </div>
+
+          {/* 유튜브 알약 뱃지 */}
+          <div 
+            className="-mt-2.5 z-10 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold tracking-tight text-white shadow-md border border-red-400 whitespace-nowrap transition-transform duration-200 group-hover:scale-105"
+            style={{
+              backgroundColor: '#FF0000',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.18)'
+            }}
+          >
+            시공 영상
+          </div>
+        </a>
+
+        {/* 데스크탑 호버 툴팁 */}
+        <div className="hidden lg:group-hover:flex absolute right-full mr-3 top-4 items-center bg-gray-900/95 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg shadow-xl whitespace-nowrap pointer-events-none transition-opacity">
+          ▶ 공식 유튜브 시공 영상
+          <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-gray-900/95" />
+        </div>
+      </motion.div>
     </aside>
   );
 };

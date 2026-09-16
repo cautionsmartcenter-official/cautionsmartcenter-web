@@ -52,7 +52,7 @@ const COMPARISON_DATA: ComparisonFeature[] = [
   {
     title: '제거 용이성 (Peelability)',
     traditionalFilm: '본드 잔여물 및 원 도장면 칠 뜯김 위험',
-    sprayPps: '손쉬운 필름형 박리 가능',
+    sprayPps: '손쉽게 벗겨지는 필름형 특성',
     aiRobotPpcs: '본드 잔여물 0% / 언제든 신차 도장 100% 원복',
     winner: 'ai'
   },
@@ -70,7 +70,7 @@ export function AiTechnologySection() {
     { label: 'AI 시공 정밀도', value: '99.9%', desc: '6축 다관절 로봇 경로 제어', icon: Cpu },
     { label: '도막 균일성', value: '±2.5μm', desc: '초미세 스프레이 노즐 분사', icon: Layers },
     { label: '시공 시간 단축', value: '50% ↓', desc: '자동화 공정으로 신속 시공', icon: Gauge },
-    { label: '본드 잔여물', value: '0%', desc: '100% 무손상 Peelable 박리', icon: RotateCcw },
+    { label: '본드 잔여물', value: '0%', desc: '100% 무손상으로 깔끔하게 벗겨지는 방식', icon: RotateCcw },
   ];
 
   return (
@@ -137,7 +137,7 @@ export function AiTechnologySection() {
               '정밀한 6축 AI 로봇 시공',
               '마이크론 단위 균일한 코팅 두께',
               '기존 대비 50% 빠른 작업 시간',
-              '원 도장 칠 손상 0% 박리(Peelable)'
+              '원 도장 손상 없이 깔끔하게 벗겨지는(Peelable)'
             ].map((feat, i) => (
               <div key={i} className="flex items-center gap-2.5 text-xs sm:text-sm text-gray-200">
                 <ShieldCheck className="w-4 h-4 text-red-500 shrink-0" />

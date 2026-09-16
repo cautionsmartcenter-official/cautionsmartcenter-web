@@ -6,68 +6,13 @@ export interface FaqItem {
   id: number;
   question: string;
   answer: string;
-  category: 'AI 로봇 PPS' | '사고수리/도색' | '보험처리/보증' | '예약/픽업';
+  category: 'PPS' | 'CurveRobot' | '사고수리/도색' | '보험처리/보증' | '예약/픽업';
   popular?: boolean;
 }
 
-const FAQ_DATA: FaqItem[] = [
-  {
-    id: 1,
-    category: 'AI 로봇 PPS',
-    popular: true,
-    question: 'AI 로봇 PPS 시공 후 나중에 제거할 때 원래 차량 도장에 손상이 전혀 없나요?',
-    answer: '네, 100% 안전합니다. 코션의 AI 로봇 PPS(Paint Protection Spray)는 화학적 본드가 아닌 특수 액상 탄성 수지가 경화되어 보호막을 형성하므로, 제거 시 끈적이는 본드 잔여물이 일절 남지 않고 신차 출고 당시의 원 도장면 그대로 깔끔하게 박리됩니다.'
-  },
-  {
-    id: 2,
-    category: 'AI 로봇 PPS',
-    popular: true,
-    question: '기존 일반 필름 랩핑이나 PPF와의 가장 결정적인 차이점은 무엇인가요?',
-    answer: '기존 필름은 수작업 칼질로 인한 차체 스크래치 위험과 모서리 들뜸, 시간이 지남에 따른 황변 현상이 발생합니다. 반면 AI 로봇 PPS는 스프레이 분사 방식으로 칼을 일절 쓰지 않으며, AI가 마이크론 단위의 균일한 두께로 도포하여 복잡한 에어덕트와 굴곡까지 완벽하게 밀착 마감됩니다.'
-  },
-  {
-    id: 3,
-    category: '사고수리/도색',
-    popular: true,
-    question: '사고 수리 및 판금도색 시 자차 및 대물 보험 처리가 가능한가요?',
-    answer: '네, 국내 전 손해보험사 사고수리 지정 협력 정비공장으로서 자차 및 대물 보험처리가 100% 가능합니다. 99.9% 디지털 분광 조색기와 최신 수용성 열처리 부스를 통해 사고 전 신차 상태로 완벽 복원해 드립니다.'
-  },
-  {
-    id: 4,
-    category: '예약/픽업',
-    popular: true,
-    question: '시공 소요 시간은 얼마나 걸리며 픽업 & 딜리버리 서비스가 지원되나요?',
-    answer: 'AI 로봇 자동화 공정 덕분에 일반 수작업 대비 작업 시간이 약 50% 단축됩니다. 부위별로 상이하나 통상 1~2일 내에 완료되며, 수도권 전 지역 무료 1:1 도어투도어 픽업 & 드랍 딜리버리 및 수리 기간 중 동급 수입차 대차 서비스를 지원해 드립니다.'
-  },
-  {
-    id: 5,
-    category: '보험처리/보증',
-    popular: false,
-    question: '품질 보증 기간과 사후 관리는 어떻게 진행되나요?',
-    answer: '코션스마트센터에서 시공된 모든 차량에는 공식 정품 전자 보증서가 발급되며, 최대 5년간 무상 보증을 지원합니다. 또한 시공 후 정기 점검 및 디테일링 케어 혜택을 함께 제공해 드립니다.'
-  },
-  {
-    id: 6,
-    category: 'AI 로봇 PPS',
-    popular: false,
-    question: '컬러 PPS로 차량 색상을 완전히 바꿀 수도 있나요?',
-    answer: '네, 가능합니다. 순정 컬러를 보호하는 투명(Gloss/Matte) PPS뿐만 아니라, 포르쉐, 페라리, BMW M 등 최고급 수입차 순정 컬러와 커스텀 사틴/메탈릭 컬러의 [컬러 PPS] 시공이 가능하며, 원상복구가 언제든 자유롭습니다.'
-  },
-  {
-    id: 7,
-    category: '사고수리/도색',
-    popular: false,
-    question: '알루미늄 바디 및 탄소섬유(카본) 파츠도 완벽 복원이 가능한가요?',
-    answer: '코션스마트센터는 슈퍼카 및 프리미엄 수입차 전용 알루미늄 판금 장비와 인버터 스폿 용접기를 보유하고 있어, 아우디 ASF, 재규어/랜드로버 등 특수 알루미늄 바디 복원도 완벽하게 수행합니다.'
-  },
-  {
-    id: 8,
-    category: '보험처리/보증',
-    popular: false,
-    question: '과실 비율이 확정되지 않은 사고의 경우 어떻게 진행해야 하나요?',
-    answer: '사고 즉시 코션스마트센터로 연락 주시면 사고 전문 어드바이저가 초기 과실 산정 조언부터 보험사 접수, 무료 대차 배차까지 원스톱으로 처리해 드려 불필요한 분쟁과 손해를 최소화해 드립니다.'
-  }
-];
+// FAQ 데이터 (추후 실제 자주 묻는 질문 내용으로 등록 예정)
+const FAQ_DATA: FaqItem[] = [];
+
 
 interface ReaddyFaqProps {
   onNavigateToContact?: () => void;
@@ -77,9 +22,9 @@ interface ReaddyFaqProps {
 export function ReaddyFaq({ onNavigateToContact, onNavigateToNotice: _onNavigateToNotice }: ReaddyFaqProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const categories = ['전체', 'AI 로봇 PPS', '사고수리/도색', '보험처리/보증', '예약/픽업'];
+  const categories = ['전체', 'PPS', 'CurveRobot', '사고수리/도색', '보험처리/보증', '예약/픽업'];
 
   const filteredFaqs = FAQ_DATA.filter((item) => {
     const matchesCategory = selectedCategory === '전체' || item.category === selectedCategory;
@@ -110,7 +55,7 @@ export function ReaddyFaq({ onNavigateToContact, onNavigateToNotice: _onNavigate
           </h1>
 
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            AI 로봇 PPS, 사고수리, 보험처리, 무상 픽업서비스 등 고객님께서 자주 궁금해하시는 질문을 정리했습니다.
+            PPS 시공, CurveRobot 도장, 사고수리, 보험처리, 무상 픽업서비스 등 고객님께서 자주 궁금해하시는 질문을 정리했습니다.
           </p>
         </div>
 
@@ -123,7 +68,7 @@ export function ReaddyFaq({ onNavigateToContact, onNavigateToNotice: _onNavigate
                 key={cat}
                 onClick={() => {
                   setSelectedCategory(cat);
-                  setOpenIndex(0);
+                  setOpenIndex(null);
                 }}
                 className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
                   selectedCategory === cat
@@ -223,8 +168,20 @@ export function ReaddyFaq({ onNavigateToContact, onNavigateToNotice: _onNavigate
               );
             })
           ) : (
-            <div className="text-center py-16 bg-white border border-slate-200 rounded-2xl text-slate-400 text-sm shadow-sm">
-              검색 조건에 맞는 질문이 없습니다.
+            <div className="text-center py-20 bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
+                <HelpCircle className="w-6 h-6" />
+              </div>
+              <p className="text-slate-700 font-semibold mb-1">
+                {searchQuery || selectedCategory !== '전체'
+                  ? '조건에 일치하는 질문이 없습니다.'
+                  : '등록된 자주 묻는 질문이 없습니다.'}
+              </p>
+              <p className="text-xs text-slate-400">
+                {searchQuery || selectedCategory !== '전체'
+                  ? '다른 검색어나 카테고리를 선택해 보세요.'
+                  : '자주 묻는 질문(FAQ) 내용이 곧 업데이트될 예정입니다.'}
+              </p>
             </div>
           )}
         </div>

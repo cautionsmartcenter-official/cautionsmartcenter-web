@@ -168,7 +168,7 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                                 }}
                                 className="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer text-gray-200 hover:bg-white/10 hover:text-white"
                               >
-                                <span>{section.name}</span>
+                                <span className={section.name === 'CARDIP' ? 'font-cardip font-black tracking-wide text-white' : ''}>{section.name}</span>
                               </button>
                               {index < array.length - 1 && (
                                 <div className="h-px bg-white/10 my-1 mx-2" />
@@ -353,6 +353,19 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                       <HelpCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                       <span>자주묻는질문</span>
                     </button>
+
+                    <div className="h-px bg-white/10 my-1 mx-2" />
+
+                    <a
+                      href="https://www.youtube.com/@cautionsmartcenter_official"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsCommunityDropdownOpen(false)}
+                      className="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer text-gray-200 hover:bg-white/10 hover:text-white"
+                    >
+                      <i className="ri-youtube-fill text-red-500 text-sm shrink-0" />
+                      <span>공식 유튜브 (시공 영상)</span>
+                    </a>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -442,7 +455,7 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                                     }}
                                     className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-all text-gray-300 hover:bg-white/10 hover:text-white"
                                   >
-                                    <span>{section.name}</span>
+                                    <span className={section.name === 'CARDIP' ? 'font-cardip font-black tracking-wide text-white' : ''}>{section.name}</span>
                                   </button>
                                 ))}
                               </div>
@@ -582,6 +595,17 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                         <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
                         <span>자주묻는질문</span>
                       </button>
+
+                      <a
+                        href="https://www.youtube.com/@cautionsmartcenter_official"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-2 w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all text-gray-400 hover:text-white"
+                      >
+                        <i className="ri-youtube-fill text-red-500 text-base" />
+                        <span>공식 유튜브 (시공 영상)</span>
+                      </a>
                     </div>
                   )}
                 </div>

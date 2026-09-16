@@ -6,7 +6,7 @@ export const ReaddyReviewsSection: React.FC = () => {
     {
       id: 1,
       rating: 5,
-      content: 'AI 로봇 PPS 시공을 받았는데 정말 놀라웠습니다. 기존 랩핑과는 차원이 다른 마감 품질이에요. 균일한 코팅과 완벽한 광택, 그리고 무엇보다 내구성이 뛰어나서 매우 만족스럽습니다. CAUTION의 기술력은 정말 최고입니다.',
+      content: 'PPS 시공을 받았는데 정말 놀라웠습니다. 기존 랩핑과는 차원이 다른 마감 품질이에요. 균일한 코팅과 완벽한 광택, 그리고 무엇보다 내구성이 뛰어나서 매우 만족스럽습니다. CAUTION의 기술력은 정말 최고입니다.',
       name: '김민수',
       car: 'BMW 5 Series',
       image: '/images/readdy/customer-001.jpg'
@@ -22,7 +22,7 @@ export const ReaddyReviewsSection: React.FC = () => {
     {
       id: 3,
       rating: 5,
-      content: 'PPS (CARDIP 뿌리는 페인트) 시공 후 차량이 완전히 새것처럼 변했습니다. AI 로봇 기술이라 시공 시간도 빠르고 품질도 일정해서 믿을 수 있었어요. 직원분들도 친절하고 전문적이어서 안심하고 맡길 수 있었습니다. 다음에도 꼭 이용할게요.',
+      content: 'PPS (CARDIP 뿌리는 페인트) 시공 후 차량이 완전히 새것처럼 변했습니다. CurveRobot 부스 도장 기술이라 완성도와 품질이 일정해서 믿을 수 있었어요. 직원분들도 친절하고 전문적이어서 안심하고 맡길 수 있었습니다. 다음에도 꼭 이용할게요.',
       name: '이준호',
       car: 'Audi A6',
       image: '/images/readdy/customer-003.jpg'

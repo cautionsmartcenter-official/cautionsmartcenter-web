@@ -10,7 +10,7 @@ export const ServicesPage: React.FC = () => {
     pps: {
       hero: '/images/readdy/service-hero-ai.jpg',
       detail: '/images/readdy/service-detail-ai-001.jpg',
-      title: 'AI 로봇 PPS & 컬러PPS 시공 현장'
+      title: '투명 PPS & 컬러 PPS 시공 현장'
     },
     repair: {
       hero: '/images/readdy/service-hero-repair.jpg',
@@ -159,8 +159,9 @@ export const ServicesPage: React.FC = () => {
                       <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-amber-500 flex items-center justify-center mb-6 shadow-lg">
                         <Shield className="w-8 h-8 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold text-white mb-2 font-mono">
-                        PPS <span className="text-amber-400 text-lg font-normal">(Paint Protection Spray)</span>
+                      <h3 className="text-2xl font-bold text-white mb-2">
+                        <span className="block">투명 PPS</span>
+                        <span className="block text-amber-400 text-lg font-normal mt-1">(Paint Protection Spray)</span>
                       </h3>
                       <p className="text-red-400 font-semibold text-sm mb-4">투명 도장 보호 솔루션</p>
                       <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-6">
@@ -189,8 +190,9 @@ export const ServicesPage: React.FC = () => {
                       <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-red-600 flex items-center justify-center mb-6 shadow-lg">
                         <Sparkles className="w-8 h-8 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold text-white mb-2 font-mono">
-                        컬러PPS <span className="text-red-400 text-lg font-normal">(Paint Protection Spray)</span>
+                      <h3 className="text-2xl font-bold text-white mb-2">
+                        <span className="block">컬러 PPS</span>
+                        <span className="block text-red-400 text-lg font-normal mt-1">(Color Paint Protection Spray)</span>
                       </h3>
                       <p className="text-amber-400 font-semibold text-sm mb-4">컬러 체인지 + 보호 솔루션</p>
                       <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-6">

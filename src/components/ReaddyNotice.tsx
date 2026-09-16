@@ -14,114 +14,9 @@ export interface NoticeItem {
   tag?: string;
 }
 
-const NOTICE_DATA: NoticeItem[] = [
-  {
-    id: 1,
-    category: '기술소식',
-    isImportant: true,
-    title: '최첨단 4세대 AI 로봇 자동화 PPS 스프레이 시스템 2호기 증설 도입',
-    date: '2026.02.15',
-    views: 1420,
-    tag: '신규 설비',
-    highlights: [
-      '마이크론(μm) 단위 초정밀 AI 비전 센서 기반 균일 도포',
-      '도장면 손상 0% - 칼을 쓰지 않는 무스크래치 스프레이 공법',
-      '작업 시간 50% 단축으로 당일/익일 빠른 출고 가능'
-    ],
-    content: `
-      코션스마트센터가 더욱 완벽한 프리미엄 시공 퀄리티와 빠른 출고 일정을 위해 '4세대 AI 로봇 자동화 PPS(Paint Protection Spray) 2호기'를 추가 증설 도입하였습니다.
+// 공지사항 데이터 (추후 실제 공지 및 이벤트 소식으로 등록 예정)
+const NOTICE_DATA: NoticeItem[] = [];
 
-      기존 1호기 대비 3D 레이저 스캐닝 해상도가 200% 향상되어 슈퍼카, 하이퍼카의 복잡한 굴곡과 에어덕트 부위까지 오차 없는 완벽한 두께로 시공됩니다.
-
-      앞으로도 코션스마트센터는 대한민국 최고의 수입차 외장관리 및 사고수리 테크놀로지를 선도하겠습니다.
-    `
-  },
-  {
-    id: 2,
-    category: '이벤트',
-    isImportant: true,
-    title: '2026 프리미엄 수입차 봄맞이 무상 정밀점검 & AI PPS 특별 프로모션',
-    date: '2026.02.01',
-    views: 980,
-    tag: '프로모션',
-    highlights: [
-      '수입차 전 차종 120개 항목 컴퓨터 정밀 진단 무상 지원',
-      'AI 로봇 PPS 프론트 패키지 시공 시 프리미엄 유리막 코팅 무료 업그레이드',
-      '보험 수리 고객 대상 자차 자기부담금 최대 50% 지원 혜택'
-    ],
-    content: `
-      다가오는 봄 드라이빙 시즌을 맞이하여 코션스마트센터를 찾아주시는 고객님들을 위한 스페셜 프로모션을 진행합니다.
-
-      겨울철 염화칼슘으로 손상된 하부 및 도장면 정밀 케어와 함께 신차급 광택을 유지할 수 있는 AI 로봇 PPS 시공 혜택을 놓치지 마세요.
-
-      ■ 행사 기간: 2026년 2월 1일 ~ 2026년 3월 31일까지
-      ■ 대상: 수입차 및 국산 프리미엄 전 차종 (사전 예약 필수)
-    `
-  },
-  {
-    id: 3,
-    category: '안내',
-    isImportant: false,
-    title: '수도권 전 지역 1:1 프리미엄 도어투도어 무료 픽업 & 딜리버리 서비스 안내',
-    date: '2026.01.20',
-    views: 754,
-    tag: '고객 편의',
-    highlights: [
-      '분당, 판교, 강남, 서초, 용인, 수원 등 수도권 전 지역 지원',
-      '전문 탁송 기사님을 통한 100% 안전 책임 운송',
-      '수리 및 시공 기간 중 동급 수입차 무상 대차 서비스 연계'
-    ],
-    content: `
-      바쁜 직장인 및 전문직 고객님들의 소중한 시간을 지켜드리기 위해, 코션스마트센터의 '1:1 맞춤형 픽업 & 딜리버리 서비스'가 더욱 강화되었습니다.
-
-      자택이나 직장에서 계신 곳으로 전담 인력이 방문하여 차량을 안전하게 입고 및 시공 후 다시 원하시는 장소로 인도해 드립니다.
-
-      온라인 견적 문의 또는 유선 상담 시 '픽업 요청'을 말씀해 주시면 편리하게 이용하실 수 있습니다.
-    `
-  },
-  {
-    id: 4,
-    category: '공지',
-    isImportant: false,
-    title: '전 보험사 공식 협력 지정점 100% 자차/대물 원스톱 보험처리 가이드',
-    date: '2026.01.10',
-    views: 1120,
-    tag: '보험 수리',
-    highlights: [
-      '국내 전 손해보험사 공식 협력업체 등록',
-      '사고 접수부터 렌트카 대차, 미수선 처리 및 보증서 발급 원스톱 진행',
-      '99.9% 분광 조색기와 공식 수용성 페인트를 사용한 완벽 복원'
-    ],
-    content: `
-      사고 발생 시 당황하지 마시고 코션스마트센터로 연락 주시면, 사고 처리 전문가가 초기 과실 비율 상담부터 보험사 접수 대행, 최고 수준의 수리까지 일괄 전담해 드립니다.
-
-      자차 보험 수리 시 자기부담금 지원 및 렌트카 지원 혜택을 제공하오니 언제든 24시간 사고 긴급 상담 창구를 이용해 주시기 바랍니다.
-    `
-  },
-  {
-    id: 5,
-    category: '공지',
-    isImportant: false,
-    title: '코션스마트센터 고객 상담 센터 운영 시간 및 오시는 길 안내',
-    date: '2026.01.02',
-    views: 630,
-    tag: '운영 안내',
-    highlights: [
-      '평일 08:30 ~ 19:00 / 토요일 09:00 ~ 16:00 (일요일/공휴일 예약제)',
-      '경기도 광주시 태재로 26 (분당 서현역 10분 거리)',
-      '24시간 카카오톡 실시간 상담 채널 연중무휴 가동'
-    ],
-    content: `
-      코션스마트센터 본점 센터 운영 시간 안내입니다.
-
-      ■ 평일: 08:30 ~ 19:00 (당일 입고 및 출고 가능)
-      ■ 토요일: 09:00 ~ 16:00
-      ■ 일요일 및 공휴일: 사전 예약 차량 우선 시공 및 긴급 사고차량 입고 대기
-
-      고객센터 유선 전화(031-712-6665) 또는 카카오톡 플러스친구를 통해 24시간 실시간 상담이 가능합니다.
-    `
-  }
-];
 
 interface ReaddyNoticeProps {
   onNavigateToContact?: () => void;
@@ -333,8 +228,20 @@ export function ReaddyNotice({ onNavigateToContact, onNavigateToFaq }: ReaddyNot
               </motion.div>
             ))
           ) : (
-            <div className="text-center py-16 bg-white border border-slate-200 rounded-2xl text-slate-400 text-sm shadow-sm">
-              일치하는 공지사항이 없습니다.
+            <div className="text-center py-20 bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
+                <Bell className="w-6 h-6" />
+              </div>
+              <p className="text-slate-700 font-semibold mb-1">
+                {searchQuery || selectedCategory !== '전체'
+                  ? '조건에 일치하는 공지사항이 없습니다.'
+                  : '등록된 공지사항이 없습니다.'}
+              </p>
+              <p className="text-xs text-slate-400">
+                {searchQuery || selectedCategory !== '전체'
+                  ? '다른 검색어나 카테고리를 선택해 보세요.'
+                  : '새로운 소식 및 프로모션이 준비되는 대로 안내해 드리겠습니다.'}
+              </p>
             </div>
           )}
         </div>

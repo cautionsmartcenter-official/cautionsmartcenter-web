@@ -15,6 +15,7 @@ import { ReaddyFaq } from './components/ReaddyFaq';
 import { FloatingContactBar } from './components/FloatingContactBar';
 import { AdminDashboard } from './components/AdminDashboard';
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
+import { ReaddyYouTubeSection } from './components/ReaddyYouTubeSection';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -116,7 +117,7 @@ export default function App() {
       {/* ── 2. Brand Story View ── */}
       {activeTab === 'brand-story' && (
         <main>
-          <ReaddyBrandStory />
+          <ReaddyBrandStory onNavigateToContact={handleNavigateToContact} />
         </main>
       )}
 
@@ -190,7 +191,10 @@ export default function App() {
           {/* ════════════════ 3. READDY AI TECHNOLOGY SECTION (1:1 Exact) ════════════════ */}
           <ReaddyAiTechSection onNavigateToBrandTech={() => handleNavigateToBrandStory('technology')} />
 
-          {/* ════════════════ 4. READDY CUSTOMER REVIEWS SECTION (1:1 Exact) ════════════════ */}
+          {/* ════════════════ 4. READDY YOUTUBE SHOWCASE SECTION ════════════════ */}
+          <ReaddyYouTubeSection />
+
+          {/* ════════════════ 5. READDY CUSTOMER REVIEWS SECTION (1:1 Exact) ════════════════ */}
           <ReaddyReviewsSection />
 
           {/* ════════════════ 5. READDY CTA & SILHOUETTES SECTION (1:1 Exact) ════════════════ */}

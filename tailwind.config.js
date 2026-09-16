@@ -17,6 +17,9 @@ export default {
         cardip: {
           red: '#C2181C',
           dark: '#0F1C25',
+          darkblue: '#0F1C25',
+          black: '#000000',
+          white: '#FFFFFF',
         }
       },
       fontFamily: {
@@ -24,6 +27,7 @@ export default {
         serif: ['"Noto Sans KR"', 'serif'],
         mono: ['"Space Mono"', 'monospace'],
         roboto: ['"Roboto"', 'sans-serif'],
+        cardip: ['"Roboto"', 'sans-serif'],
       },
     },
   },
