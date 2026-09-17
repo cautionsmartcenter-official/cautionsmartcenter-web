@@ -155,7 +155,7 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
               <div className="flex items-center gap-2">
                 <i className="ri-instagram-line text-base text-pink-600 shrink-0" />
                 <span>
-                  <strong>PPS & 컬러 PPS</strong> 작업 영상 및 필오프(Peelable) 테스트는 <strong>공식 인스타그램</strong>에서 실시간 릴스로 매일 업데이트됩니다.
+                  <strong>PPS & 컬러 PPS</strong> 작업 영상 및 Peelable Paint 필오프 테스트는 <strong>공식 인스타그램</strong>에서 실시간 릴스로 매일 업데이트됩니다.
                 </span>
               </div>
               <a

@@ -71,7 +71,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     summary: '도장면 손상 없이 언제든 떼어낼 수 있는 CARDIP Peelable Paint 커스텀 컬러 체인지',
     details: [
       '원하는 컬러로 완벽 변신 + 보호 성능 동시 제공',
-      '원복 시 본딩 잔여물 없이 100% 필오프(Peelable)',
+      '원복 시 본딩 잔여물 없이 100% Peelable Paint 필오프',
       '도장 부스 내 초정밀 열처리 공정'
     ],
     linkType: 'instagram',

@@ -18,7 +18,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
       id: 'pps',
       title: '독일 정품 CARDIP® PPS 도장 보호막 시공',
       category: 'CARDIP® PPS',
-      desc: '칼을 쓰지 않는 Seamless 분사 공법과 완벽한 원상 복구(Peelable) 성능',
+      desc: '칼을 쓰지 않는 Seamless 분사 공법과 완벽한 원상 복구 Peelable Paint 성능',
       image: '/images/readdy/service-detail-ai-img.jpg',
       badge: '페인트 보호'
     },

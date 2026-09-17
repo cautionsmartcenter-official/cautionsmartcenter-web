@@ -34,7 +34,7 @@ const SERVICES_DATA: ServiceItem[] = [
     badge: 'FLAGSHIP INNOVATION',
     title: 'CARDIP® PPS (도장 보호 스프레이)',
     engTitle: 'CARDIP® Paint Protection Spray',
-    desc: '기존 필름 랩핑의 한계를 완벽히 극복한 스프레이 방식의 차세대 페인트 보호막. 초미세 스프레이로 도막 두께를 균일하게 도포하며, 칼선이나 들뜸 없이 언제든 손상 없이 깨끗하게 벗겨지는(Peelable) 보호막입니다.',
+    desc: '기존 필름 랩핑의 한계를 완벽히 극복한 스프레이 방식의 차세대 페인트 보호막. 초미세 스프레이로 도막 두께를 균일하게 도포하며, 칼선이나 들뜸 없이 언제든 손상 없이 깨끗하게 벗겨지는 Peelable Paint 보호막입니다.',
     icon: Bot,
     accentColor: '#C2181C',
     mainImage: '/images/readdy/service-ai-001.jpg',
@@ -42,7 +42,7 @@ const SERVICES_DATA: ServiceItem[] = [
     features: [
       '스프레이 분사 방식으로 칼자국 및 필름 들뜸 원천 차단',
       '정밀 노즐 제어로 100% 균일한 마이크론 도막 형성',
-      '원 도장면 손상 없이 100% 깔끔하게 벗겨지는(Peelable) 시스템',
+      '원 도장면 손상 없이 100% 깔끔하게 벗겨지는 Peelable Paint 시스템',
       '셀프 힐링(스크래치 자동 복원) 및 초발수 UV 차단'
     ],
     specs: [

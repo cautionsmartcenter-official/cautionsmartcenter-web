@@ -402,7 +402,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                   <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS 정밀 시공 구조 (11단계 멀티레이어)
                 </h3>
                 <p className="text-xs sm:text-base text-gray-600 mt-3 max-w-2xl mx-auto leading-relaxed">
-                  차량 원도장면을 100% 안전하게 보호하고 필요 시 도장 손상 없이 깔끔하게 벗겨지는(Peelable) 총 11회 정밀 분사 멀티레이어 도료 시스템
+                  차량 원도장면을 100% 안전하게 보호하고 필요 시 도장 손상 없이 깔끔하게 벗겨지는 Peelable Paint 총 11회 정밀 분사 멀티레이어 도료 시스템
                 </p>
               </div>
 

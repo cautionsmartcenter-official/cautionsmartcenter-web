@@ -137,7 +137,7 @@ export function AiTechnologySection() {
               '정밀한 6축 AI 로봇 시공',
               '마이크론 단위 균일한 코팅 두께',
               '기존 대비 50% 빠른 작업 시간',
-              '원 도장 손상 없이 깔끔하게 벗겨지는(Peelable)'
+              '원 도장 손상 없이 깔끔하게 벗겨지는 Peelable Paint'
             ].map((feat, i) => (
               <div key={i} className="flex items-center gap-2.5 text-xs sm:text-sm text-gray-200">
                 <ShieldCheck className="w-4 h-4 text-red-500 shrink-0" />

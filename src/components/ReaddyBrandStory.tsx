@@ -220,7 +220,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   독일 정품 <span className="text-cardip-red font-cardip font-black">CARDIP®</span> PPS
                 </h3>
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed font-sans">
-                  독일 Colosol Coatings GmbH 본사의 <strong className="text-gray-900 font-cardip">CARDIP® Aqua+ PPS</strong>는 차체에 칼을 대지 않는 100% 무절개 스프레이 분사 방식으로 원도장을 안전하게 보호하며, 필요 시 언제든 흔적 없이 깔끔하게 벗겨낼 수 있는(Peelable) 세계적인 정품 액상 보호 도막 시스템입니다.
+                  독일 Colosol Coatings GmbH 본사의 <strong className="text-gray-900 font-cardip">CARDIP® Aqua+ PPS</strong>는 차체에 칼을 대지 않는 100% 무절개 스프레이 분사 방식으로 원도장을 안전하게 보호하며, 필요 시 언제든 흔적 없이 깔끔하게 벗겨낼 수 있는 Peelable Paint 세계적인 정품 액상 보호 도막 시스템입니다.
                 </p>
                 <div className="pt-2 flex flex-wrap gap-2 text-xs font-bold text-gray-700">
                   <span className="px-3 py-1.5 bg-gray-100 rounded-lg border border-gray-200">100% Made in Germany</span>
@@ -231,7 +231,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
             </div>
           </motion.div>
 
-          {/* 3-Column Core Features: 250µm+ Thickness, 50 Series Product, Peelable Protection */}
+          {/* 3-Column Core Features: 250µm+ Thickness, 50 Series Product, Peelable Paint Protection */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
             {/* Column 1: 250µm+ 도막 두께 */}
             <motion.div
@@ -241,16 +241,16 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
-                <div className="w-full h-64 sm:h-72 bg-black rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
+                <div className="w-full aspect-[4/3] bg-[#020E1A] rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
                   <img
-                    src="/images/cardip/cardip_thickness_gauge.png"
+                    src="/images/cardip/cardip_card1_thickness_4x3.png"
                     alt="250µm+ Total film thickness"
-                    className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
                 <div className="space-y-2 mb-4">
-                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full tracking-wider">
                     250µm+ TOTAL FILM THICKNESS
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
@@ -288,16 +288,16 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
-                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-4 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-red-50/20 transition-colors">
+                <div className="w-full aspect-[4/3] bg-[#020E1A] rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
                   <img
-                    src="/images/cardip/cardip_50series_product.png"
+                    src="/images/cardip/cardip_card2_50series_4x3.png"
                     alt="CARDIP 50 Series Aqua+ PPS Pro Clear 5050"
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                    className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
                 <div className="space-y-2 mb-4">
-                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full tracking-wider">
                     AQUA+ PPS PRO CLEAR 5050
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
@@ -326,7 +326,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               </div>
             </motion.div>
 
-            {/* Column 3: Peelable Paint 보호막 형성 & 무손상 박리 */}
+            {/* Column 3: Peelable Paint 무손상 보호 도막 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -335,20 +335,20 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
-                <div className="w-full h-64 sm:h-72 bg-black rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
+                <div className="w-full aspect-[4/3] bg-[#020E1A] rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
                   <img
-                    src="/images/cardip/cardip_peelable_hand.png"
+                    src="/images/cardip/cardip_card3_peelable_4x3.png"
                     alt="Perfect Adhesion & Peelability - Lifetime guarantee"
-                    className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
                 <div className="space-y-2 mb-4">
-                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full tracking-wider">
                     PEELABLE PAINT SYSTEM
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
-                    Peelable 무손상 박리 보호막
+                    Peelable Paint 무손상 보호 도막
                   </h3>
                 </div>
 
