@@ -135,11 +135,11 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     id: 'pps-clear',
     title: '투명 PPS',
     engTitle: '(Paint Protection Spray)',
-    subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
-    description: '독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터로서, 독일에서 연구·생산되는 CARDIP® PPS를 기반으로 전문 시공 서비스를 제공합니다. 250µm+의 도막 두께로 스톤칩과 외부 오염으로부터 도장면을 보호하며, 필요 시 도장면에서 제거할 수 있는 Peelable Paint 시스템입니다.',
+    subtitle: '최첨단 AI 분사 무절개 투명 도장 보호',
+    description: '독일 정품 CARDIP® PPS를 기반으로 250µm+ 도막 두께의 투명 보호층을 형성합니다. 칼을 전혀 대지 않는 무절개 스프레이 방식으로 시공되어 스톤칩과 스크래치를 완벽 차단하며, 필요 시 도장면 손상 없이 언제든 깔끔하게 벗겨낼 수 있습니다.',
     heroImage: '/images/readdy/service-hero-ai.jpg',
     features: [
-      '독일 CARDIP® 한국 공식 디스트리뷰터',
+      '독일 정품 CARDIP® PPS 11단계 정밀 시공',
       '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
       '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
       '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)',
@@ -174,11 +174,11 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     id: 'pps-color',
     title: '컬러 PPS',
     engTitle: '(Color Paint Protection Spray)',
-    subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
-    description: '독일 Colosol Coatings GmbH 본사의 기술 기준을 바탕으로 구현하는 Peelable Color Paint 시스템입니다. 전 세계 슈퍼카 순정 컬러부터 마이바흐 투톤까지 도색 표면 질감을 완성도 높게 구현하며, 필요 시 도장면에서 제거할 수 있는 혁신적인 컬러 체인지 솔루션입니다.',
+    subtitle: '원도장 손상 없는 프리미엄 컬러 체인지',
+    description: '독일 정품 CARDIP® 원료를 바탕으로 슈퍼카 순정 컬러부터 마이바흐 투톤까지 실제 도색 수준의 깊은 색감을 완성합니다. 기존 도장면을 샌딩 없이 100% 안전 보존하며, 추후 원복 시 흔적 없이 깔끔하게 벗겨낼 수 있는 혁신적인 컬러 솔루션입니다.',
     heroImage: '/images/readdy/brand-hero-001.jpg',
     features: [
-      '독일 CARDIP® 한국 공식 디스트리뷰터',
+      '독일 정품 CARDIP® 컬러 도료 11단계 정밀 시공',
       '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 투톤 구현',
       '칼을 사용하지 않는 분사 방식으로 차량 손상 방지',
       '실제 도색 수준의 표면 질감과 깊이 있는 광택',
@@ -213,8 +213,8 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     id: 'ai-tech',
     title: '투명 PPS',
     engTitle: '(Paint Protection Spray)',
-    subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터 정품 (Aqua+ Pro Clear 5050)',
-    description: '독일 Colosol Coatings GmbH 본사 한국 공식 디스트리뷰터 정품 도료. AI 로봇 스프레이 셀로 구현하는 차세대 페인트 보호 시스템으로 완벽한 무절개 보호를 제공합니다.',
+    subtitle: '독일 정품 CARDIP® PPS (Aqua+ Pro Clear 5050)',
+    description: '독일 정품 CARDIP® 도료와 4세대 AI 로봇 스프레이 시스템으로 구현하는 차세대 페인트 보호 솔루션으로 완벽한 무절개 보호를 제공합니다.',
     heroImage: '/images/readdy/service-hero-ai.jpg',
     features: [
       'AI 로봇 정밀 분사 시공',
@@ -388,23 +388,6 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
           <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
-            {/* Header */}
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-50 border border-gray-200 rounded-full mb-4">
-                <span className="w-2 h-2 rounded-full bg-cardip-red animate-pulse" />
-                <span className="text-xs font-bold text-gray-700 tracking-wider uppercase">
-                  GERMAN <span className="font-cardip font-black text-black">CARDIP®</span> GENUINE MATERIAL
-                </span>
-              </div>
-              <h2 className="text-3xl sm:text-5xl font-black text-gray-900 tracking-tight leading-tight mb-4">
-                독일 <span className="text-cardip-red font-cardip font-black">CARDIP®</span> 한국 공식 디스트리뷰터
-              </h2>
-              <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-sans">
-                코션스마트센터는 독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터(Official Korean Distributor)입니다.<br className="hidden sm:inline" />
-                독일에서 연구·생산되는 CARDIP® PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.
-              </p>
-            </div>
-
             {/* 11-Stage Precision Multi-Layer System (총 11회 도포 시공 구조) */}
             <div className="rounded-3xl bg-gray-50 border border-gray-200 p-6 sm:p-10 lg:p-12 mb-20 shadow-xl overflow-hidden">
               {/* Header */}
@@ -416,7 +399,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                   </span>
                 </div>
                 <h3 className="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight">
-                  1. <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS 시공 구조 (11단계 멀티레이어)
+                  <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS 정밀 시공 구조 (11단계 멀티레이어)
                 </h3>
                 <p className="text-xs sm:text-base text-gray-600 mt-3 max-w-2xl mx-auto leading-relaxed">
                   차량 원도장면을 100% 안전하게 보호하고 필요 시 도장 손상 없이 깔끔하게 벗겨지는(Peelable) 총 11회 정밀 분사 멀티레이어 도료 시스템

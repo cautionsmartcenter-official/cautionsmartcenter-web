@@ -57,10 +57,10 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
       id: 'pps-clear',
       title: '투명 PPS',
       engTitle: '(Paint Protection Spray)',
-      subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
-      description: '독일 Colosol Coatings GmbH의 한국 공식 디스트리뷰터로서, 독일에서 연구·생산되는 CARDIP® PPS를 기반으로 전문 시공 서비스를 제공합니다. 250µm+의 도막 두께로 스톤칩과 외부 오염으로부터 도장면을 보호하며, 필요 시 도장면에서 제거할 수 있는 Peelable Paint 시스템입니다.',
+      subtitle: '최첨단 AI 분사 무절개 투명 도장 보호',
+      description: '독일 정품 CARDIP® PPS를 기반으로 250µm+ 도막 두께의 투명 보호층을 형성합니다. 칼을 전혀 대지 않는 무절개 스프레이 방식으로 시공되어 스톤칩과 스크래치를 완벽 차단하며, 필요 시 도장면 손상 없이 언제든 깔끔하게 벗겨낼 수 있습니다.',
       features: [
-        '독일 CARDIP® 한국 공식 디스트리뷰터',
+        '독일 정품 CARDIP® PPS 11단계 정밀 시공',
         '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
         '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
         '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)'
@@ -73,10 +73,10 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
       id: 'pps-color',
       title: '컬러 PPS',
       engTitle: '(Color Paint Protection Spray)',
-      subtitle: '독일 CARDIP® 한국 공식 디스트리뷰터',
-      description: '독일 Colosol Coatings GmbH 본사의 기술 기준을 바탕으로 구현하는 Peelable Color Paint 시스템입니다. 전 세계 슈퍼카 순정 컬러부터 마이바흐 투톤까지 도색 표면 질감을 완성도 높게 구현하며, 필요 시 도장면에서 제거할 수 있는 혁신적인 컬러 체인지 솔루션입니다.',
+      subtitle: '원도장 손상 없는 프리미엄 컬러 체인지',
+      description: '독일 정품 CARDIP® 원료를 바탕으로 슈퍼카 순정 컬러부터 마이바흐 투톤까지 실제 도색 수준의 깊은 색감을 완성합니다. 기존 도장면을 샌딩 없이 100% 안전 보존하며, 추후 원복 시 흔적 없이 깔끔하게 벗겨낼 수 있는 혁신적인 컬러 솔루션입니다.',
       features: [
-        '독일 CARDIP® 한국 공식 디스트리뷰터',
+        '독일 정품 CARDIP® 컬러 도료 11단계 정밀 시공',
         '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 투톤 구현',
         '칼을 사용하지 않는 분사 방식으로 차량 손상 방지',
         '무접착 방식으로 깔끔하게 벗겨지는 시스템 (원도장면 보존)'
