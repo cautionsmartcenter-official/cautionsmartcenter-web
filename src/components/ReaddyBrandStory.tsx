@@ -194,9 +194,46 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
             </motion.p>
           </div>
 
-          {/* 3-Column Expanded Showcase Grid (Simplified & Balanced) */}
+          {/* CARDIP Official Hero Showcase: The original Peelable Paint & PPS */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-3xl p-6 sm:p-10 border-2 border-gray-200 shadow-md mb-10 overflow-hidden group hover:border-cardip-red/40 transition-all"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-7 flex items-center justify-center bg-gray-50 rounded-2xl p-4 sm:p-6 overflow-hidden border border-gray-100">
+                <img
+                  src="/images/cardip/cardip_peelable_hero.png"
+                  alt="The original Peelable Paint & PPS - CARDIP"
+                  className="w-full h-auto max-h-80 object-contain group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="lg:col-span-5 space-y-4 text-left">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-red-50 border border-red-200 rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-cardip-red animate-pulse" />
+                  <span className="text-xs font-bold font-roboto text-cardip-red tracking-wider uppercase">
+                    The Original Peelable Paint & PPS
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 tracking-tight leading-tight">
+                  독일 정품 <span className="text-cardip-red font-cardip font-black">CARDIP®</span> PPS
+                </h3>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed font-sans">
+                  독일 Colosol Coatings GmbH 본사의 <strong className="text-gray-900 font-cardip">CARDIP® Aqua+ PPS</strong>는 차체에 칼을 대지 않는 100% 무절개 스프레이 분사 방식으로 원도장을 안전하게 보호하며, 필요 시 언제든 흔적 없이 깔끔하게 벗겨낼 수 있는(Peelable) 세계적인 정품 액상 보호 도막 시스템입니다.
+                </p>
+                <div className="pt-2 flex flex-wrap gap-2 text-xs font-bold text-gray-700">
+                  <span className="px-3 py-1.5 bg-gray-100 rounded-lg border border-gray-200">100% Made in Germany</span>
+                  <span className="px-3 py-1.5 bg-gray-100 rounded-lg border border-gray-200">Easy-Peel-Polymer™ 특허</span>
+                  <span className="px-3 py-1.5 bg-gray-100 rounded-lg border border-gray-200">친환경 수성 포뮬러</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 3-Column Core Features: 250µm+ Thickness, 50 Series Product, Peelable Protection */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            {/* Column 1: CARDIP System Overview */}
+            {/* Column 1: 250µm+ 도막 두께 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -204,49 +241,45 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
-                {/* Large Product Showcase Container */}
-                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-6 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-red-50/30 transition-colors">
+                <div className="w-full h-64 sm:h-72 bg-black rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
                   <img
-                    src="/images/cardip/cardip_clean_logo.png"
-                    alt="CARDIP Peelable Paint System"
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md rounded-xl"
+                    src="/images/cardip/cardip_thickness_gauge.png"
+                    alt="250µm+ Total film thickness"
+                    className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
-                {/* Product Badge & Title */}
                 <div className="space-y-2 mb-4">
                   <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
-                    PEELABLE PAINT SYSTEM
+                    250µm+ TOTAL FILM THICKNESS
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-cardip">
-                    CARDIP® Peelable PPS
+                  <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
+                    250µm+ 압도적 도막 두께
                   </h3>
                 </div>
 
-                {/* Body Explanation */}
                 <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
-                  칼을 대지 않는 100% 무절개 분사 방식으로 복잡한 곡면과 파츠까지 완벽한 일체형 마감을 구현하며, 원도장 손상 없이 언제든 제거할 수 있는 혁신적인 도장 보호 시스템입니다.
+                  일반 보호필름(150µm)을 압도하는 <strong className="text-cardip-dark">250µm 이상(실측 최대 428µm)</strong>의 초후도 탄성 피막을 형성하여, 고속 주행 스톤칩과 가혹한 도로 환경으로부터 차량 원도장을 빈틈없이 강력하게 보호합니다.
                 </p>
               </div>
 
-              {/* Key Specs */}
               <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">칼 없이 완성하는 100% 무절개 분사 시공</span>
+                  <span className="font-medium">실측 최대 428µm 고강도 탄성 보호막 형성</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">독일 본사 엄격한 품질 기준 정품 도료 공급</span>
+                  <span className="font-medium">독일 공인 DIN ISO 20567-1 스톤칩 저항 인증</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">원도장 손상 없이 깔끔하게 벗겨지는 원상복구</span>
+                  <span className="font-medium">복잡한 3D 굴곡과 에어로파츠까지 균일 도포</span>
                 </div>
               </div>
             </motion.div>
 
-            {/* Column 2: Aqua+ PPS Pro Clear 5050 (PPS Base & Clear) */}
+            {/* Column 2: 50 Series Aqua+ PPS Pro Clear 5050 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -255,95 +288,87 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
-                {/* Large Product Can Showcase */}
-                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-6 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-red-50/30 transition-colors">
+                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-4 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-red-50/20 transition-colors">
                   <img
-                    src="/images/cardip/image10.png"
-                    alt="CARDIP Aqua+ PPS Pro Clear 5050"
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-lg"
+                    src="/images/cardip/cardip_50series_product.png"
+                    alt="CARDIP 50 Series Aqua+ PPS Pro Clear 5050"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md"
                   />
                 </div>
 
-                {/* Product Badge & Title */}
                 <div className="space-y-2 mb-4">
                   <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
-                    PPS BASE & CLEAR MATERIAL
+                    AQUA+ PPS PRO CLEAR 5050
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
-                    Aqua+ PPS Pro Clear 5050
+                    독일 정품 50시리즈 원료
                   </h3>
                 </div>
 
-                {/* Product Description */}
                 <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
-                  <strong className="text-cardip-dark">250µm+의 압도적인 도막 두께</strong>와 탁월한 스톤칩 저항성을 갖춘 친환경 수성 베이스 도료로, 오렌지필 없이 투명하고 매끄러운 고광택 마감을 완성합니다.
+                  독일 본사의 특허 원료로 현장 인위적 희석 없이 <strong className="text-cardip-dark">100% 규격 원액 그대로 다이렉트 분사</strong>되며, 수성 및 유성 등 모든 상도 도료 및 프리미엄 클리어코트와 완벽히 결합합니다.
                 </p>
               </div>
 
-              {/* Key Specs */}
               <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">250µm+ 고강도 Peelable Paint 보호막 형성</span>
+                  <span className="font-medium">100% 독일 Colosol 본사 직수입 정품 원액</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">유해물질 없는 차세대 친환경 수성 포뮬러</span>
+                  <span className="font-medium">유해물질(VOCs) 없는 친환경 수성 시스템</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">도장면 잔여물 없이 깔끔하게 벗겨지는 원상복구</span>
+                  <span className="font-medium">오렌지필 제로 세계 최고 수준 표면 평활도</span>
                 </div>
               </div>
             </motion.div>
 
-            {/* Column 3: Reflow+ ClearCoat 9080 (Self-Healing Clear) */}
+            {/* Column 3: Peelable Paint 보호막 형성 & 무손상 박리 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-dark/50 transition-all shadow-md flex flex-col justify-between group"
+              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
-                {/* Large Product Can Showcase */}
-                <div className="w-full h-64 sm:h-72 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-6 flex items-center justify-center mb-6 overflow-hidden border border-gray-100 group-hover:bg-slate-100/50 transition-colors">
+                <div className="w-full h-64 sm:h-72 bg-black rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
                   <img
-                    src="/images/cardip/image11.png"
-                    alt="CARDIP Reflow+ ClearCoat 9080"
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-lg"
+                    src="/images/cardip/cardip_peelable_hand.png"
+                    alt="Perfect Adhesion & Peelability - Lifetime guarantee"
+                    className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
-                {/* Product Badge & Title */}
                 <div className="space-y-2 mb-4">
-                  <span className="inline-block text-xs font-bold font-roboto text-cardip-dark bg-slate-100 border border-slate-300 px-3 py-1 rounded-full uppercase tracking-wider">
-                    SELF-HEALING CLEARCOAT
+                  <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                    PEELABLE PAINT SYSTEM
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-black text-cardip-dark font-roboto">
-                    Reflow+ ClearCoat 9080
+                    Peelable 무손상 박리 보호막
                   </h3>
                 </div>
 
-                {/* Product Description */}
                 <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
-                  미세 스크래치가 상온 및 열에 의해 자연 치유되는 <strong className="text-cardip-dark">Self-Healing(자가복원)</strong> 기술과 자외선 차단 무황변 특성을 갖춘 쇼카 수준의 프리미엄 탑코트입니다.
+                  특허받은 <strong className="text-cardip-dark">Easy-Peel-Polymer™</strong> 기술로 화학 본드 접착제 없이도 완벽히 밀착되며, 필요 시 칼자국이나 본드 잔여물, 도장 손상 없이 언제든 신차 출고 상태 그대로 깨끗하게 벗겨집니다.
                 </p>
               </div>
 
-              {/* Key Specs */}
               <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
                 <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-dark text-base" />
-                  <span className="font-medium">미세 스크래치 셀프 힐링(자가복원) 기술</span>
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">화학 본드 잔여물 0% 무접착 밀착 시스템</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-dark text-base" />
-                  <span className="font-medium">최고급 도장 수준의 깊은 하이글로시 광택</span>
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">칼을 쓰지 않는 100% 무스크래치 무절개 시공</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-dark text-base" />
-                  <span className="font-medium">DIN ISO 기준 자외선 차단 및 평생 무황변</span>
+                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
+                  <span className="font-medium">원도장 손상 없이 신차 본래 모습으로 완벽 복구</span>
                 </div>
               </div>
             </motion.div>

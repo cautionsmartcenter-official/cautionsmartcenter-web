@@ -165,7 +165,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
       { step: 1, title: '차량 세척 및 표면 정리', desc: '도장면 유분과 미세 오염물을 세정하여 시공 준비를 진행합니다' },
       { step: 2, title: '차량 분석 및 마스킹', desc: '차량 굴곡을 확인하고 시공 부위를 정밀하게 마스킹합니다' },
       { step: 3, title: 'Aqua+ 5050 도포', desc: '250µm+ 도막 두께를 갖춘 투명 보호 베이스 도료를 균일하게 분사합니다' },
-      { step: 4, title: 'Reflow+ 클리어코트 코팅', desc: '표면 보호와 광택을 위한 Self-Healing 클리어코트를 도포합니다' },
+      { step: 4, title: '프리미엄 클리어코트 코팅', desc: '표면 보호와 광택을 위한 Self-Healing 클리어코트를 도포합니다' },
       { step: 5, title: '경화 및 최종 검수', desc: '도막 상태와 마감 품질을 철저히 확인 후 출고합니다' }
     ],
     relatedServices: ['pps-color', 'detailing', 'repair']
@@ -204,7 +204,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
       { step: 1, title: '컬러 상담 및 조색', desc: '고객 맞춤형 컬러 배합을 결정하고 정밀 조색을 진행합니다' },
       { step: 2, title: '차량 세척 및 마스킹', desc: '시공 부위를 세정하고 라인에 맞춰 정밀하게 마스킹합니다' },
       { step: 3, title: 'PPS 탄성 베이스 도포', desc: '추후 손상 없이 깨끗하게 벗겨지도록 보호 베이스층을 균일하게 분사합니다' },
-      { step: 4, title: 'Color & Reflow+ 코팅', desc: '선택 컬러 및 Self-Healing 클리어코트를 순차 도포합니다' },
+      { step: 4, title: 'Color & 클리어코트 코팅', desc: '선택 컬러 및 Self-Healing 클리어코트를 순차 도포합니다' },
       { step: 5, title: '경화 및 정밀 피니싱', desc: '표면 마감과 품질을 꼼꼼하게 검수한 후 차량을 인도합니다' }
     ],
     relatedServices: ['pps-clear', 'detailing', 'paint']
@@ -606,7 +606,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                       <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">스크래치 자가치유</td>
                       <td className="py-4 px-6 text-gray-600 border-l border-gray-100">열 반응 코팅층 적용</td>
                       <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
-                        ✓ Reflow+ 9080 Self-Healing (열 반응 자가치유)
+                        ✓ 프리미엄 클리어코트 Self-Healing (열 반응 자가치유)
                       </td>
                     </tr>
                   </tbody>
