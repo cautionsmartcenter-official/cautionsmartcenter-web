@@ -11,6 +11,13 @@ import {
   createWarrantyShareMessage,
   getWarrantyViewUrl
 } from '../lib/warrantyStorage';
+import {
+  getKakaoKey,
+  setKakaoKey,
+  isKakaoReady,
+  sendKakaoWarranty,
+  initKakao
+} from '../lib/kakao';
 import { WarrantyViewer } from './WarrantyViewer';
 
 interface AdminWarrantyManagerProps {
@@ -32,6 +39,12 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [viewingWarranty, setViewingWarranty] = useState<WarrantyItem | null>(null);
   const [issuedSuccessWarranty, setIssuedSuccessWarranty] = useState<WarrantyItem | null>(null);
+
+  // 카카오 전송 모달 및 카카오 키 설정 모달
+  const [sendingKakaoWarranty, setSendingKakaoWarranty] = useState<WarrantyItem | null>(null);
+  const [isKakaoSettingsOpen, setIsKakaoSettingsOpen] = useState(false);
+  const [kakaoKeyInput, setKakaoKeyInput] = useState('');
+  const [isKakaoConfigured, setIsKakaoConfigured] = useState(false);
 
   // 알림 토스트
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -69,6 +82,14 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
   useEffect(() => {
     reloadData();
+    const key = getKakaoKey();
+    setKakaoKeyInput(key);
+    if (key) {
+      initKakao(key);
+      setIsKakaoConfigured(true);
+    } else {
+      setIsKakaoConfigured(isKakaoReady());
+    }
   }, []);
 
   // 외부(상담 신청서)에서 전달된 사전 정보가 있을 때 폼 열기
@@ -88,6 +109,25 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       if (onClearPrefill) onClearPrefill();
     }
   }, [initialPrefill]);
+
+  // 카카오 키 저장 핸들러
+  const handleSaveKakaoKey = (e: React.FormEvent) => {
+    e.preventDefault();
+    const success = setKakaoKey(kakaoKeyInput);
+    if (success) {
+      setIsKakaoConfigured(true);
+      setIsKakaoSettingsOpen(false);
+      showToast('카카오 JavaScript 키가 성공적으로 등록 및 활성화되었습니다!');
+    } else {
+      if (!kakaoKeyInput.trim()) {
+        setIsKakaoConfigured(false);
+        setIsKakaoSettingsOpen(false);
+        showToast('카카오 키가 해제되었습니다. (클립보드 및 모바일 공유로 동작합니다)');
+      } else {
+        alert('카카오 키 등록 중 오류가 발생했습니다. 키를 다시 확인해 주세요.');
+      }
+    }
+  };
 
   // 신규 발급 모달 열기
   const handleOpenCreateModal = () => {
@@ -167,7 +207,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     }
 
     if (editingId) {
-      // 수정
       const updated = updateWarranty(editingId, formData);
       if (updated) {
         reloadData();
@@ -175,11 +214,9 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         showToast(`보증서(${formData.warrantyNo})가 성공적으로 수정되었습니다.`);
       }
     } else {
-      // 신규 발급
       const created = saveWarranty(formData);
       reloadData();
       setIsFormOpen(false);
-      // 발급 성공 모달 표시
       setIssuedSuccessWarranty(created);
     }
   };
@@ -193,46 +230,10 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     }
   };
 
-  // 카카오톡 전송 / 공유
-  const handleKakaoShare = (item: WarrantyItem) => {
-    const shareMessage = createWarrantyShareMessage(item);
-    const viewUrl = getWarrantyViewUrl(item.warrantyNo);
-
-    // 카카오 SDK 사용 가능한 경우
-    if (typeof window !== 'undefined' && (window as any).Kakao?.Share) {
-      try {
-        (window as any).Kakao.Share.sendDefault({
-          objectType: 'feed',
-          content: {
-            title: `[코션스마트센터] PPS 시공 보증서 발급 안내`,
-            description: `${item.customerName} 고객님 (${item.carPlate} / ${item.carModel})\nPPS 시공 보증서가 정상 발급되었습니다.`,
-            imageUrl: `${window.location.origin}/images/warranty/warranty_front.png`,
-            link: {
-              mobileWebUrl: viewUrl,
-              webUrl: viewUrl
-            }
-          },
-          buttons: [
-            {
-              title: '전자 보증서 확인하기',
-              link: {
-                mobileWebUrl: viewUrl,
-                webUrl: viewUrl
-              }
-            }
-          ]
-        });
-        showToast('카카오톡 전송 창이 열렸습니다.');
-        return;
-      } catch (err) {
-        console.warn('Kakao Share direct error', err);
-      }
-    }
-
-    // 기본 클립보드 복사
-    navigator.clipboard.writeText(shareMessage).then(() => {
-      showToast('고객 카톡 전송용 보증서 안내문구가 복사되었습니다! 카톡 채팅방에 붙여넣기(Ctrl+V) 해주세요.');
-    });
+  // 카카오톡 전송 실행 (SDK 또는 모바일 공유 또는 클립보드)
+  const handleExecuteSendKakao = async (item: WarrantyItem) => {
+    const res = await sendKakaoWarranty(item);
+    showToast(res.message);
   };
 
   // 보증서 열람 링크 복사
@@ -395,6 +396,17 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             <option value="cancelled">취소</option>
           </select>
 
+          {/* 카카오 키 설정 버튼 */}
+          <button
+            onClick={() => setIsKakaoSettingsOpen(true)}
+            className="px-3 py-2 bg-[#FEE500]/25 hover:bg-[#FEE500]/40 text-[#3c1e1e] border border-[#FEE500]/60 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            title="카카오톡 공식 공유 JavaScript 키 설정"
+          >
+            <i className="ri-kakao-talk-fill text-base text-[#3c1e1e]" />
+            <span className="hidden sm:inline">카카오 연동</span>
+            <span className={`w-2 h-2 rounded-full ${isKakaoConfigured ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+          </button>
+
           {/* 엑셀 다운로드 */}
           <button
             onClick={exportWarrantiesToCSV}
@@ -509,11 +521,11 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     {/* 전송 & 액션 버튼들 */}
                     <td className="py-3.5 px-4 whitespace-nowrap text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        {/* 💬 카카오톡 전송 */}
+                        {/* 💬 카카오톡 전송 센터 열기 */}
                         <button
-                          onClick={() => handleKakaoShare(item)}
+                          onClick={() => setSendingKakaoWarranty(item)}
                           className="px-2.5 py-1.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-bold rounded-lg text-xs flex items-center gap-1 shadow-sm cursor-pointer transition-transform hover:scale-105"
-                          title="고객 카카오톡으로 보증서 안내문구 전송"
+                          title="카카오톡 또는 문자로 고객에게 보증서 전송"
                         >
                           <i className="ri-kakao-talk-fill text-xs" />
                           <span>카톡전송</span>
@@ -879,7 +891,217 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       </AnimatePresence>
 
       {/* ─────────────────────────────────────────────────────────────
-         5. 신규 발급 완료 모달 (카카오톡 바로 전송 & 링크 복사)
+         5. 카카오톡 전송 센터 모달 (SendKakaoModal)
+      ───────────────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {sendingKakaoWarranty && (
+          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-slate-800"
+            >
+              {/* 모달 상단 */}
+              <div className="bg-[#FEE500] px-6 py-4 flex items-center justify-between text-[#3c1e1e]">
+                <div className="flex items-center gap-2">
+                  <i className="ri-kakao-talk-fill text-2xl" />
+                  <div>
+                    <h3 className="font-black text-base">카카오톡 보증서 전송 센터</h3>
+                    <p className="text-[11px] font-medium opacity-80">
+                      고객 카카오톡 또는 문자로 보증서 안내문과 바로가기 링크를 전송합니다.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSendingKakaoWarranty(null)}
+                  className="w-8 h-8 rounded-full bg-black/10 hover:bg-black/20 flex items-center justify-center cursor-pointer transition-colors"
+                >
+                  <i className="ri-close-line text-lg" />
+                </button>
+              </div>
+
+              {/* 모달 본문 */}
+              <div className="p-6 space-y-4">
+                {/* 고객 정보 요약 배너 */}
+                <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">수신 고객</span>
+                    <strong className="text-slate-900 text-sm">{sendingKakaoWarranty.customerName} 고객님</strong>
+                    <span className="font-mono text-slate-600 block">{sendingKakaoWarranty.customerPhone}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-slate-500 block text-[10px]">시공 차량</span>
+                    <span className="font-bold text-red-600">{sendingKakaoWarranty.carPlate}</span>
+                    <span className="text-slate-600 block text-[11px]">{sendingKakaoWarranty.carModel}</span>
+                  </div>
+                </div>
+
+                {/* 카카오 연동 상태 뱃지 및 안내 */}
+                <div className="flex items-center justify-between bg-slate-100/80 px-3.5 py-2.5 rounded-xl border border-slate-200/80 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2.5 h-2.5 rounded-full ${isKakaoConfigured ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                    <span className="font-semibold text-slate-700">
+                      {isKakaoConfigured ? '카카오 공식 JavaScript SDK 연동됨' : '카카오 앱키 미등록 상태 (간편전송)'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setIsKakaoSettingsOpen(true);
+                    }}
+                    className="text-[11px] font-bold text-red-600 hover:underline cursor-pointer"
+                  >
+                    {isKakaoConfigured ? '키 변경' : '키 등록하기(3분)'}
+                  </button>
+                </div>
+
+                {/* 발송 메시지 미리보기 박스 */}
+                <div>
+                  <label className="text-xs font-bold text-slate-600 block mb-1.5 flex items-center justify-between">
+                    <span>발송 메시지 미리보기</span>
+                    <span className="text-[11px] text-slate-400 font-normal">고객 화면에 표시될 내용</span>
+                  </label>
+                  <div className="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80 text-xs text-slate-800 font-sans whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto select-all">
+                    {createWarrantyShareMessage(sendingKakaoWarranty)}
+                  </div>
+                </div>
+
+                {/* 전송 액션 버튼들 */}
+                <div className="space-y-2.5 pt-2">
+                  {/* 카카오톡 앱/웹으로 직접 전송 */}
+                  <button
+                    onClick={() => handleExecuteSendKakao(sendingKakaoWarranty)}
+                    className="w-full py-3.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-black rounded-2xl text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer transition-transform hover:scale-[1.01]"
+                  >
+                    <i className="ri-kakao-talk-fill text-lg" />
+                    <span>카카오톡으로 전송 실행</span>
+                  </button>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    {/* 문자(SMS) 바로 전송 */}
+                    <a
+                      href={`sms:${sendingKakaoWarranty.customerPhone}?body=${encodeURIComponent(createWarrantyShareMessage(sendingKakaoWarranty))}`}
+                      className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    >
+                      <i className="ri-message-2-line text-emerald-600 text-sm" />
+                      <span>문자(SMS) 발송</span>
+                    </a>
+
+                    {/* 안내 문구 복사 */}
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(createWarrantyShareMessage(sendingKakaoWarranty)).then(() => {
+                          showToast('안내문구가 복사되었습니다. 카톡 창에 붙여넣기(Ctrl+V) 하세요.');
+                        });
+                      }}
+                      className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    >
+                      <i className="ri-file-copy-line text-slate-600 text-sm" />
+                      <span>문구 전체 복사</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ─────────────────────────────────────────────────────────────
+         6. 카카오 JavaScript 키 설정 모달
+      ───────────────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {isKakaoSettingsOpen && (
+          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-slate-800"
+            >
+              <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <i className="ri-key-2-line text-xl text-yellow-400" />
+                  <div>
+                    <h3 className="font-bold text-base text-white">카카오톡 공식 연동 설정</h3>
+                    <p className="text-[11px] text-slate-400">
+                      카카오 무료 개발자 키를 입력하시면 공식 카드 형식 메시지가 바로 전송됩니다.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsKakaoSettingsOpen(false)}
+                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center cursor-pointer"
+                >
+                  <i className="ri-close-line text-lg" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveKakaoKey} className="p-6 space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">
+                    카카오 JavaScript 키 (무료 발급)
+                  </label>
+                  <input
+                    type="text"
+                    value={kakaoKeyInput}
+                    onChange={(e) => setKakaoKeyInput(e.target.value)}
+                    placeholder="예: a1b2c3d4e5f6g7h8i9j0..."
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:border-red-500"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    * 비워두고 저장하시면 기본 클립보드 복사 & 스마트폰 공유 방식으로 동작합니다.
+                  </p>
+                </div>
+
+                {/* 발급 안내 가이드 */}
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2 text-slate-700">
+                  <h4 className="font-bold text-slate-900 flex items-center gap-1">
+                    <i className="ri-information-line text-primary" />
+                    <span>3분 무료 발급 방법 안내</span>
+                  </h4>
+                  <ol className="list-decimal list-inside space-y-1.5 text-[11px] text-slate-600 leading-relaxed pl-1">
+                    <li>
+                      <a
+                        href="https://developers.kakao.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary font-bold hover:underline"
+                      >
+                        developers.kakao.com
+                      </a>
+                      에 접속하여 카카오 계정으로 로그인합니다.
+                    </li>
+                    <li><strong>[내 애플리케이션]</strong> → <strong>[애플리케이션 추가하기]</strong> 클릭 (앱 이름: 코션스마트센터)</li>
+                    <li><strong>[앱 키]</strong> 메뉴에서 <strong>JavaScript 키</strong>를 복사합니다.</li>
+                    <li><strong>[플랫폼]</strong> → <strong>[Web 플랫폼 등록]</strong>에서 사이트 도메인(<code className="bg-slate-200 px-1 rounded">http://localhost:5173</code>)을 추가합니다.</li>
+                    <li>복사한 키를 위 입력칸에 붙여넣고 [저장하기]를 누르면 끝!</li>
+                  </ol>
+                </div>
+
+                <div className="pt-2 flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsKakaoSettingsOpen(false)}
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
+                  >
+                    닫기
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
+                  >
+                    저장하기
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ─────────────────────────────────────────────────────────────
+         7. 신규 발급 완료 모달
       ───────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {issuedSuccessWarranty && (
@@ -890,7 +1112,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
               exit={{ opacity: 0, scale: 0.9 }}
               className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-center p-6"
             >
-              {/* 성공 아이콘 */}
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner">
                 <i className="ri-checkbox-circle-fill" />
               </div>
@@ -902,7 +1123,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 관리자 DB에 안전하게 저장되었습니다. 이제 고객님의 핸드폰으로 보증서를 바로 전송하실 수 있습니다.
               </p>
 
-              {/* 발급 요약 박스 */}
               <div className="bg-slate-50 rounded-2xl p-4 text-xs space-y-1.5 text-left border border-slate-200 mb-6 font-sans">
                 <div className="flex justify-between">
                   <span className="text-slate-500">보증번호</span>
@@ -922,12 +1142,13 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </div>
               </div>
 
-              {/* 액션 버튼들 */}
               <div className="space-y-2.5">
-                {/* 카카오톡으로 바로 보내기 */}
+                {/* 카카오톡 전송 센터 열기 */}
                 <button
                   onClick={() => {
-                    handleKakaoShare(issuedSuccessWarranty);
+                    const target = issuedSuccessWarranty;
+                    setIssuedSuccessWarranty(null);
+                    setSendingKakaoWarranty(target);
                   }}
                   className="w-full py-3.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-black rounded-2xl text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all"
                 >
@@ -948,7 +1169,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   <span>발급된 보증서 확인 / 인쇄 (A4)</span>
                 </button>
 
-                {/* 닫기 */}
                 <button
                   onClick={() => setIssuedSuccessWarranty(null)}
                   className="w-full py-2.5 text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
@@ -962,7 +1182,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       </AnimatePresence>
 
       {/* ─────────────────────────────────────────────────────────────
-         6. 보증서 뷰어 팝업 (WarrantyViewer)
+         8. 보증서 뷰어 팝업 (WarrantyViewer)
       ───────────────────────────────────────────────────────────── */}
       {viewingWarranty && (
         <WarrantyViewer

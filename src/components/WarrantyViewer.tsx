@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { type WarrantyItem, createWarrantyShareMessage, getWarrantyViewUrl } from '../lib/warrantyStorage';
+import { type WarrantyItem, getWarrantyViewUrl } from '../lib/warrantyStorage';
+import { sendKakaoWarranty } from '../lib/kakao';
 
 interface WarrantyViewerProps {
   warranty: WarrantyItem;
@@ -37,47 +38,10 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   };
 
   // 카카오톡 전송 / 공유
-  const handleKakaoShare = () => {
-    const shareMessage = createWarrantyShareMessage(warranty);
-    const viewUrl = getWarrantyViewUrl(warranty.warrantyNo);
-
-    // 1. 만약 카카오 SDK가 로드되어 있고 초기화되어 있다면 직접 카카오 링크 전송
-    if (typeof window !== 'undefined' && (window as any).Kakao?.Share) {
-      try {
-        (window as any).Kakao.Share.sendDefault({
-          objectType: 'feed',
-          content: {
-            title: `[코션스마트센터] PPS 시공 보증서 발급 안내`,
-            description: `${warranty.customerName} 고객님 (${warranty.carPlate} / ${warranty.carModel})\nPPS 시공 보증서가 정상 발급되었습니다.`,
-            imageUrl: `${window.location.origin}/images/warranty/warranty_front.png`,
-            link: {
-              mobileWebUrl: viewUrl,
-              webUrl: viewUrl
-            }
-          },
-          buttons: [
-            {
-              title: '전자 보증서 확인하기',
-              link: {
-                mobileWebUrl: viewUrl,
-                webUrl: viewUrl
-              }
-            }
-          ]
-        });
-        setShareFeedback('카카오톡 전송 창이 열렸습니다.');
-        setTimeout(() => setShareFeedback(null), 3000);
-        return;
-      } catch (err) {
-        console.warn('Kakao Share direct error, falling back to message copy', err);
-      }
-    }
-
-    // 2. 기본 클립보드 복사 및 카카오톡 안내
-    navigator.clipboard.writeText(shareMessage).then(() => {
-      setShareFeedback('카카오톡 전송용 안내 문구가 클립보드에 복사되었습니다! 카톡 채팅방에 붙여넣기(Ctrl+V) 해주세요.');
-      setTimeout(() => setShareFeedback(null), 4000);
-    });
+  const handleKakaoShare = async () => {
+    const res = await sendKakaoWarranty(warranty);
+    setShareFeedback(res.message);
+    setTimeout(() => setShareFeedback(null), 4000);
   };
 
   // 인쇄 실행
