@@ -223,11 +223,13 @@ export const createWarrantyShareMessage = (item: WarrantyItem): string => {
     item.hasColorPps ? `컬러PPS(${item.colorPpsDetail || '전체'})` : ''
   ].filter(Boolean).join(', ') || '독일 정품 CARDIP PPS';
 
-  return `[코션스마트센터] 공식 전자 품질 보증서 발급 안내
+  return `[코션스마트센터] PPS 시공 보증서 발급 안내
 
 안녕하세요, ${item.customerName} 고객님.
+
 (주)코션스마트센터를 믿고 차량 시공을 맡겨주셔서 진심으로 감사드립니다.
-고객님의 차량에 독일 CARDIP® 공식 정품 시공 보증서가 정상 발급되었습니다.
+
+고객님의 차량에 PPS 시공 보증서가 정상 발급되었습니다.
 
 ■ 차량번호 : ${item.carPlate} (${item.carModel})
 ■ 시공내역 : ${ppsType}

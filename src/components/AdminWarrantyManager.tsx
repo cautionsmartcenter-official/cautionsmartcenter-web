@@ -204,8 +204,8 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         (window as any).Kakao.Share.sendDefault({
           objectType: 'feed',
           content: {
-            title: `[코션스마트센터] 공식 전자 품질 보증서`,
-            description: `${item.customerName} 고객님 (${item.carPlate} / ${item.carModel})\n독일 CARDIP 정품 PPS 시공 보증서가 발급되었습니다.`,
+            title: `[코션스마트센터] PPS 시공 보증서 발급 안내`,
+            description: `${item.customerName} 고객님 (${item.carPlate} / ${item.carModel})\nPPS 시공 보증서가 정상 발급되었습니다.`,
             imageUrl: `${window.location.origin}/images/warranty/warranty_front.png`,
             link: {
               mobileWebUrl: viewUrl,
