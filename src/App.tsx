@@ -14,6 +14,8 @@ import { ReaddyNotice } from './components/ReaddyNotice';
 import { ReaddyFaq } from './components/ReaddyFaq';
 import { FloatingContactBar } from './components/FloatingContactBar';
 import { AdminDashboard } from './components/AdminDashboard';
+import { WarrantyViewer } from './components/WarrantyViewer';
+import { getWarrantyById, getWarranties, type WarrantyItem } from './lib/warrantyStorage';
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
 import { ReaddyYouTubeSection } from './components/ReaddyYouTubeSection';
 
@@ -21,6 +23,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedServiceId, setSelectedServiceId] = useState<string>('repair');
   const [contactInitialService, setContactInitialService] = useState<string>('');
+  const [customerWarranty, setCustomerWarranty] = useState<WarrantyItem | null>(null);
+  const [warrantySearchQuery, setWarrantySearchQuery] = useState<string>('');
 
   /* ── Navigate to Service Detail ── */
   const handleOpenServiceDetail = (serviceId: string) => {
@@ -75,11 +79,24 @@ export default function App() {
     }
   };
 
-  /* ── Hash routing (e.g. #admin) ── */
+  /* ── Hash routing (e.g. #admin, #warranty) ── */
   useEffect(() => {
     const checkHash = () => {
-      if (window.location.hash === '#admin') {
+      const hash = window.location.hash;
+      if (hash === '#admin') {
         setActiveTab('admin');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash.startsWith('#warranty')) {
+        setActiveTab('warranty');
+        const params = new URLSearchParams(hash.split('?')[1] || '');
+        const no = params.get('no') || params.get('id');
+        if (no) {
+          const item = getWarrantyById(no);
+          setCustomerWarranty(item);
+        } else {
+          const all = getWarranties();
+          setCustomerWarranty(all[0] || null);
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
@@ -88,7 +105,68 @@ export default function App() {
     return () => window.removeEventListener('hashchange', checkHash);
   }, []);
 
-  /* ── 0. Admin Dashboard View ── */
+  /* ── 0-A. Customer Warranty View ── */
+  if (activeTab === 'warranty') {
+    if (customerWarranty) {
+      return (
+        <WarrantyViewer
+          warranty={customerWarranty}
+          onClose={() => {
+            window.location.hash = '';
+            setActiveTab('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      );
+    }
+
+    return (
+      <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center shadow-2xl">
+          <div className="w-16 h-16 rounded-2xl bg-red-600/20 text-red-500 border border-red-500/30 flex items-center justify-center mx-auto mb-4 text-3xl">
+            <i className="ri-shield-check-fill" />
+          </div>
+          <h2 className="text-xl font-bold mb-2">코션스마트센터 전자보증서 조회</h2>
+          <p className="text-xs text-slate-400 mb-6">
+            차량번호 또는 보증일련번호를 입력하시면 발급된 보증서를 바로 확인하실 수 있습니다.
+          </p>
+          <div className="space-y-3">
+            <input
+              type="text"
+              value={warrantySearchQuery}
+              onChange={(e) => setWarrantySearchQuery(e.target.value)}
+              placeholder="예: 123가 4567 또는 CSC-2026-..."
+              className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-2xl text-sm focus:outline-none focus:border-red-500"
+            />
+            <button
+              onClick={() => {
+                const item = getWarrantyById(warrantySearchQuery.trim());
+                if (item) {
+                  setCustomerWarranty(item);
+                } else {
+                  alert('입력하신 정보와 일치하는 정품 보증서가 없습니다. 번호를 다시 확인해 주세요.');
+                }
+              }}
+              className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-red-600/30 cursor-pointer"
+            >
+              보증서 조회하기
+            </button>
+            <button
+              onClick={() => {
+                window.location.hash = '';
+                setActiveTab('home');
+              }}
+              className="text-xs text-slate-500 hover:text-white pt-2 cursor-pointer block mx-auto"
+            >
+              ← 홈페이지로 돌아가기
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── 0-B. Admin Dashboard View ── */
   if (activeTab === 'admin') {
     return (
       <AdminDashboard

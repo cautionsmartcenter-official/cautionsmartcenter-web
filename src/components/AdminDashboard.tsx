@@ -8,6 +8,8 @@ import {
   exportConsultationsToCSV,
   type ConsultationItem
 } from '../lib/consultationStorage';
+import { AdminWarrantyManager } from './AdminWarrantyManager';
+import { exportWarrantiesToCSV } from '../lib/warrantyStorage';
 
 interface AdminDashboardProps {
   onExit: () => void;
@@ -30,6 +32,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
   });
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState('');
+
+  // 탭 섹션: 상담 접수 vs 전자 보증서
+  const [adminSection, setAdminSection] = useState<'consultations' | 'warranties'>('consultations');
+  const [warrantyPrefill, setWarrantyPrefill] = useState<any>(null);
 
   const [consultations, setConsultations] = useState<ConsultationItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -153,14 +159,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
               코션스마트센터 관리자 로그인
             </h1>
             <p className="text-xs text-slate-400 mt-2">
-              실시간 고객 맞춤 견적 & 상담 신청 접수 관리 시스템
+              실시간 고객 견적 접수 & 공식 정품 전자보증서 발급 시스템
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider">
-                관리자 인증 비밀번호
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                관리자 비밀번호
               </label>
               <div className="relative">
                 <input
@@ -168,33 +174,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
                   placeholder="비밀번호 입력 (기본: caution2026!)"
+                  className="w-full px-4 py-3.5 bg-slate-950 border border-slate-700 rounded-2xl text-white placeholder-slate-500 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                   autoFocus
-                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:border-primary transition-colors"
                 />
               </div>
               {authError && (
                 <p className="text-xs text-red-400 mt-2 flex items-center gap-1">
-                  <i className="ri-error-warning-line" /> {authError}
+                  <i className="ri-error-warning-line" />
+                  {authError}
                 </p>
               )}
             </div>
 
-            <div className="pt-2">
-              <button
-                type="submit"
-                className="w-full py-3.5 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl transition-all shadow-lg shadow-primary/30 active:scale-95 text-sm cursor-pointer"
-              >
-                관리자 대시보드 입장
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="w-full py-3.5 bg-primary hover:bg-primary-dark text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-primary/30 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>대시보드 로그인</span>
+              <i className="ri-arrow-right-line" />
+            </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-800 text-center">
+          <div className="mt-8 pt-6 border-t border-slate-800 text-center">
             <button
               onClick={onExit}
-              className="text-xs text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1 cursor-pointer"
+              className="text-xs text-slate-400 hover:text-white transition-colors cursor-pointer inline-flex items-center gap-1"
             >
-              <i className="ri-arrow-left-line" /> 공식 웹사이트 홈으로 돌아가기
+              <i className="ri-arrow-left-line" />
+              <span>홈페이지로 돌아가기</span>
             </button>
           </div>
         </motion.div>
@@ -214,22 +221,65 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
             <span className="px-2.5 py-1 bg-primary text-white text-xs font-black rounded-md tracking-wider">
               ADMIN
             </span>
-            <div>
-              <h1 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
-                코션스마트센터 상담 접수 관리
+            <div className="hidden sm:block">
+              <h1 className="text-base font-black tracking-tight text-white flex items-center gap-2">
+                코션스마트센터 관리자
               </h1>
+            </div>
+
+            {/* ── 상단 탭 전환 바 ── */}
+            <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700 ml-1 sm:ml-3">
+              <button
+                onClick={() => setAdminSection('consultations')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  adminSection === 'consultations'
+                    ? 'bg-primary text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <i className="ri-inbox-line" />
+                <span>상담 접수</span>
+                <span className="px-1.5 py-0.2 bg-white/20 rounded-full text-[10px]">{stats.total}</span>
+              </button>
+
+              <button
+                onClick={() => setAdminSection('warranties')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  adminSection === 'warranties'
+                    ? 'bg-red-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <i className="ri-shield-check-fill text-yellow-300" />
+                <span>정품 전자보증서</span>
+              </button>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={exportConsultationsToCSV}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
-              title="상담 내역을 엑셀 CSV 파일로 저장합니다"
-            >
-              <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
-              <span className="hidden sm:inline">엑셀 다운로드</span>
-            </button>
+            {/* 상담 섹션일 때 엑셀 다운로드 */}
+            {adminSection === 'consultations' && (
+              <button
+                onClick={exportConsultationsToCSV}
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                title="상담 내역을 엑셀 CSV 파일로 저장합니다"
+              >
+                <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
+                <span className="hidden sm:inline">엑셀 다운로드</span>
+              </button>
+            )}
+
+            {/* 보증서 섹션일 때 보증서 대장 엑셀 다운로드 */}
+            {adminSection === 'warranties' && (
+              <button
+                onClick={exportWarrantiesToCSV}
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                title="보증서 발급 대장을 엑셀 CSV 파일로 저장합니다"
+              >
+                <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
+                <span className="hidden sm:inline">보증서 대장 다운로드</span>
+              </button>
+            )}
 
             <button
               onClick={onExit}
@@ -252,285 +302,300 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
 
       {/* ── Dashboard Body ── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        {/* ── 1. 통계 카드 섹션 ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {/* 전체 접수 */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500">총 상담 접수</span>
-              <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-                <i className="ri-inbox-line" />
-              </span>
+        {/* ─────────────────────────────────────────────────────────────
+           A. 정품 전자 보증서 관리 섹션
+        ───────────────────────────────────────────────────────────── */}
+        {adminSection === 'warranties' ? (
+          <AdminWarrantyManager
+            initialPrefill={warrantyPrefill}
+            onClearPrefill={() => setWarrantyPrefill(null)}
+          />
+        ) : (
+          /* ─────────────────────────────────────────────────────────────
+             B. 상담 & 견적 접수 관리 섹션
+          ───────────────────────────────────────────────────────────── */
+          <div>
+            {/* ── 1. 통계 카드 섹션 ── */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {/* 전체 접수 */}
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-500">총 상담 접수</span>
+                  <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                    <i className="ri-inbox-line" />
+                  </span>
+                </div>
+                <div className="mt-3 text-2xl sm:text-3xl font-black text-slate-900">
+                  {stats.total} <span className="text-xs font-medium text-slate-500">건</span>
+                </div>
+              </div>
+
+              {/* 신규 미확인 */}
+              <div className="bg-white p-5 rounded-2xl border border-red-200 shadow-sm relative overflow-hidden">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-red-600">신규 대기</span>
+                  <span className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 animate-pulse">
+                    <i className="ri-notification-3-line" />
+                  </span>
+                </div>
+                <div className="mt-3 text-2xl sm:text-3xl font-black text-red-600">
+                  {stats.newCount} <span className="text-xs font-medium text-slate-500">건</span>
+                </div>
+              </div>
+
+              {/* 상담/견적 진행중 */}
+              <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-amber-600">상담 & 견적 중</span>
+                  <span className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                    <i className="ri-customer-service-2-line" />
+                  </span>
+                </div>
+                <div className="mt-3 text-2xl sm:text-3xl font-black text-amber-600">
+                  {stats.inProgress} <span className="text-xs font-medium text-slate-500">건</span>
+                </div>
+              </div>
+
+              {/* 시공 예약/완료 */}
+              <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-600">예약 & 완료</span>
+                  <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <i className="ri-checkbox-circle-line" />
+                  </span>
+                </div>
+                <div className="mt-3 text-2xl sm:text-3xl font-black text-emerald-600">
+                  {stats.completed} <span className="text-xs font-medium text-slate-500">건</span>
+                </div>
+              </div>
             </div>
-            <div className="mt-3 text-2xl sm:text-3xl font-black text-slate-900">{stats.total} <span className="text-xs font-medium text-slate-500">건</span></div>
-          </div>
 
-          {/* 신규 미확인 */}
-          <div className="bg-white p-5 rounded-2xl border border-red-200 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-red-600">신규 대기</span>
-              <span className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 animate-pulse">
-                <i className="ri-notification-3-line" />
-              </span>
+            {/* ── 2. 검색 및 필터 바 ── */}
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row items-center gap-3 justify-between">
+              {/* 검색창 */}
+              <div className="relative w-full md:w-96">
+                <i className="ri-search-line absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="고객명, 연락처, 차종, 문의 검색..."
+                  className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    <i className="ri-close-line" />
+                  </button>
+                )}
+              </div>
+
+              {/* 상태 필터 및 서비스 필터 */}
+              <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+                {/* 상태별 필터 */}
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:border-primary"
+                >
+                  <option value="all">진행상태: 전체</option>
+                  <option value="new">신규 접수</option>
+                  <option value="contacted">상담 진행중</option>
+                  <option value="quoted">견적 발송</option>
+                  <option value="reserved">시공 예약</option>
+                  <option value="completed">시공 완료</option>
+                  <option value="cancelled">취소/보류</option>
+                </select>
+
+                {/* 서비스별 필터 */}
+                <select
+                  value={serviceFilter}
+                  onChange={(e) => setServiceFilter(e.target.value)}
+                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:border-primary"
+                >
+                  <option value="all">시공종류: 전체</option>
+                  <option value="투명PPS">투명 PPS</option>
+                  <option value="컬러PPS">컬러 PPS</option>
+                  <option value="사고수리">사고수리 & 판금도색</option>
+                  <option value="광택">광택 & 유리막 코팅</option>
+                </select>
+
+                <button
+                  onClick={reloadData}
+                  className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer"
+                  title="새로고침"
+                >
+                  <i className="ri-refresh-line text-base" />
+                </button>
+              </div>
             </div>
-            <div className="mt-3 text-2xl sm:text-3xl font-black text-red-600">{stats.newCount} <span className="text-xs font-medium text-slate-500">건</span></div>
-          </div>
 
-          {/* 상담/견적 진행중 */}
-          <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-amber-600">상담 & 견적 중</span>
-              <span className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
-                <i className="ri-customer-service-2-line" />
-              </span>
-            </div>
-            <div className="mt-3 text-2xl sm:text-3xl font-black text-amber-600">{stats.inProgress} <span className="text-xs font-medium text-slate-500">건</span></div>
-          </div>
-
-          {/* 시공 예약/완료 */}
-          <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-emerald-600">예약 & 완료</span>
-              <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                <i className="ri-checkbox-circle-line" />
-              </span>
-            </div>
-            <div className="mt-3 text-2xl sm:text-3xl font-black text-emerald-600">{stats.completed} <span className="text-xs font-medium text-slate-500">건</span></div>
-          </div>
-        </div>
-
-        {/* ── 2. 검색 및 필터 바 ── */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row items-center gap-3 justify-between">
-          {/* 검색창 */}
-          <div className="relative w-full md:w-96">
-            <i className="ri-search-line absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="고객명, 연락처, 차종, 섀시코드, 문의 검색..."
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary transition-colors"
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              >
-                <i className="ri-close-line" />
-              </button>
-            )}
-          </div>
-
-          {/* 필터 셀렉트 */}
-          <div className="flex items-center gap-2.5 w-full md:w-auto">
-            {/* 상태 필터 */}
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-primary"
-            >
-              <option value="all">전체 상태</option>
-              <option value="new">신규 접수</option>
-              <option value="contacted">상담 진행중</option>
-              <option value="quoted">견적 발송</option>
-              <option value="reserved">시공 예약</option>
-              <option value="completed">시공 완료</option>
-              <option value="cancelled">취소/보류</option>
-            </select>
-
-            {/* 서비스 필터 */}
-            <select
-              value={serviceFilter}
-              onChange={(e) => setServiceFilter(e.target.value)}
-              className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-primary"
-            >
-              <option value="all">전체 서비스</option>
-              <option value="투명PPS">투명PPS</option>
-              <option value="컬러PPS">컬러PPS</option>
-              <option value="판금도색">판금도색</option>
-              <option value="디테일링">디테일링</option>
-              <option value="기타">기타</option>
-            </select>
-
-            <button
-              onClick={reloadData}
-              className="p-2 text-slate-500 hover:text-primary hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
-              title="새로고침"
-            >
-              <i className="ri-refresh-line text-lg" />
-            </button>
-          </div>
-        </div>
-
-        {/* ── 3. 상담 신청 리스트 테이블 ── */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-700">
-              <thead className="bg-slate-100/75 text-xs text-slate-500 uppercase border-b border-slate-200 font-bold tracking-wider">
-                <tr>
-                  <th className="py-3.5 px-4">접수 일시</th>
-                  <th className="py-3.5 px-4">고객 정보</th>
-                  <th className="py-3.5 px-4">차량 정보 (섀시코드)</th>
-                  <th className="py-3.5 px-4">관심 서비스</th>
-                  <th className="py-3.5 px-4">진행 상태</th>
-                  <th className="py-3.5 px-4 text-center">빠른 조치</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filteredList.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="py-16 text-center text-slate-400">
-                      <i className="ri-inbox-archive-line text-4xl block mb-2 text-slate-300" />
-                      일치하는 상담 신청 내역이 없습니다.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredList.map((item) => {
-                    const statusObj = STATUS_LABELS[item.status] || STATUS_LABELS.new;
-                    const dateFormatted = new Date(item.createdAt).toLocaleString('ko-KR', {
-                      month: 'numeric',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    });
-
-                    return (
-                      <tr
-                        key={item.id}
-                        className={`hover:bg-slate-50/80 transition-colors ${
-                          item.status === 'new' ? 'bg-red-50/20' : ''
-                        }`}
-                      >
-                        {/* 일시 */}
-                        <td className="py-4 px-4 whitespace-nowrap">
-                          <div className="font-semibold text-slate-800">{dateFormatted}</div>
-                          <div className="text-[11px] text-slate-400 font-mono">{item.id.slice(0, 10)}</div>
-                        </td>
-
-                        {/* 고객 정보 */}
-                        <td className="py-4 px-4">
-                          <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                            {item.name}
-                            {item.status === 'new' && (
-                              <span className="w-2 h-2 rounded-full bg-red-500 inline-block animate-ping" />
-                            )}
-                          </div>
-                          <div className="text-xs text-slate-600 font-mono mt-0.5">
-                            <a href={`tel:${item.phone}`} className="hover:text-primary underline">
-                              {item.phone}
-                            </a>
-                          </div>
-                          {item.email && (
-                            <div className="text-[11px] text-slate-400 truncate max-w-[160px]">
-                              {item.email}
-                            </div>
-                          )}
-                        </td>
-
-                        {/* 차량 정보 */}
-                        <td className="py-4 px-4">
-                          <div className="font-semibold text-slate-900 text-xs">
-                            {item.customModel || `${item.model || item.brand}`}
-                          </div>
-                          {item.codeName && (
-                            <span className="inline-block mt-1 px-2 py-0.5 bg-slate-100 text-slate-700 text-[11px] font-mono font-bold rounded border border-slate-200">
-                              {item.codeName}
-                            </span>
-                          )}
-                        </td>
-
-                        {/* 관심 서비스 */}
-                        <td className="py-4 px-4 whitespace-nowrap">
-                          <span
-                            className={`inline-block px-2.5 py-1 text-xs font-bold rounded-lg border ${
-                              item.service.includes('컬러')
-                                ? 'bg-amber-50 text-amber-800 border-amber-200'
-                                : item.service.includes('투명')
-                                ? 'bg-blue-50 text-blue-800 border-blue-200'
-                                : 'bg-slate-100 text-slate-800 border-slate-200'
-                            }`}
-                          >
-                            {item.service}
-                          </span>
-                        </td>
-
-                        {/* 진행 상태 (드롭다운) */}
-                        <td className="py-4 px-4 whitespace-nowrap">
-                          <select
-                            value={item.status}
-                            onChange={(e) =>
-                              handleStatusChange(item.id, e.target.value as ConsultationItem['status'])
-                            }
-                            className={`px-2.5 py-1 text-xs font-bold rounded-lg border focus:outline-none ${statusObj.bg} ${statusObj.color}`}
-                          >
-                            <option value="new">신규 접수</option>
-                            <option value="contacted">상담 진행중</option>
-                            <option value="quoted">견적 발송</option>
-                            <option value="reserved">시공 예약</option>
-                            <option value="completed">시공 완료</option>
-                            <option value="cancelled">취소/보류</option>
-                          </select>
-                        </td>
-
-                        {/* 빠른 조치 버튼 */}
-                        <td className="py-4 px-4 whitespace-nowrap text-center">
-                          <div className="flex items-center justify-center gap-1.5">
-                            {/* 통화 */}
-                            <a
-                              href={`tel:${item.phone}`}
-                              className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
-                              title={`${item.phone} 바로 통화 연결`}
-                            >
-                              <i className="ri-phone-fill text-base" />
-                            </a>
-
-                            {/* 카톡 채널 연결 */}
-                            <a
-                              href="http://pf.kakao.com/_FxlNhX/chat"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="p-1.5 rounded-lg bg-[#FEE500]/30 text-[#3A1D1D] hover:bg-[#FEE500] transition-colors"
-                              title="카카오톡 채널 채팅창 열기"
-                            >
-                              <i className="ri-chat-3-fill text-base" />
-                            </a>
-
-                            {/* 상세 및 메모 */}
-                            <button
-                              onClick={() => {
-                                setSelectedItem(item);
-                                setCurrentNote(item.notes || '');
-                              }}
-                              className="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer relative"
-                              title="상세 문의 내용 및 메모"
-                            >
-                              <i className="ri-file-list-3-line text-base" />
-                              {item.notes && (
-                                <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-primary rounded-full" />
-                              )}
-                            </button>
-
-                            {/* 삭제 */}
-                            <button
-                              onClick={() => handleDelete(item.id, item.name)}
-                              className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors cursor-pointer"
-                              title="상담 내역 삭제"
-                            >
-                              <i className="ri-delete-bin-line text-base" />
-                            </button>
-                          </div>
+            {/* ── 3. 상담 접수 테이블 ── */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                  <thead>
+                    <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-[11px] sm:text-xs uppercase tracking-wider font-semibold">
+                      <th className="py-3.5 px-4">상태</th>
+                      <th className="py-3.5 px-4">접수일시</th>
+                      <th className="py-3.5 px-4">고객명 / 연락처</th>
+                      <th className="py-3.5 px-4">차량정보</th>
+                      <th className="py-3.5 px-4">희망 시공</th>
+                      <th className="py-3.5 px-4">문의 요약</th>
+                      <th className="py-3.5 px-4">관리 메모</th>
+                      <th className="py-3.5 px-4 text-center">관리</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredList.length === 0 ? (
+                      <tr>
+                        <td colSpan={8} className="py-12 text-center text-slate-400">
+                          <i className="ri-file-search-line text-3xl block mb-2 text-slate-300" />
+                          해당 조건의 상담 접수 내역이 없습니다.
                         </td>
                       </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
+                    ) : (
+                      filteredList.map((item) => {
+                        const statusMeta = STATUS_LABELS[item.status] || STATUS_LABELS.new;
+                        const dateFormatted = new Date(item.createdAt).toLocaleString('ko-KR', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        });
+
+                        return (
+                          <tr
+                            key={item.id}
+                            className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                            onClick={() => {
+                              setSelectedItem(item);
+                              setCurrentNote(item.notes || '');
+                            }}
+                          >
+                            {/* 상태 뱃지 및 드롭다운 */}
+                            <td className="py-3.5 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                              <select
+                                value={item.status}
+                                onChange={(e) =>
+                                  handleStatusChange(item.id, e.target.value as ConsultationItem['status'])
+                                }
+                                className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${statusMeta.bg} ${statusMeta.color} focus:outline-none cursor-pointer`}
+                              >
+                                <option value="new">신규 접수</option>
+                                <option value="contacted">상담 진행중</option>
+                                <option value="quoted">견적 발송</option>
+                                <option value="reserved">시공 예약</option>
+                                <option value="completed">시공 완료</option>
+                                <option value="cancelled">취소/보류</option>
+                              </select>
+                            </td>
+
+                            {/* 접수일시 */}
+                            <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap font-mono text-[11px]">
+                              {dateFormatted}
+                            </td>
+
+                            {/* 고객명 / 연락처 */}
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                {item.name}
+                                {item.status === 'new' && (
+                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+                                )}
+                              </div>
+                              <div className="text-slate-500 font-mono text-[11px]">{item.phone}</div>
+                            </td>
+
+                            {/* 차량정보 */}
+                            <td className="py-3.5 px-4">
+                              <div className="font-semibold text-slate-800 line-clamp-1">{item.model || '미입력'}</div>
+                              {item.codeName && (
+                                <div className="text-[11px] text-slate-500 font-mono">{item.codeName}</div>
+                              )}
+                            </td>
+
+                            {/* 희망 시공 */}
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md font-medium text-xs">
+                                {item.service || '일반 상담'}
+                              </span>
+                            </td>
+
+                            {/* 문의 내용 요약 */}
+                            <td className="py-3.5 px-4 max-w-xs">
+                              <p className="text-slate-600 line-clamp-1 text-xs">{item.message || '-'}</p>
+                            </td>
+
+                            {/* 관리자 메모 */}
+                            <td className="py-3.5 px-4 max-w-[160px]">
+                              {item.notes ? (
+                                <span className="inline-flex items-center gap-1 text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 line-clamp-1">
+                                  <i className="ri-sticky-note-line text-xs" />
+                                  <span className="truncate">{item.notes}</span>
+                                </span>
+                              ) : (
+                                <span className="text-slate-300 text-xs">-</span>
+                              )}
+                            </td>
+
+                            {/* 액션 버튼 */}
+                            <td className="py-3.5 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                              <div className="flex items-center justify-center gap-1">
+                                {/* 상세 보기 */}
+                                <button
+                                  onClick={() => {
+                                    setSelectedItem(item);
+                                    setCurrentNote(item.notes || '');
+                                  }}
+                                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+                                  title="상담 상세 내역 및 메모"
+                                >
+                                  <i className="ri-file-list-3-line text-base" />
+                                </button>
+
+                                {/* 보증서 바로 발급 단축 버튼 */}
+                                <button
+                                  onClick={() => {
+                                    setWarrantyPrefill({
+                                      customerName: item.name,
+                                      customerPhone: item.phone,
+                                      carModel: item.model || '',
+                                      notes: `상담 접수 번호(${item.id}) 연계`
+                                    });
+                                    setAdminSection('warranties');
+                                  }}
+                                  className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                                  title="이 고객 정보로 정품 보증서 발급하기"
+                                >
+                                  <i className="ri-shield-check-line text-base" />
+                                </button>
+
+                                {/* 삭제 */}
+                                <button
+                                  onClick={() => handleDelete(item.id, item.name)}
+                                  className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors cursor-pointer"
+                                  title="상담 내역 삭제"
+                                >
+                                  <i className="ri-delete-bin-line text-base" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </main>
 
-      {/* ── 4. 상세 모달 & 관리자 메모 ── */}
+      {/* ── 4. 상담 상세 모달 & 관리자 메모 ── */}
       <AnimatePresence>
         {selectedItem && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -570,35 +635,64 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                   <span className="font-medium text-slate-700">{selectedItem.email || '미입력'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block mb-1">신청 서비스</span>
-                  <span className="font-bold text-slate-800">{selectedItem.service}</span>
+                  <span className="text-slate-400 block mb-1">진행 상태</span>
+                  <select
+                    value={selectedItem.status}
+                    onChange={(e) =>
+                      handleStatusChange(selectedItem.id, e.target.value as ConsultationItem['status'])
+                    }
+                    className="font-bold text-slate-800 bg-white border border-slate-200 rounded-lg px-2 py-1 focus:outline-none"
+                  >
+                    <option value="new">신규 접수</option>
+                    <option value="contacted">상담 진행중</option>
+                    <option value="quoted">견적 발송</option>
+                    <option value="reserved">시공 예약</option>
+                    <option value="completed">시공 완료</option>
+                    <option value="cancelled">취소/보류</option>
+                  </select>
                 </div>
                 <div>
-                  <span className="text-slate-400 block mb-1">차량 모델</span>
-                  <span className="font-bold text-slate-800">{selectedItem.customModel || selectedItem.model}</span>
+                  <span className="text-slate-400 block mb-1">차종</span>
+                  <span className="font-bold text-slate-800">{selectedItem.model || '미입력'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block mb-1">섀시 코드명</span>
-                  <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200 inline-block">
-                    {selectedItem.codeName || '직접입력'}
-                  </span>
+                  <span className="text-slate-400 block mb-1">섀시 코드</span>
+                  <span className="font-mono text-slate-700">{selectedItem.codeName || '-'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block mb-1">접수 시각</span>
-                  <span className="text-slate-600 font-medium">
-                    {new Date(selectedItem.createdAt).toLocaleString('ko-KR')}
-                  </span>
+                  <span className="text-slate-400 block mb-1">신청 시공</span>
+                  <span className="font-bold text-red-600">{selectedItem.service || '미지정'}</span>
                 </div>
               </div>
 
-              {/* 고객 문의 내용 */}
+              {/* 고객 문의 전문 */}
               <div className="mb-6">
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                  고객 전달 문의 내용
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                  고객 요청 / 문의 내용
                 </label>
-                <div className="p-4 bg-slate-100 rounded-xl text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
+                <div className="p-4 bg-slate-100 rounded-2xl text-slate-800 text-sm whitespace-pre-wrap leading-relaxed border border-slate-200/80">
                   {selectedItem.message || '별도 문의 내용이 없습니다.'}
                 </div>
+              </div>
+
+              {/* 정품 보증서 바로 발급하기 버튼 */}
+              <div className="mb-6">
+                <button
+                  onClick={() => {
+                    setWarrantyPrefill({
+                      customerName: selectedItem.name,
+                      customerPhone: selectedItem.phone,
+                      carModel: selectedItem.model || '',
+                      notes: `온라인 상담 접수 연계 (${selectedItem.service || 'CARDIP PPS'})`
+                    });
+                    setAdminSection('warranties');
+                    setSelectedItem(null);
+                  }}
+                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all"
+                >
+                  <i className="ri-shield-check-fill text-base text-yellow-300" />
+                  <span>이 고객 정보로 즉시 정품 보증서 발급하기</span>
+                </button>
               </div>
 
               {/* 관리자 메모 작성 */}
@@ -612,8 +706,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                 <textarea
                   value={currentNote}
                   onChange={(e) => setCurrentNote(e.target.value)}
-                  rows={4}
-                  placeholder="예: 9월 10일 유선 상담 완료, 입고 일정 확정 후 재연락 요망, 카톡으로 스톤칩 사진 수신함 등"
+                  rows={3}
+                  placeholder="예: 유선 상담 완료, 토요일 실차 입고 예약, 스톤칩 부위 추가 보강 요청 등"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary resize-none"
                 />
                 <div className="flex justify-end mt-2">
