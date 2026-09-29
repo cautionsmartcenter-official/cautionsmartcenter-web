@@ -18,6 +18,13 @@ import {
   sendKakaoWarranty,
   initKakao
 } from '../lib/kakao';
+import {
+  getAlimtalkConfig,
+  saveAlimtalkConfig,
+  isAlimtalkConfigured,
+  sendDirectAlimtalk,
+  type AlimtalkConfig
+} from '../lib/alimtalk';
 import { WarrantyViewer } from './WarrantyViewer';
 
 interface AdminWarrantyManagerProps {
@@ -40,11 +47,17 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
   const [viewingWarranty, setViewingWarranty] = useState<WarrantyItem | null>(null);
   const [issuedSuccessWarranty, setIssuedSuccessWarranty] = useState<WarrantyItem | null>(null);
 
-  // 카카오 전송 모달 및 카카오 키 설정 모달
+  // 카카오 전송 모달 및 설정 모달
   const [sendingKakaoWarranty, setSendingKakaoWarranty] = useState<WarrantyItem | null>(null);
   const [isKakaoSettingsOpen, setIsKakaoSettingsOpen] = useState(false);
+  const [settingsTab, setSettingsTab] = useState<'alimtalk' | 'kakao_js'>('alimtalk');
   const [kakaoKeyInput, setKakaoKeyInput] = useState('');
   const [isKakaoConfigured, setIsKakaoConfigured] = useState(false);
+
+  // 카카오 공식 알림톡 (고객 번호 다이렉트 자동 발송) 상태
+  const [alimtalkConfig, setAlimtalkConfig] = useState<AlimtalkConfig>(() => getAlimtalkConfig());
+  const [isAlimtalkReady, setIsAlimtalkReady] = useState(false);
+  const [isSendingAlimtalk, setIsSendingAlimtalk] = useState(false);
 
   // 알림 토스트
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -82,6 +95,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
   useEffect(() => {
     reloadData();
+    setIsAlimtalkReady(isAlimtalkConfigured());
     const key = getKakaoKey();
     setKakaoKeyInput(key);
     if (key) {
@@ -126,6 +140,36 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       } else {
         alert('카카오 키 등록 중 오류가 발생했습니다. 키를 다시 확인해 주세요.');
       }
+    }
+  };
+
+  // 솔라피 알림톡 설정 저장 핸들러
+  const handleSaveAlimtalkConfig = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveAlimtalkConfig(alimtalkConfig);
+    const ready = isAlimtalkConfigured();
+    setIsAlimtalkReady(ready);
+    setIsKakaoSettingsOpen(false);
+    showToast('카카오 알림톡 연동 설정이 성공적으로 저장되었습니다!');
+  };
+
+  // 고객 번호로 공식 알림톡 즉시 발송
+  const handleSendDirectAlimtalk = async (item: WarrantyItem) => {
+    if (!isAlimtalkReady) {
+      setSettingsTab('alimtalk');
+      setIsKakaoSettingsOpen(true);
+      return;
+    }
+
+    setIsSendingAlimtalk(true);
+    const res = await sendDirectAlimtalk(item, alimtalkConfig);
+    setIsSendingAlimtalk(false);
+
+    if (res.success) {
+      showToast(`🎉 ${item.customerName} 고객님(${item.customerPhone})께 공식 카카오 알림톡이 발송되었습니다!`);
+      setSendingKakaoWarranty(null);
+    } else {
+      alert(`알림톡 발송 실패 안내:\n\n${res.errorMessage}`);
     }
   };
 
@@ -396,15 +440,26 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             <option value="cancelled">취소</option>
           </select>
 
-          {/* 카카오 키 설정 버튼 */}
+          {/* 알림톡 / 카카오 키 설정 버튼 */}
           <button
-            onClick={() => setIsKakaoSettingsOpen(true)}
+            onClick={() => {
+              setSettingsTab('alimtalk');
+              setIsKakaoSettingsOpen(true);
+            }}
             className="px-3 py-2 bg-[#FEE500]/25 hover:bg-[#FEE500]/40 text-[#3c1e1e] border border-[#FEE500]/60 text-xs sm:text-sm font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
-            title="카카오톡 공식 공유 JavaScript 키 설정"
+            title="고객 번호 다이렉트 알림톡 및 카카오톡 설정"
           >
             <i className="ri-kakao-talk-fill text-base text-[#3c1e1e]" />
-            <span className="hidden sm:inline">카카오 연동</span>
-            <span className={`w-2 h-2 rounded-full ${isKakaoConfigured ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+            <span className="hidden sm:inline">알림톡/카카오 연동</span>
+            <span
+              className={`w-2 h-2 rounded-full ${
+                isAlimtalkReady
+                  ? 'bg-emerald-500 ring-2 ring-emerald-300'
+                  : isKakaoConfigured
+                  ? 'bg-blue-500'
+                  : 'bg-amber-500'
+              }`}
+            />
           </button>
 
           {/* 엑셀 다운로드 */}
@@ -938,20 +993,33 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </div>
 
                 {/* 카카오 연동 상태 뱃지 및 안내 */}
-                <div className="flex items-center justify-between bg-slate-100/80 px-3.5 py-2.5 rounded-xl border border-slate-200/80 text-xs">
+                <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className={`w-2.5 h-2.5 rounded-full ${isKakaoConfigured ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                    <span className="font-semibold text-slate-700">
-                      {isKakaoConfigured ? '카카오 공식 JavaScript SDK 연동됨' : '카카오 앱키 미등록 상태 (간편전송)'}
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full ${
+                        isAlimtalkReady
+                          ? 'bg-emerald-500 animate-pulse'
+                          : isKakaoConfigured
+                          ? 'bg-blue-500'
+                          : 'bg-amber-500'
+                      }`}
+                    />
+                    <span className="font-semibold text-slate-800">
+                      {isAlimtalkReady
+                        ? '카카오 공식 알림톡 연동됨 (개인 로그인 불필요)'
+                        : isKakaoConfigured
+                        ? '카카오 JS 공유키 연동됨 (개인 계정 로그인 필요)'
+                        : '알림톡 미연동 (아래 설정 클릭 시 3분 연동 가능)'}
                     </span>
                   </div>
                   <button
                     onClick={() => {
+                      setSettingsTab('alimtalk');
                       setIsKakaoSettingsOpen(true);
                     }}
                     className="text-[11px] font-bold text-red-600 hover:underline cursor-pointer"
                   >
-                    {isKakaoConfigured ? '키 변경' : '키 등록하기(3분)'}
+                    {isAlimtalkReady ? '연동 설정 관리' : '알림톡 설정하기'}
                   </button>
                 </div>
 
@@ -959,7 +1027,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 <div>
                   <label className="text-xs font-bold text-slate-600 block mb-1.5 flex items-center justify-between">
                     <span>발송 메시지 미리보기</span>
-                    <span className="text-[11px] text-slate-400 font-normal">고객 화면에 표시될 내용</span>
+                    <span className="text-[11px] text-slate-400 font-normal">고객 스마트폰에 도착하는 본문</span>
                   </label>
                   <div className="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80 text-xs text-slate-800 font-sans whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto select-all">
                     {createWarrantyShareMessage(sendingKakaoWarranty)}
@@ -968,37 +1036,71 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
                 {/* 전송 액션 버튼들 */}
                 <div className="space-y-2.5 pt-2">
-                  {/* 카카오톡 앱/웹으로 직접 전송 */}
+                  {/* 메인 버튼: 고객 번호로 공식 알림톡 다이렉트 발송 (로그인 불필요!) */}
                   <button
-                    onClick={() => handleExecuteSendKakao(sendingKakaoWarranty)}
-                    className="w-full py-3.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-black rounded-2xl text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer transition-transform hover:scale-[1.01]"
+                    onClick={() => handleSendDirectAlimtalk(sendingKakaoWarranty)}
+                    disabled={isSendingAlimtalk}
+                    className={`w-full py-4 font-black rounded-2xl text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all ${
+                      isAlimtalkReady
+                        ? 'bg-gradient-to-r from-[#FEE500] to-amber-400 hover:from-[#FDD835] hover:to-amber-500 text-[#3c1e1e] hover:scale-[1.01]'
+                        : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    }`}
                   >
-                    <i className="ri-kakao-talk-fill text-lg" />
-                    <span>카카오톡으로 전송 실행</span>
+                    {isSendingAlimtalk ? (
+                      <>
+                        <i className="ri-loader-4-line animate-spin text-xl" />
+                        <span>고객님 번호로 알림톡 발송 중...</span>
+                      </>
+                    ) : isAlimtalkReady ? (
+                      <>
+                        <i className="ri-send-plane-fill text-xl text-red-600" />
+                        <span>고객 번호({sendingKakaoWarranty.customerPhone})로 알림톡 즉시 발송</span>
+                      </>
+                    ) : (
+                      <>
+                        <i className="ri-settings-4-line text-lg text-yellow-400" />
+                        <span>고객 번호로 바로 쏘기 (알림톡 연동 설정 열기)</span>
+                      </>
+                    )}
                   </button>
 
-                  <div className="grid grid-cols-2 gap-2">
-                    {/* 문자(SMS) 바로 전송 */}
-                    <a
-                      href={`sms:${sendingKakaoWarranty.customerPhone}?body=${encodeURIComponent(createWarrantyShareMessage(sendingKakaoWarranty))}`}
-                      className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors"
-                    >
-                      <i className="ri-message-2-line text-emerald-600 text-sm" />
-                      <span>문자(SMS) 발송</span>
-                    </a>
+                  <div className="pt-2 border-t border-slate-200">
+                    <span className="text-[11px] text-slate-500 block mb-2 font-medium">보조 발송 옵션:</span>
+                    <div className="grid grid-cols-3 gap-2">
+                      {/* 개인 카카오톡 공유 */}
+                      <button
+                        onClick={() => handleExecuteSendKakao(sendingKakaoWarranty)}
+                        className="py-2.5 bg-yellow-50 hover:bg-yellow-100 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer border border-yellow-200"
+                        title="스마트폰/PC의 개인 카카오톡 앱을 통해 친구/채팅방으로 공유"
+                      >
+                        <i className="ri-kakao-talk-fill text-yellow-600 text-sm" />
+                        <span>개인카톡 공유</span>
+                      </button>
 
-                    {/* 안내 문구 복사 */}
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(createWarrantyShareMessage(sendingKakaoWarranty)).then(() => {
-                          showToast('안내문구가 복사되었습니다. 카톡 창에 붙여넣기(Ctrl+V) 하세요.');
-                        });
-                      }}
-                      className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                      <i className="ri-file-copy-line text-slate-600 text-sm" />
-                      <span>문구 전체 복사</span>
-                    </button>
+                      {/* 문자(SMS) 바로 전송 */}
+                      <a
+                        href={`sms:${sendingKakaoWarranty.customerPhone}?body=${encodeURIComponent(
+                          createWarrantyShareMessage(sendingKakaoWarranty)
+                        )}`}
+                        className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-colors text-center"
+                      >
+                        <i className="ri-message-2-line text-emerald-600 text-sm" />
+                        <span>문자(SMS)</span>
+                      </a>
+
+                      {/* 안내 문구 복사 */}
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(createWarrantyShareMessage(sendingKakaoWarranty)).then(() => {
+                            showToast('안내문구가 복사되었습니다. 카톡 창에 붙여넣기(Ctrl+V) 하세요.');
+                          });
+                        }}
+                        className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                      >
+                        <i className="ri-file-copy-line text-slate-600 text-sm" />
+                        <span>문구 복사</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1021,11 +1123,11 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             >
               <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <i className="ri-key-2-line text-xl text-yellow-400" />
+                  <i className="ri-shield-flash-line text-xl text-yellow-400" />
                   <div>
-                    <h3 className="font-bold text-base text-white">카카오톡 공식 연동 설정</h3>
+                    <h3 className="font-bold text-base text-white">카카오톡 & 알림톡 연동 센터</h3>
                     <p className="text-[11px] text-slate-400">
-                      카카오 무료 개발자 키를 입력하시면 공식 카드 형식 메시지가 바로 전송됩니다.
+                      고객 번호로 다이렉트 자동 발송(알림톡) 또는 카카오 공유 방식을 설정합니다.
                     </p>
                   </div>
                 </div>
@@ -1037,64 +1139,240 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </button>
               </div>
 
-              <form onSubmit={handleSaveKakaoKey} className="p-6 space-y-4">
-                <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">
-                    카카오 JavaScript 키 (무료 발급)
-                  </label>
-                  <input
-                    type="text"
-                    value={kakaoKeyInput}
-                    onChange={(e) => setKakaoKeyInput(e.target.value)}
-                    placeholder="예: a1b2c3d4e5f6g7h8i9j0..."
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:border-red-500"
+              {/* 상단 탭 전환: 알림톡 vs JS Key */}
+              <div className="flex border-b border-slate-200 bg-slate-50 px-6 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setSettingsTab('alimtalk')}
+                  className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
+                    settingsTab === 'alimtalk'
+                      ? 'border-red-600 text-red-600'
+                      : 'border-transparent text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  <i className="ri-send-plane-fill text-sm" />
+                  <span>1. 카카오 공식 알림톡 (고객 번호 직발송 - 추천)</span>
+                  <span
+                    className={`w-2 h-2 rounded-full ${isAlimtalkReady ? 'bg-emerald-500' : 'bg-slate-300'}`}
                   />
-                  <p className="text-[11px] text-slate-500 mt-1">
-                    * 비워두고 저장하시면 기본 클립보드 복사 & 스마트폰 공유 방식으로 동작합니다.
-                  </p>
-                </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSettingsTab('kakao_js')}
+                  className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
+                    settingsTab === 'kakao_js'
+                      ? 'border-red-600 text-red-600'
+                      : 'border-transparent text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  <i className="ri-kakao-talk-fill text-sm text-yellow-600" />
+                  <span>2. 카카오 JavaScript 키 (공유용)</span>
+                  <span
+                    className={`w-2 h-2 rounded-full ${isKakaoConfigured ? 'bg-blue-500' : 'bg-slate-300'}`}
+                  />
+                </button>
+              </div>
 
-                {/* 발급 안내 가이드 */}
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2 text-slate-700">
-                  <h4 className="font-bold text-slate-900 flex items-center gap-1">
-                    <i className="ri-information-line text-primary" />
-                    <span>3분 무료 발급 방법 안내</span>
-                  </h4>
-                  <ol className="list-decimal list-inside space-y-1.5 text-[11px] text-slate-600 leading-relaxed pl-1">
-                    <li>
+              {/* ── 탭 1: 카카오 공식 알림톡 (솔라피 Solapi API 연동) ── */}
+              {settingsTab === 'alimtalk' && (
+                <form onSubmit={handleSaveAlimtalkConfig} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-xs text-amber-900 leading-relaxed flex items-start gap-2.5">
+                    <i className="ri-lightbulb-fill text-amber-600 text-lg flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block font-bold mb-0.5">개인 카카오톡 로그인 필요 없는 완벽한 자동 발송</strong>
+                      고객 핸드폰 번호(010-XXXX-XXXX)만 있으면 코션스마트센터 공식 채널 이름으로 고객에게 즉시 전송되며, 카카오톡 미설치 고객에겐 장문 문자(LMS)로 자동 대체 발송됩니다.
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 block mb-1">
+                        솔라피 API Key <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={alimtalkConfig.apiKey}
+                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, apiKey: e.target.value })}
+                        placeholder="예: NCS..."
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 block mb-1">
+                        솔라피 API Secret <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="password"
+                        value={alimtalkConfig.apiSecret}
+                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, apiSecret: e.target.value })}
+                        placeholder="••••••••••••••••••••••••••••••"
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 block mb-1">
+                        카카오 채널 발신프로필 ID (PFID) <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={alimtalkConfig.pfId}
+                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, pfId: e.target.value })}
+                        placeholder="예: KA01PF..."
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 block mb-1">
+                        승인된 알림톡 템플릿 ID (Template ID)
+                      </label>
+                      <input
+                        type="text"
+                        value={alimtalkConfig.templateId}
+                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, templateId: e.target.value })}
+                        placeholder="예: KA01TP... (승인 후 입력)"
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 block mb-1">
+                        발신번호 (코션 대표번호) <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={alimtalkConfig.senderPhone}
+                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, senderPhone: e.target.value })}
+                        placeholder="예: 02-1234-5678 또는 010-..."
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
+                        required
+                      />
+                    </div>
+                    <div className="flex items-center pt-5">
+                      <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={alimtalkConfig.autoSmsFallback}
+                          onChange={(e) =>
+                            setAlimtalkConfig({ ...alimtalkConfig, autoSmsFallback: e.target.checked })
+                          }
+                          className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
+                        />
+                        <span>카톡 미수신 시 문자로 자동 대체 발송</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* 3단계 연동 안내 가이드 박스 */}
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2.5 text-slate-700">
+                    <h4 className="font-bold text-slate-900 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <i className="ri-guide-line text-red-600" />
+                        <span>솔라피(Solapi) 3분 연동 순서 안내</span>
+                      </span>
                       <a
-                        href="https://developers.kakao.com"
+                        href="https://solapi.com"
                         target="_blank"
                         rel="noreferrer"
-                        className="text-primary font-bold hover:underline"
+                        className="text-primary hover:underline font-bold text-[11px]"
                       >
-                        developers.kakao.com
+                        solapi.com 바로가기 ↗
                       </a>
-                      에 접속하여 카카오 계정으로 로그인합니다.
-                    </li>
-                    <li><strong>[내 애플리케이션]</strong> → <strong>[애플리케이션 추가하기]</strong> 클릭 (앱 이름: 코션스마트센터)</li>
-                    <li><strong>[앱 키]</strong> 메뉴에서 <strong>JavaScript 키</strong>를 복사합니다.</li>
-                    <li><strong>[플랫폼]</strong> → <strong>[Web 플랫폼 등록]</strong>에서 사이트 도메인(<code className="bg-slate-200 px-1 rounded">http://localhost:5173</code>)을 추가합니다.</li>
-                    <li>복사한 키를 위 입력칸에 붙여넣고 [저장하기]를 누르면 끝!</li>
-                  </ol>
-                </div>
+                    </h4>
+                    <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-600 leading-relaxed pl-1">
+                      <li>
+                        <strong>솔라피 가입</strong> 후 우측 상단 <strong>[API Key 관리]</strong>에서 API Key와 Secret 생성 후 위 칸에 입력합니다.
+                      </li>
+                      <li>
+                        좌측 <strong>[카카오톡] → [발신 프로필 관리]</strong>에서 코션스마트센터 카카오 채널을 추가합니다 (휴대폰 인증번호 1분 완료). 생성된 PFID를 입력합니다.
+                      </li>
+                      <li>
+                        좌측 <strong>[발신번호 관리]</strong>에서 코션 대표번호를 등록합니다.
+                      </li>
+                      <li>
+                        <strong>[템플릿 관리]</strong>에 아래 [템플릿 양식 복사] 버튼을 눌러 승인 신청 후 승인된 템플릿 ID를 넣으면 끝!
+                      </li>
+                    </ol>
 
-                <div className="pt-2 flex items-center justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsKakaoSettingsOpen(false)}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
-                  >
-                    닫기
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
-                  >
-                    저장하기
-                  </button>
-                </div>
-              </form>
+                    <div className="pt-1 flex items-center justify-between border-t border-slate-200">
+                      <span className="text-[10px] text-slate-500">* 템플릿 승인 전에도 문자로 즉시 발송 가능합니다.</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const tpl = `[코션스마트센터] PPS 시공 보증서 발급 안내\n\n안녕하세요, #{고객명} 고객님.\n(주)코션스마트센터를 믿고 차량 시공을 맡겨주셔서 진심으로 감사드립니다.\n\n고객님의 차량에 PPS 시공 보증서가 정상 발급되었습니다.\n\n■ 차량번호 : #{차량번호} (#{차종})\n■ 시공내역 : #{시공내역}\n■ 보증기간 : #{보증기간}\n■ 보증번호 : #{보증번호}\n\n아래 [전자 보증서 바로 확인하기] 버튼을 터치하시면 고객님의 공식 전자 보증서를 언제든 확인 및 보관하실 수 있습니다.\n\n버튼: 웹링크 (버튼명: 전자 보증서 바로 확인하기 / URL: #{보증서링크})`;
+                          navigator.clipboard.writeText(tpl).then(() => {
+                            showToast('알림톡 템플릿 승인 양식이 복사되었습니다. 솔라피에 붙여넣기 하세요!');
+                          });
+                        }}
+                        className="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-[10px] font-bold text-slate-700 cursor-pointer flex items-center gap-1 shadow-sm"
+                      >
+                        <i className="ri-file-copy-line text-xs" />
+                        <span>알림톡 템플릿 신청문구 복사</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsKakaoSettingsOpen(false)}
+                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
+                    >
+                      닫기
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
+                    >
+                      알림톡 설정 저장하기
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* ── 탭 2: 카카오 JavaScript 키 설정 ── */}
+              {settingsTab === 'kakao_js' && (
+                <form onSubmit={handleSaveKakaoKey} className="p-6 space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
+                      카카오 JavaScript 키 (developers.kakao.com)
+                    </label>
+                    <input
+                      type="text"
+                      value={kakaoKeyInput}
+                      onChange={(e) => setKakaoKeyInput(e.target.value)}
+                      placeholder="예: a1b2c3d4e5f6g7h8i9j0..."
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono focus:outline-none focus:border-red-500"
+                    />
+                    <p className="text-[11px] text-slate-500 mt-1">
+                      * 이 방식은 관리자의 스마트폰 카카오톡과 연동된 개인 계정으로 로그인해야 발송됩니다.
+                    </p>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsKakaoSettingsOpen(false)}
+                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
+                    >
+                      닫기
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
+                    >
+                      JS 키 저장하기
+                    </button>
+                  </div>
+                </form>
+              )}
             </motion.div>
           </div>
         )}
