@@ -10,7 +10,9 @@ import {
   type ConsultationItem
 } from '../lib/consultationStorage';
 import { AdminWarrantyManager } from './AdminWarrantyManager';
+import { AdminCalendar } from './AdminCalendar';
 import { exportWarrantiesToCSV } from '../lib/warrantyStorage';
+import { getSchedules } from '../lib/scheduleStorage';
 
 interface AdminDashboardProps {
   onExit: () => void;
@@ -34,9 +36,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState('');
 
-  // 탭 섹션: 상담 접수 vs 전자 보증서
-  const [adminSection, setAdminSection] = useState<'consultations' | 'warranties'>('consultations');
+  // 탭 섹션: 상담 접수 vs 시공 캘린더 vs 전자 보증서
+  const [adminSection, setAdminSection] = useState<'consultations' | 'calendar' | 'warranties'>('consultations');
   const [warrantyPrefill, setWarrantyPrefill] = useState<any>(null);
+  const [calendarPrefill, setCalendarPrefill] = useState<any>(null);
+  const [scheduleCount, setScheduleCount] = useState<number>(0);
 
   const [consultations, setConsultations] = useState<ConsultationItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,6 +55,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
   const reloadData = () => {
     const data = getConsultations();
     setConsultations(data);
+    setScheduleCount(getSchedules().length);
   };
 
   useEffect(() => {
@@ -255,6 +260,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
               </button>
 
               <button
+                onClick={() => setAdminSection('calendar')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  adminSection === 'calendar'
+                    ? 'bg-blue-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <i className="ri-calendar-event-line text-blue-300" />
+                <span>시공 캘린더</span>
+                {scheduleCount > 0 && (
+                  <span className="px-1.5 py-0.2 bg-white/20 rounded-full text-[10px]">{scheduleCount}</span>
+                )}
+              </button>
+
+              <button
                 onClick={() => setAdminSection('warranties')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                   adminSection === 'warranties'
@@ -322,9 +342,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
             initialPrefill={warrantyPrefill}
             onClearPrefill={() => setWarrantyPrefill(null)}
           />
+        ) : adminSection === 'calendar' ? (
+          /* ─────────────────────────────────────────────────────────────
+             B. 시공 예약 캘린더 관리 섹션 (차량번호 중심)
+          ───────────────────────────────────────────────────────────── */
+          <AdminCalendar
+            onIssueWarranty={(prefill) => {
+              setWarrantyPrefill(prefill);
+              setAdminSection('warranties');
+            }}
+            initialPrefill={calendarPrefill}
+            onClearPrefill={() => setCalendarPrefill(null)}
+          />
         ) : (
           /* ─────────────────────────────────────────────────────────────
-             B. 상담 & 견적 접수 관리 섹션
+             C. 상담 & 견적 접수 관리 섹션
           ───────────────────────────────────────────────────────────── */
           <div>
             {/* ── 1. 통계 카드 섹션 ── */}
@@ -467,7 +499,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                       <th className="py-3.5 px-4 whitespace-nowrap">차량정보</th>
                       <th className="py-3.5 px-4 whitespace-nowrap">희망 시공</th>
                       <th className="py-3.5 px-4 min-w-[220px]">문의 내용 및 상담 메모</th>
-                      <th className="py-3.5 px-4 text-center whitespace-nowrap w-28 min-w-[112px]">관리</th>
+                      <th className="py-3.5 px-4 text-center whitespace-nowrap w-36 min-w-[140px]">관리</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -563,7 +595,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                             </td>
 
                             {/* 관리 액션 버튼 (독립 너비 고정, 겹침 완전 방지) */}
-                            <td className="py-3.5 px-4 text-center whitespace-nowrap w-28 min-w-[112px]" onClick={(e) => e.stopPropagation()}>
+                            <td className="py-3.5 px-4 text-center whitespace-nowrap w-36 min-w-[140px]" onClick={(e) => e.stopPropagation()}>
                               <div className="flex items-center justify-center gap-1.5">
                                 {/* 상세 보기 */}
                                 <button
@@ -575,6 +607,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                   title="상담 상세 내역 및 메모 확인/수정"
                                 >
                                   <i className="ri-file-list-3-line text-base" />
+                                </button>
+
+                                {/* 캘린더 시공 일정 등록 단축 버튼 */}
+                                <button
+                                  onClick={() => {
+                                    setCalendarPrefill({
+                                      customerName: item.name,
+                                      customerPhone: item.phone,
+                                      carModel: item.model || '',
+                                      serviceType: item.service || '',
+                                      notes: `상담 접수 번호(${item.id}) 연계: ${item.message || ''}`
+                                    });
+                                    setAdminSection('calendar');
+                                  }}
+                                  className="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
+                                  title="이 상담 정보로 시공 예약 캘린더에 일정 등록"
+                                >
+                                  <i className="ri-calendar-event-line text-base" />
                                 </button>
 
                                 {/* 보증서 바로 발급 단축 버튼 */}
@@ -696,8 +746,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                 </div>
               </div>
 
-              {/* 정품 보증서 바로 발급하기 버튼 */}
-              <div className="mb-6">
+              {/* 캘린더 일정 등록 & 정품 보증서 바로 발급 버튼 */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-6">
+                <button
+                  onClick={() => {
+                    setCalendarPrefill({
+                      customerName: selectedItem.name,
+                      customerPhone: selectedItem.phone,
+                      carModel: selectedItem.model || '',
+                      serviceType: selectedItem.service || '',
+                      notes: `온라인 상담 접수 연계: ${selectedItem.message || ''}`
+                    });
+                    setAdminSection('calendar');
+                    setSelectedItem(null);
+                  }}
+                  className="py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm cursor-pointer transition-all"
+                >
+                  <i className="ri-calendar-event-line text-base text-blue-200" />
+                  <span>시공 예약 캘린더에 등록</span>
+                </button>
+
                 <button
                   onClick={() => {
                     setWarrantyPrefill({
@@ -709,10 +777,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                     setAdminSection('warranties');
                     setSelectedItem(null);
                   }}
-                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all"
+                  className="py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm cursor-pointer transition-all"
                 >
                   <i className="ri-shield-check-fill text-base text-yellow-300" />
-                  <span>이 고객 정보로 즉시 정품 보증서 발급하기</span>
+                  <span>즉시 정품 보증서 발급하기</span>
                 </button>
               </div>
 
