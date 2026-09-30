@@ -33,54 +33,6 @@ export interface WarrantyItem {
 
 const STORAGE_KEY = 'caution_warranty_db';
 
-// 초기 샘플 시드 데이터
-const SEED_WARRANTIES: WarrantyItem[] = [
-  {
-    id: 'war-seed-01',
-    warrantyNo: 'CSC-2026-0315-01',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 13).toISOString(),
-    customerName: '홍길동',
-    customerPhone: '010-1234-5678',
-    customerAddress: '경기도 성남시 분당구 판교역로 120',
-    carModel: '포르쉐 911 카레라 4 GTS',
-    carPlate: '123가 4567',
-    carColor: '크레용 (Crayon)',
-    vin: 'WP0AB2A97NS123456',
-    hasClearPps: true,
-    clearPpsDetail: '전체 (Full Body)',
-    hasColorPps: false,
-    colorPpsDetail: '',
-    price: '7,500,000',
-    issueDate: '2026-03-15',
-    warrantyPeriodYears: 6,
-    issuedBy: '(주) 코션스마트센터',
-    status: 'active',
-    notes: '신차 출고 즉시 입고. 250um 정품 CARDIP PPS 완벽 시공 및 6년 보증 발급'
-  },
-  {
-    id: 'war-seed-02',
-    warrantyNo: 'CSC-2026-0320-02',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 8).toISOString(),
-    customerName: '이서진',
-    customerPhone: '010-9876-5432',
-    customerAddress: '서울특별시 서초구 반포대로',
-    carModel: '메르세데스-마이바흐 S580',
-    carPlate: '77나 8899',
-    carColor: '옵시디언 블랙',
-    vin: '', // 패스
-    hasClearPps: false,
-    clearPpsDetail: '',
-    hasColorPps: true,
-    colorPpsDetail: '사틴 프로즌 다크 실버 전체',
-    price: '9,200,000',
-    issueDate: '2026-03-20',
-    warrantyPeriodYears: 6,
-    issuedBy: '(주) 코션스마트센터',
-    status: 'active',
-    notes: 'CARDIP 컬러PPS 특허 박리 도장 시공. 추후 본드 자국 없는 100% 무손상 박리 안내 완료'
-  }
-];
-
 // 보증서 일련번호 자동 생성 함수: CSC-YYYY-MMDD-순번
 export const generateWarrantyNo = (): string => {
   const now = new Date();
@@ -91,19 +43,34 @@ export const generateWarrantyNo = (): string => {
   return `CSC-${year}-${month}${day}-${randomSuffix}`;
 };
 
-// 보증서 목록 조회
+// 보증서 목록 조회 (이전 더미 데이터 자동 정리)
 export const getWarranties = (): WarrantyItem[] => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_WARRANTIES));
-      return SEED_WARRANTIES;
+      return [];
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : SEED_WARRANTIES;
+    if (!Array.isArray(parsed)) return [];
+    
+    // 이전 더미 시드 데이터(war-seed-) 자동 삭제 정리
+    const cleaned = parsed.filter((item: WarrantyItem) => !item.id?.startsWith('war-seed-'));
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+    }
+    return cleaned;
   } catch (err) {
     console.error('Error fetching warranties:', err);
-    return SEED_WARRANTIES;
+    return [];
+  }
+};
+
+// 전체 보증서 내역 삭제 / 초기화
+export const clearAllWarranties = (): void => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  } catch (err) {
+    console.error('Error clearing warranties:', err);
   }
 };
 

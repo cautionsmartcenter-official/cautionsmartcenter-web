@@ -5,6 +5,7 @@ import {
   updateConsultationStatus,
   updateConsultationNotes,
   deleteConsultation,
+  clearAllConsultations,
   exportConsultationsToCSV,
   type ConsultationItem
 } from '../lib/consultationStorage';
@@ -91,6 +92,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
       deleteConsultation(id);
       reloadData();
       if (selectedItem && selectedItem.id === id) {
+        setSelectedItem(null);
+      }
+    }
+  };
+
+  // 전체 상담 내역 초기화/비우기 핸들러
+  const handleClearConsultations = () => {
+    if (window.confirm('기존 접수된 모든 상담 내역을 삭제하고 초기화하시겠습니까?\n(삭제 후에는 복구할 수 없습니다.)')) {
+      clearAllConsultations();
+      reloadData();
+      if (selectedItem) {
         setSelectedItem(null);
       }
     }
@@ -429,6 +441,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                 >
                   <i className="ri-refresh-line text-base" />
                 </button>
+
+                {consultations.length > 0 && (
+                  <button
+                    onClick={handleClearConsultations}
+                    className="px-3 py-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 text-xs sm:text-sm font-semibold rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer border border-transparent hover:border-red-200"
+                    title="전체 상담 내역을 삭제하고 초기화합니다"
+                  >
+                    <i className="ri-delete-bin-line text-slate-500 hover:text-red-600 text-sm" />
+                    <span className="hidden sm:inline">상담 내역 비우기</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -438,20 +461,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                 <table className="w-full text-left border-collapse text-xs sm:text-sm">
                   <thead>
                     <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-[11px] sm:text-xs uppercase tracking-wider font-semibold">
-                      <th className="py-3.5 px-4">상태</th>
-                      <th className="py-3.5 px-4">접수일시</th>
-                      <th className="py-3.5 px-4">고객명 / 연락처</th>
-                      <th className="py-3.5 px-4">차량정보</th>
-                      <th className="py-3.5 px-4">희망 시공</th>
-                      <th className="py-3.5 px-4">문의 요약</th>
-                      <th className="py-3.5 px-4">관리 메모</th>
-                      <th className="py-3.5 px-4 text-center">관리</th>
+                      <th className="py-3.5 px-4 whitespace-nowrap">상태</th>
+                      <th className="py-3.5 px-4 whitespace-nowrap">접수일시</th>
+                      <th className="py-3.5 px-4 whitespace-nowrap">고객명 / 연락처</th>
+                      <th className="py-3.5 px-4 whitespace-nowrap">차량정보</th>
+                      <th className="py-3.5 px-4 whitespace-nowrap">희망 시공</th>
+                      <th className="py-3.5 px-4 min-w-[220px]">문의 내용 및 상담 메모</th>
+                      <th className="py-3.5 px-4 text-center whitespace-nowrap w-28 min-w-[112px]">관리</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {filteredList.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="py-12 text-center text-slate-400">
+                        <td colSpan={7} className="py-12 text-center text-slate-400">
                           <i className="ri-file-search-line text-3xl block mb-2 text-slate-300" />
                           해당 조건의 상담 접수 내역이 없습니다.
                         </td>
@@ -524,26 +546,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                               </span>
                             </td>
 
-                            {/* 문의 내용 요약 */}
-                            <td className="py-3.5 px-4 max-w-xs">
-                              <p className="text-slate-600 line-clamp-1 text-xs">{item.message || '-'}</p>
-                            </td>
-
-                            {/* 관리자 메모 */}
-                            <td className="py-3.5 px-4 max-w-[160px]">
-                              {item.notes ? (
-                                <span className="inline-flex items-center gap-1 text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 line-clamp-1">
-                                  <i className="ri-sticky-note-line text-xs" />
+                            {/* 문의 내용 및 상담 메모 (통합 정리) */}
+                            <td className="py-3.5 px-4 min-w-[220px] max-w-sm">
+                              <p className="text-slate-700 line-clamp-1 text-xs font-medium" title={item.message}>
+                                {item.message || '-'}
+                              </p>
+                              {item.notes && (
+                                <div
+                                  className="mt-1 flex items-center gap-1 text-[11px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 w-fit max-w-[220px] truncate"
+                                  title={item.notes}
+                                >
+                                  <i className="ri-sticky-note-line text-xs shrink-0 text-amber-600" />
                                   <span className="truncate">{item.notes}</span>
-                                </span>
-                              ) : (
-                                <span className="text-slate-300 text-xs">-</span>
+                                </div>
                               )}
                             </td>
 
-                            {/* 액션 버튼 */}
-                            <td className="py-3.5 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                              <div className="flex items-center justify-center gap-1">
+                            {/* 관리 액션 버튼 (독립 너비 고정, 겹침 완전 방지) */}
+                            <td className="py-3.5 px-4 text-center whitespace-nowrap w-28 min-w-[112px]" onClick={(e) => e.stopPropagation()}>
+                              <div className="flex items-center justify-center gap-1.5">
                                 {/* 상세 보기 */}
                                 <button
                                   onClick={() => {
@@ -551,7 +572,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                     setCurrentNote(item.notes || '');
                                   }}
                                   className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
-                                  title="상담 상세 내역 및 메모"
+                                  title="상담 상세 내역 및 메모 확인/수정"
                                 >
                                   <i className="ri-file-list-3-line text-base" />
                                 </button>

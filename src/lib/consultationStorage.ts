@@ -31,7 +31,7 @@ const SEED_DATA: ConsultationItem[] = [
     service: '투명PPS',
     message: '신차 출고 후 본넷 및 앞범퍼 생활보호패키지 투명 PPS 전체 시공 견적 문의드립니다. 주말 입고 가능한지 확인 부탁드립니다.',
     status: 'new',
-    notes: '031 유선 통화 전 카카오톡으로 시공 부위 사진 수신 예정',
+    notes: '1차 유선 상담 대기 (시공 부위 확인 예정)',
     isRead: false,
   },
   {
@@ -46,7 +46,7 @@ const SEED_DATA: ConsultationItem[] = [
     service: '컬러PPS',
     message: '순정 화이트 바디에 사틴 프로즌 그레이 컬러PPS 전체 랩핑 스프레이 시공 비용 및 소요 일정 문의합니다.',
     status: 'contacted',
-    notes: '유선 1차 상담 완료. 이번 주 토요일 실차 방문 견적 예약',
+    notes: '유선 1차 상담 완료 (주말 실차 방문 견적 예약)',
     isRead: true,
   }
 ];
@@ -59,10 +59,34 @@ export const getConsultations = (): ConsultationItem[] => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_DATA));
       return SEED_DATA;
     }
-    return JSON.parse(raw);
+    const parsed: ConsultationItem[] = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return SEED_DATA;
+    
+    // 이전 혼란스러운 시드 메모 문구 자동 정리
+    let changed = false;
+    const migrated = parsed.map((item) => {
+      if (item.notes === '031 유선 통화 전 카카오톡으로 시공 부위 사진 수신 예정') {
+        changed = true;
+        return { ...item, notes: '1차 유선 상담 대기 (시공 부위 확인 예정)' };
+      }
+      return item;
+    });
+    if (changed) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+    }
+    return migrated;
   } catch (err) {
     console.error('Failed to load consultations from storage:', err);
     return SEED_DATA;
+  }
+};
+
+// 상담 접수 내역 전체 비우기 (초기화)
+export const clearAllConsultations = (): void => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  } catch (err) {
+    console.error('Failed to clear consultations:', err);
   }
 };
 

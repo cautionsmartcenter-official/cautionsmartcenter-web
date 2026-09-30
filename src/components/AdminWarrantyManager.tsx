@@ -6,6 +6,7 @@ import {
   saveWarranty,
   updateWarranty,
   deleteWarranty,
+  clearAllWarranties,
   exportWarrantiesToCSV,
   generateWarrantyNo,
   createWarrantyShareMessage,
@@ -274,6 +275,15 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     }
   };
 
+  // 전체 데이터 비우기 (초기화)
+  const handleClearAllData = () => {
+    if (window.confirm('기존에 저장된 모든 보증서 내역을 삭제하고 초기화하시겠습니까?\n(이전 내역이 모두 영구 삭제되며 되돌릴 수 없습니다.)')) {
+      clearAllWarranties();
+      reloadData();
+      showToast('이전 보증서 내역이 모두 삭제되었습니다.');
+    }
+  };
+
   // 카카오톡 전송 실행 (SDK 또는 모바일 공유 또는 클립보드)
   const handleExecuteSendKakao = async (item: WarrantyItem) => {
     const res = await sendKakaoWarranty(item);
@@ -471,6 +481,18 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             <i className="ri-file-excel-2-line text-emerald-600 text-base" />
             <span className="hidden sm:inline">대장 엑셀저장</span>
           </button>
+
+          {/* 이전 데이터 전체 비우기 */}
+          {warranties.length > 0 && (
+            <button
+              onClick={handleClearAllData}
+              className="px-3 py-2 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 text-xs sm:text-sm font-semibold rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer border border-transparent hover:border-red-200"
+              title="이전 보증서 목록을 전체 삭제하고 초기화합니다"
+            >
+              <i className="ri-delete-bin-line text-slate-500 hover:text-red-600 text-base" />
+              <span className="hidden sm:inline">이전 데이터 비우기</span>
+            </button>
+          )}
 
           {/* + 신규 보증서 발급 버튼 */}
           <button
