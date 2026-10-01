@@ -34,6 +34,7 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
     { id: 'home', name: '홈' },
     { id: 'brand-story', name: '브랜드 스토리' },
     { id: 'services', name: '서비스' },
+    { id: 'partners', name: '전국 시공점' },
     { id: 'portfolio', name: '포트폴리오' }
   ];
 

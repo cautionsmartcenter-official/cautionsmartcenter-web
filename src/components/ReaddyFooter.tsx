@@ -15,6 +15,7 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
     ],
     company: [
       { name: '브랜드 스토리', id: 'brand-story' },
+      { name: '전국 시공점 안내', id: 'partners' },
       { name: '시공 포트폴리오', id: 'portfolio' },
       { name: '기술력 & 설비', id: 'brand-story' },
       { name: '오시는 길', id: 'home' }

@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 
 interface ReaddyBrandStoryProps {
   onNavigateToContact?: (serviceName?: string) => void;
+  onSelectTab?: (tab: string) => void;
 }
 
-export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateToContact }) => {
+export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateToContact, onSelectTab }) => {
   const techFeatures = [
     {
       icon: 'ri-robot-line',
@@ -440,6 +441,42 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               </p>
             </motion.div>
           </div>
+
+          {/* Nationwide Branch & Partner Locator Link Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 bg-neutral-950 text-white rounded-3xl p-8 sm:p-10 border border-white/10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden"
+          >
+            <div className="space-y-2 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-600/20 text-red-400 border border-red-600/30 rounded-full text-xs font-bold">
+                <span>OFFICIAL PARTNER NETWORK</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black tracking-tight">
+                전국 공식 가맹점 및 시공 네트워크 안내
+              </h3>
+              <p className="text-sm text-gray-300 break-keep max-w-2xl">
+                경기 광주 본점(직영) 및 인천점(1급 하이테크 자동차 공업사) 등 공식 가맹점에서 정품 <strong className="text-white">독일 CARDIP PPS 원료</strong> 시공을 직접 경험하실 수 있습니다.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full md:w-auto">
+              <button
+                onClick={() => {
+                  if (onSelectTab) {
+                    onSelectTab('partners');
+                  } else {
+                    window.location.hash = '#partners';
+                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="w-full sm:w-auto px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-red-600/30 cursor-pointer"
+              >
+                전국 시공점 찾기 →
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
 

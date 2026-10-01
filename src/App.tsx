@@ -18,6 +18,7 @@ import { WarrantyViewer } from './components/WarrantyViewer';
 import { getWarrantyById, getWarranties, type WarrantyItem } from './lib/warrantyStorage';
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
 import { ReaddyYouTubeSection } from './components/ReaddyYouTubeSection';
+import { ReaddyPartners } from './components/ReaddyPartners';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -85,6 +86,9 @@ export default function App() {
       const hash = window.location.hash;
       if (hash === '#admin') {
         setActiveTab('admin');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash === '#partners' || hash === '#branches' || hash === '#partner') {
+        setActiveTab('partners');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (hash.startsWith('#warranty')) {
         setActiveTab('warranty');
@@ -195,7 +199,13 @@ export default function App() {
       {/* ── 2. Brand Story View ── */}
       {activeTab === 'brand-story' && (
         <main>
-          <ReaddyBrandStory onNavigateToContact={handleNavigateToContact} />
+          <ReaddyBrandStory
+            onNavigateToContact={handleNavigateToContact}
+            onSelectTab={(tab) => {
+              setActiveTab(tab);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
         </main>
       )}
 
@@ -224,7 +234,14 @@ export default function App() {
         </main>
       )}
 
-      {/* ── 5. Portfolio Gallery View ── */}
+      {/* ── 5. Nationwide Partners & Branches View ── */}
+      {activeTab === 'partners' && (
+        <main>
+          <ReaddyPartners />
+        </main>
+      )}
+
+      {/* ── 6. Portfolio Gallery View ── */}
       {activeTab === 'portfolio' && (
         <main>
           <ReaddyPortfolio onNavigateToContact={handleNavigateToContact} />
