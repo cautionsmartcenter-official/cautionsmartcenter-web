@@ -142,7 +142,7 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
               </div>
               <div className="flex items-center gap-3 mt-3">
                 <div className="w-16 h-0.5 bg-primary" />
-                <span className="text-xs text-gray-500 font-mono">CurveRobot 자동화 & 프리미엄 외장관리</span>
+                <span className="text-xs text-gray-400 font-medium">수입차 사고수리 & PPS 전문 센터</span>
               </div>
             </div>
 
