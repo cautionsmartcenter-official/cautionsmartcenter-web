@@ -19,6 +19,7 @@ import { getWarrantyById, getWarranties, type WarrantyItem } from './lib/warrant
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
 import { ReaddyYouTubeSection } from './components/ReaddyYouTubeSection';
 import { ReaddyPartners } from './components/ReaddyPartners';
+import { InlineTextEditor } from './components/InlineTextEditor';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -317,6 +318,9 @@ export default function App() {
 
       {/* ── 9. Right Floating Quick Contact Bar (카카오톡 채널 & 전화 상담) ── */}
       <FloatingContactBar />
+
+      {/* ── 10. Visual Inline Text Editor (마우스 클릭으로 문구 즉시 수정 & AI 복사 기능) ── */}
+      <InlineTextEditor />
     </div>
   );
 }
