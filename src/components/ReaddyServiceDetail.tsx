@@ -140,7 +140,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     heroImage: '/images/readdy/service-hero-ai.jpg',
     features: [
       '독일 정품 CARDIP® PPS 정밀 시공',
-      '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
+      '칼 없이 완성하는 Seamless 시공\n(AI 로봇 정밀 분사)',
       '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
       '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)',
       '균일한 표면 레벨링과 높은 투명도',
@@ -333,7 +333,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                 <div className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 mb-4">
                   <i className="ri-check-line text-primary text-lg font-bold" />
                 </div>
-                <h3 className="text-base font-bold text-dark">{feat}</h3>
+                <h3 className="text-base font-bold text-dark whitespace-pre-line">{feat}</h3>
               </motion.div>
             ))}
           </div>

@@ -167,6 +167,12 @@ export const InlineTextEditor: React.FC = () => {
       const target = e.target as HTMLElement;
       if (!isCandidateElement(target)) return;
 
+      // 이미 편집 중인 요소를 다시 클릭한 경우:
+      // 브라우저의 기본 커서 위치 지정(클릭한 글자 사이에 커서 놓기)과 텍스트 선택을 방해하지 않음
+      if (target === activeElementRef.current) {
+        return;
+      }
+
       e.preventDefault();
       e.stopPropagation();
 
@@ -193,13 +199,38 @@ export const InlineTextEditor: React.FC = () => {
       activeElementRef.current = target;
       target.focus();
 
-      // 커서를 끝으로 이동
-      const range = document.createRange();
-      range.selectNodeContents(target);
-      range.collapse(false);
-      const sel = window.getSelection();
-      sel?.removeAllRanges();
-      sel?.addRange(range);
+      // 마우스로 클릭한 바로 그 글자 사이에 커서 배치!
+      let rangeSet = false;
+      const doc = document as any;
+      if (doc.caretRangeFromPoint) {
+        const range = doc.caretRangeFromPoint(e.clientX, e.clientY);
+        if (range && target.contains(range.startContainer)) {
+          const sel = window.getSelection();
+          sel?.removeAllRanges();
+          sel?.addRange(range);
+          rangeSet = true;
+        }
+      } else if (doc.caretPositionFromPoint) {
+        const pos = doc.caretPositionFromPoint(e.clientX, e.clientY);
+        if (pos && target.contains(pos.offsetNode)) {
+          const range = document.createRange();
+          range.setStart(pos.offsetNode, pos.offset);
+          range.collapse(true);
+          const sel = window.getSelection();
+          sel?.removeAllRanges();
+          sel?.addRange(range);
+          rangeSet = true;
+        }
+      }
+
+      if (!rangeSet) {
+        const range = document.createRange();
+        range.selectNodeContents(target);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
     };
 
     // 포커스 아웃 시 변경사항 저장
@@ -271,35 +302,33 @@ export const InlineTextEditor: React.FC = () => {
         target.style.whiteSpace = 'pre-line';
         target.classList.add('inline-text-has-breaks');
 
-        // 1. 브라우저 내장 줄바꿈 명령
-        let inserted = false;
-        try {
-          inserted = document.execCommand('insertLineBreak');
-        } catch {
-          inserted = false;
-        }
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0) {
+          const range = sel.getRangeAt(0);
+          range.deleteContents();
 
-        // 2. insertText '\n' 대체 시도
-        if (!inserted) {
-          try {
-            inserted = document.execCommand('insertText', false, '\n');
-          } catch {
-            inserted = false;
+          const br = document.createElement('br');
+          range.insertNode(br);
+
+          // 만약 요소 맨 끝에 <br>이 삽입된 경우 (뒤에 텍스트가 없는 경우)
+          // 브라우저에서 빈 다음 줄을 렌더링하기 위해 trailing <br>이 하나 더 필요함
+          if (!br.nextSibling || (br.nextSibling.nodeType === Node.TEXT_NODE && !br.nextSibling.textContent)) {
+            const extraBr = document.createElement('br');
+            br.parentNode?.appendChild(extraBr);
           }
-        }
 
-        // 3. Selection Range 직접 DOM <br> 삽입
-        if (!inserted) {
-          const sel = window.getSelection();
-          if (sel && sel.rangeCount > 0) {
-            const range = sel.getRangeAt(0);
-            range.deleteContents();
-            const br = document.createElement('br');
-            range.insertNode(br);
-            range.setStartAfter(br);
-            range.setEndAfter(br);
-            sel.removeAllRanges();
-            sel.addRange(range);
+          // 커서를 첫 번째 <br> 바로 다음으로 설정
+          range.setStartAfter(br);
+          range.setEndAfter(br);
+          sel.removeAllRanges();
+          sel.addRange(range);
+        } else {
+          try {
+            document.execCommand('insertLineBreak');
+          } catch {
+            try {
+              document.execCommand('insertText', false, '\n');
+            } catch {}
           }
         }
       }

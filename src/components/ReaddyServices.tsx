@@ -61,7 +61,7 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
       description: '독일 정품 CARDIP® PPS를 기반으로 250µm+ 도막 두께의 투명 보호층을 형성합니다. 칼을 전혀 대지 않는 무절개 스프레이 방식으로 시공되어 스톤칩과 스크래치를 완벽 차단하며, 필요 시 도장면 손상 없이 언제든 깔끔하게 벗겨낼 수 있습니다.',
       features: [
         '독일 정품 CARDIP® PPS 정밀 시공',
-        '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
+        '칼 없이 완성하는 Seamless 시공\n(AI 로봇 정밀 분사)',
         '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
         '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)'
       ],
@@ -182,7 +182,7 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
                         <div className="w-6 h-6 flex items-center justify-center rounded-full bg-primary/10 shrink-0">
                           <i className="ri-check-line text-primary text-sm font-bold" />
                         </div>
-                        <span className="text-sm font-medium text-dark">{feat}</span>
+                        <span className="text-sm font-medium text-dark whitespace-pre-line">{feat}</span>
                       </div>
                     ))}
                   </div>

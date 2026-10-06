@@ -276,7 +276,7 @@ export function CoreServicesSection({ onRequestQuote }: CoreServicesSectionProps
                       className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/15 transition-all"
                     >
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                      <span className="text-xs sm:text-sm text-gray-200 leading-snug">{feat}</span>
+                      <span className="text-xs sm:text-sm text-gray-200 leading-snug whitespace-pre-line">{feat}</span>
                     </div>
                   ))}
                 </div>
