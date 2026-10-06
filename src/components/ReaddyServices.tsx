@@ -62,8 +62,8 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
       features: [
         '독일 정품 CARDIP® PPS 정밀 시공',
         '칼 없이 완성하는 Seamless 시공\n(AI 로봇 정밀 분사)',
-        '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
-        '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)'
+        '250µm+ 도막 두께와 높은 스톤칩 저항성\n(DIN ISO 20567-1)',
+        '무접착 방식으로 깔끔하게 벗겨지는 시스템\n(도장면 손상 없는 제거)'
       ],
       image: '/images/readdy/service-detail-ai-001.jpg',
       highlight: true,
@@ -79,7 +79,7 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
         '독일 정품 CARDIP® 컬러 도료 11단계 정밀 시공',
         '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 투톤 구현',
         '칼을 사용하지 않는 분사 방식으로 차량 손상 방지',
-        '무접착 방식으로 깔끔하게 벗겨지는 시스템 (원도장면 보존)'
+        '무접착 방식으로 깔끔하게 벗겨지는 시스템\n(원도장면 보존)'
       ],
       image: '/images/readdy/brand-tech-main-001.jpg',
       highlight: true,

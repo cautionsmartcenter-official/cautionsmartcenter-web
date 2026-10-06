@@ -141,10 +141,10 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     features: [
       '독일 정품 CARDIP® PPS 정밀 시공',
       '칼 없이 완성하는 Seamless 시공\n(AI 로봇 정밀 분사)',
-      '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
-      '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)',
+      '250µm+ 도막 두께와 높은 스톤칩 저항성\n(DIN ISO 20567-1)',
+      '무접착 방식으로 깔끔하게 벗겨지는 시스템\n(도장면 손상 없는 제거)',
       '균일한 표면 레벨링과 높은 투명도',
-      '수성 친환경 도료 시스템 & Non-Yellowing 특성'
+      '수성 친환경 도료 시스템 & Non-Yellowing\n특성'
     ],
     detailImage: '/images/readdy/service-detail-ai-img.jpg',
     details: [
@@ -182,7 +182,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
       '슈퍼카 순정 컬러코드 정밀 조색 & 마이바흐 투톤 구현',
       '칼을 사용하지 않는 분사 방식으로 차량 손상 방지',
       '실제 도색 수준의 표면 질감과 깊이 있는 광택',
-      '무접착 방식으로 깔끔하게 벗겨지는 시스템 (원도장면 보존)',
+      '무접착 방식으로 깔끔하게 벗겨지는 시스템\n(원도장면 보존)',
       '외장 컬러 변경과 스톤칩 보호 동시 구현'
     ],
     detailImage: '/images/readdy/brand-tech-main-001.jpg',
@@ -591,8 +591,8 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                     <tr className="hover:bg-gray-50 transition-colors">
                       <td className="py-4 px-6 font-bold text-gray-900 bg-gray-50/50">제거 시 특성 (벗겨지는 방식)</td>
                       <td className="py-4 px-6 text-gray-600 border-l border-gray-100">점착제 잔여물 발생 및 제거 작업 소요</td>
-                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700">
-                        ✓ 무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)
+                      <td className="py-4 px-6 text-gray-900 font-bold bg-red-50/30 border-l border-red-100 text-red-700 whitespace-pre-line">
+                        ✓ 무접착 방식으로 깔끔하게 벗겨지는 시스템{"\n"}(도장면 손상 없는 제거)
                       </td>
                     </tr>
                     <tr className="hover:bg-gray-50 transition-colors">

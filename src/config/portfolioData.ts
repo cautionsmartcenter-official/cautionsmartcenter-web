@@ -27,7 +27,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'maybach-s580',
     category: 'maybach-twotone',
     categoryName: '마이바흐 투톤',
-    title: '메르세데스-마이바흐 S580 마스터피스 투톤PPS',
+    title: '메르세데스-마이바흐 S580 베르데실버&오팔라이트화이트 투톤PPS',
     carModel: 'Mercedes-Maybach S 580 (Two-Tone)',
     image: '/images/portfolio/maybach/01.jpg',
     images: [
@@ -77,7 +77,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'maybach-gls600-nautical',
     category: 'maybach-twotone',
     categoryName: '마이바흐 투톤',
-    title: '마이바흐 GLS600 상단 노틱 블루 투톤 비스포크 PPS',
+    title: '마이바흐 GLS600 상단 노틱 블루 투톤PPS',
     carModel: 'Mercedes-Maybach GLS 600 (Nautical Blue)',
     image: '/images/portfolio/maybach_nautical/01.jpg',
     images: [
@@ -102,7 +102,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'maybach-s680-v12',
     category: 'maybach-twotone',
     categoryName: '마이바흐 투톤',
-    title: '메르세데스-마이바흐 S680 V12 플래그십 투톤 전체 PPS',
+    title: '메르세데스-마이바흐 S680 V12 신차 전체 PPS',
     carModel: 'Mercedes-Maybach S 680 V12',
     image: '/images/portfolio/maybach_v12/01.jpg',
     images: [
@@ -154,7 +154,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'color-cayenne-blue',
     category: 'color-pps',
     categoryName: '컬러PPS',
-    title: '포르쉐 카이엔 넵튠 블루(Neptune Blue) 전체 컬러PPS',
+    title: '포르쉐 카이엔 넵튠 블루(Neptune Blue) 컬러PPS',
     carModel: 'Porsche Cayenne (Neptune Blue PPS)',
     image: '/images/portfolio/cayenne_blue/01.jpg',
     images: [
@@ -179,7 +179,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'color-ferrari488',
     category: 'color-pps',
     categoryName: '컬러PPS',
-    title: '페라리 488 GTB 순정 도장 보존 페라리 레드 PPS',
+    title: '페라리 488 GTB 순정 도장 보존 페라리 레드 컬러PPS',
     carModel: 'Ferrari 488 GTB (Rosso Corsa)',
     image: '/images/portfolio/ferrari488/01.jpg',
     images: [
@@ -204,7 +204,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'color-m3-touring',
     category: 'color-pps',
     categoryName: '컬러PPS',
-    title: 'BMW M3 투어링 랩핑 제거 후 GT 실버 풀바디 PPS',
+    title: 'BMW M3 투어링 랩핑 제거 후 GT 실버 컬러PPS',
     carModel: 'BMW M3 Touring (GT Silver PPS)',
     image: '/images/portfolio/m3_touring/01.jpg',
     images: [
@@ -279,7 +279,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'color-modely-red',
     category: 'color-pps',
     categoryName: '컬러PPS',
-    title: '테슬라 모델 Y 신차 전체 페라리 레드 고광택 컬러PPS',
+    title: '테슬라 모델 Y 신차 전체 페라리 레드 컬러PPS',
     carModel: 'Tesla Model Y (Ferrari Red PPS)',
     image: '/images/portfolio/modely_red/01.jpg',
     images: [
@@ -304,7 +304,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'color-ev6-gt',
     category: 'color-pps',
     categoryName: '컬러PPS',
-    title: '기아 EV6 GT 스틸 매트 사틴 실버 전체 컬러PPS',
+    title: '기아 EV6 GT 스틸 매트 사틴 실버 컬러PPS',
     carModel: 'Kia EV6 GT (Satin Matte Silver PPS)',
     image: '/images/portfolio/ev6_gt/01.jpg',
     images: [
@@ -331,7 +331,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-gwagon',
     category: 'pps',
     categoryName: 'PPS',
-    title: '메르세데스-벤츠 G450d 신차 풀바디 초정밀 투명PPS',
+    title: '메르세데스-벤츠 G450d 신차 풀바디 투명PPS',
     carModel: 'Mercedes-Benz G 450d (W465)',
     image: '/images/portfolio/gwagon/01.jpg',
     images: [
@@ -356,7 +356,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-m3-sedan',
     category: 'pps',
     categoryName: 'PPS',
-    title: 'BMW M3 컴페티션 세단 신차 풀바디 투명PPS 보호',
+    title: 'BMW M3 컴페티션 세단 신차 풀바디 투명PPS',
     carModel: 'BMW M3 Competition Sedan (G80)',
     image: '/images/portfolio/m3_sedan/01.jpg',
     images: [
@@ -381,7 +381,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-model-x',
     category: 'pps',
     categoryName: 'PPS',
-    title: '테슬라 모델 X 신차 전체 무절개 투명PPS & 팔콘윙 케어',
+    title: '테슬라 모델 X 신차 투명PPS',
     carModel: 'Tesla Model X (Full Body PPS)',
     image: '/images/portfolio/model_x/01.jpg',
     images: [
@@ -406,7 +406,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-ex90',
     category: 'pps',
     categoryName: 'PPS',
-    title: '볼보 EX90 신차 풀바디 무절개 전체 투명PPS',
+    title: '볼보 EX90 신차 투명PPS',
     carModel: 'Volvo EX90 (Flagship EV SUV)',
     image: '/images/portfolio/ex90/01.jpg',
     images: [
