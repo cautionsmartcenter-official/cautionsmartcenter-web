@@ -69,33 +69,6 @@ const PortfolioCard: React.FC<{
           />
         </AnimatePresence>
 
-        {/* Gradient Overlay for Top Badges */}
-        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
-
-        {/* Top Badges */}
-        <div className="absolute top-3.5 left-3.5 flex items-center gap-1.5 z-10 pointer-events-none">
-          <span className="px-3 py-1 bg-black/75 backdrop-blur-md text-white text-[11px] font-bold rounded-full border border-white/20 shadow-sm">
-            {item.categoryName}
-          </span>
-          <span className="px-2 py-0.5 bg-emerald-500/90 text-white text-[10px] font-bold rounded-full shadow-sm">
-            번호판 정품인증
-          </span>
-        </div>
-
-        {/* Top Right Channel Badge */}
-        <div className="absolute top-3.5 right-3.5 z-10">
-          {item.linkType === 'instagram' ? (
-            <span className="px-2.5 py-1 bg-gradient-to-r from-purple-600/90 to-pink-600/90 text-white text-[10px] font-bold rounded-full backdrop-blur-md shadow flex items-center gap-1">
-              <i className="ri-instagram-line" />
-              <span>Instagram</span>
-            </span>
-          ) : item.linkType === 'blog' ? (
-            <span className="px-2.5 py-1 bg-[#03C75A]/95 text-white text-[10px] font-bold rounded-full backdrop-blur-md shadow flex items-center gap-1">
-              <span className="font-black text-[9px]">N</span>
-              <span>Blog</span>
-            </span>
-          ) : null}
-        </div>
 
         {/* Prev / Next Arrow Navigation (hover or touch) */}
         {images.length > 1 && (
@@ -600,11 +573,8 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                       </>
                     )}
 
-                    {/* Modal Floating Badges */}
-                    <div className="absolute top-4 left-5 flex items-center gap-2 z-20 pointer-events-none">
-                      <span className="px-3.5 py-1.5 bg-primary text-white text-xs font-bold rounded-full shadow">
-                        {activeModalItem.categoryName}
-                      </span>
+                    {/* Modal Photo Counter */}
+                    <div className="absolute top-4 left-5 z-20 pointer-events-none">
                       <span className="px-3 py-1.5 bg-black/70 backdrop-blur-md text-white text-xs font-bold rounded-full border border-white/20 shadow">
                         {modalImageIndex + 1} / {modalImages.length}
                       </span>
