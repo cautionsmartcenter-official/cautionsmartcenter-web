@@ -18,6 +18,7 @@ import { WarrantyViewer } from './components/WarrantyViewer';
 import { getWarrantyById, getWarranties, type WarrantyItem } from './lib/warrantyStorage';
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
 import { ReaddyPartners } from './components/ReaddyPartners';
+import { ReaddyLocationSection } from './components/ReaddyLocationSection';
 import { InlineTextEditor } from './components/InlineTextEditor';
 
 export default function App() {
@@ -61,6 +62,14 @@ export default function App() {
     }, 100);
   };
 
+  /* ── Navigate to Location Section ── */
+  const handleNavigateToLocation = () => {
+    setActiveTab('home');
+    setTimeout(() => {
+      document.getElementById('location')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   /* ── Navigate to Brand Story (Optional Section Anchor) ── */
   const handleNavigateToBrandStory = (targetId?: string) => {
     setActiveTab('brand-story');
@@ -80,7 +89,7 @@ export default function App() {
     }
   };
 
-  /* ── Hash routing (e.g. #admin, #warranty) ── */
+  /* ── Hash routing (e.g. #admin, #warranty, #location) ── */
   useEffect(() => {
     const checkHash = () => {
       const hash = window.location.hash;
@@ -93,6 +102,11 @@ export default function App() {
       } else if (hash === '#portfolio' || hash === '#gallery') {
         setActiveTab('portfolio');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash === '#location' || hash === '#directions' || hash === '#map') {
+        setActiveTab('home');
+        setTimeout(() => {
+          document.getElementById('location')?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
       } else if (hash.startsWith('#warranty')) {
         setActiveTab('warranty');
         const params = new URLSearchParams(hash.split('?')[1] || '');
@@ -295,16 +309,21 @@ export default function App() {
           {/* ════════════════ 5. READDY CTA & SILHOUETTES SECTION (1:1 Exact) ════════════════ */}
           <ReaddyCtaSection />
 
-          {/* ════════════════ 6. READDY CONTACT FORM SECTION (1:1 Exact) ════════════════ */}
+          {/* ════════════════ 6. READDY LOCATION & DIRECTIONS SECTION (오시는 길 & 본점 안내) ════════════════ */}
+          <ReaddyLocationSection onNavigateToContact={() => handleNavigateToContact()} />
+
+          {/* ════════════════ 7. READDY CONTACT FORM SECTION (1:1 Exact) ════════════════ */}
           <ReaddyContactSection initialService={contactInitialService} />
         </main>
       )}
 
-      {/* ── 6. Readdy Global Footer ── */}
+      {/* ── 8. Readdy Global Footer ── */}
       <ReaddyFooter
         onSelectTab={(tab) => {
           if (tab === 'repair' || tab === 'paint' || tab === 'detailing' || tab === 'ai-tech') {
             handleOpenServiceDetail(tab);
+          } else if (tab === 'location') {
+            handleNavigateToLocation();
           } else {
             setActiveTab(tab);
             window.scrollTo({ top: 0, behavior: 'smooth' });

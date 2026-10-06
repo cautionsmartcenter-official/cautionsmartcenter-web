@@ -18,7 +18,7 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
       { name: '전국 시공점 안내', id: 'partners' },
       { name: '시공 포트폴리오', id: 'portfolio' },
       { name: '기술력 & 설비', id: 'brand-story' },
-      { name: '오시는 길', id: 'home' }
+      { name: '오시는 길', id: 'location' }
     ],
     support: [
       { name: '공지사항', id: 'notice' },
@@ -61,8 +61,12 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
                 <li key={item.name}>
                   <button
                     onClick={() => {
-                      if (onSelectTab) onSelectTab(item.id);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      if (item.id === 'location') {
+                        if (onSelectTab) onSelectTab('location');
+                      } else if (onSelectTab) {
+                        onSelectTab(item.id);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
                     }}
                     className="text-sm text-gray-400 hover:text-primary transition-colors cursor-pointer"
                   >
@@ -120,9 +124,17 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
               </li>
               <li className="flex items-start gap-2">
                 <i className="ri-map-pin-line text-primary mt-0.5 w-4 h-4 flex items-center justify-center" />
-                <span className="text-sm text-gray-400">
-                  경기도 광주시 태재로 26 (신현동) / 분당 본점
-                </span>
+                <button
+                  onClick={() => {
+                    if (onSelectTab) onSelectTab('location');
+                  }}
+                  className="text-sm text-gray-400 hover:text-white transition-colors text-left cursor-pointer group"
+                >
+                  <span>경기도 광주시 태재로 26 (신현동) / 분당 본점</span>
+                  <span className="block text-[11px] text-red-500 group-hover:text-red-400 transition-colors font-medium mt-0.5">
+                    오시는 길 & 길찾기 안내 →
+                  </span>
+                </button>
               </li>
             </ul>
           </div>

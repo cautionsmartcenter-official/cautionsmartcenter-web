@@ -171,6 +171,16 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
                   <div className="text-base text-gray-600">
                     경기도 광주시 태재로 26 (신현동) / 분당 본점
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      document.getElementById('location')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-1 text-xs text-primary font-bold hover:underline mt-1 cursor-pointer"
+                  >
+                    <span>지도 및 오시는 길 안내</span>
+                    <i className="ri-arrow-right-s-line" />
+                  </button>
                 </div>
               </div>
 
