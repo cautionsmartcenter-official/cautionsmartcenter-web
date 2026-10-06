@@ -7,9 +7,9 @@ import { ReaddyYouTubeSection } from './ReaddyYouTubeSection';
 export type { PortfolioItem };
 
 const CATEGORIES = [
-  { id: 'maybach-twotone', name: '마이바흐 투톤 PPS' },
-  { id: 'color-pps', name: '컬러 PPS' },
-  { id: 'pps', name: '투명 PPS' },
+  { id: 'maybach-twotone', name: '마이바흐 투톤PPS' },
+  { id: 'color-pps', name: '컬러PPS' },
+  { id: 'pps', name: '투명PPS' },
   { id: 'paint', name: '판금도색' },
   { id: 'repair', name: '정비수리' }
 ];
@@ -341,7 +341,7 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                     {OFFICIAL_LINKS.instagramHandle}
                   </h4>
                   <p className="text-xs text-slate-500 line-clamp-1">
-                    PPS · 투톤 마이바흐 · 컬러 PPS 최신 시공 영상 보러가기
+                    PPS · 투톤 마이바흐 · 컬러PPS 최신 시공 영상 보러가기
                   </p>
                 </div>
               </div>
@@ -449,7 +449,7 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
               내 차량에 딱 맞는 시공 견적이 궁금하신가요?
             </h2>
             <p className="text-sm sm:text-base text-gray-300 mb-8 leading-relaxed max-w-2xl mx-auto">
-              PPS부터 컬러 PPS 투톤, 판금도색 사고수리, 정밀 메카닉 정비까지 최고 수준의 마스터가 1:1 맞춤 견적을 안내해 드립니다.
+              PPS부터 컬러PPS 투톤, 판금도색 사고수리, 정밀 메카닉 정비까지 최고 수준의 마스터가 1:1 맞춤 견적을 안내해 드립니다.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3.5">
               <button

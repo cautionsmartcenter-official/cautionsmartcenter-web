@@ -47,9 +47,9 @@ export const ReaddyYouTubeSection: React.FC = () => {
     {
       id: 'GtgO0-ilPvQ',
       title: '주차장에서 긁힌 2억짜리 벤츠 G450d… 투명 보호막을 벗기자 도장은 멀쩡했다?! (소름 반전)',
-      category: '신차 투명 PPS 보호',
+      category: '신차 투명PPS 보호',
       badge: '실차 보호 검증',
-      desc: '일상 주차 충격과 험로 스톤칩으로부터 순정 도장을 100% 무손상으로 지켜낸 투명 PPS의 놀라운 필오프(Peel-off) 박리 및 원상복구 현장',
+      desc: '일상 주차 충격과 험로 스톤칩으로부터 순정 도장을 100% 무손상으로 지켜낸 투명PPS의 놀라운 필오프(Peel-off) 박리 및 원상복구 현장',
       thumbnail: 'https://img.youtube.com/vi/GtgO0-ilPvQ/maxresdefault.jpg'
     }
   ];

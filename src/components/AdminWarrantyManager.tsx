@@ -363,10 +363,10 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
           </div>
         </div>
 
-        {/* 투명 PPS */}
+        {/* 투명PPS */}
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500">투명 PPS 시공</span>
+            <span className="text-xs font-bold text-slate-500">투명PPS 시공</span>
             <span className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
               <i className="ri-drop-line" />
             </span>
@@ -376,10 +376,10 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
           </div>
         </div>
 
-        {/* 컬러 PPS */}
+        {/* 컬러PPS */}
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500">컬러 PPS 시공</span>
+            <span className="text-xs font-bold text-slate-500">컬러PPS 시공</span>
             <span className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
               <i className="ri-palette-line" />
             </span>
@@ -434,8 +434,8 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:border-red-500"
           >
             <option value="all">제품: 전체</option>
-            <option value="clear">투명 PPS만</option>
-            <option value="color">컬러 PPS만</option>
+            <option value="clear">투명PPS만</option>
+            <option value="color">컬러PPS만</option>
           </select>
 
           {/* 보증 상태 필터 */}
@@ -867,7 +867,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   </h4>
 
                   <div className="space-y-3 bg-red-50/40 p-4 rounded-2xl border border-red-100">
-                    {/* 투명 PPS */}
+                    {/* 투명PPS */}
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                       <label className="flex items-center gap-2 text-xs font-bold text-slate-900 cursor-pointer w-44">
                         <input
@@ -889,7 +889,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                       )}
                     </div>
 
-                    {/* 컬러 PPS */}
+                    {/* 컬러PPS */}
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                       <label className="flex items-center gap-2 text-xs font-bold text-slate-900 cursor-pointer w-44">
                         <input

@@ -18,7 +18,7 @@ export interface ScheduleItem {
   deliveryTime?: string; // 출고 예정 시간 (예: 18:00)
 
   // 시공 항목 및 상태
-  serviceType: string; // 예: 투명 PPS (전체), 컬러 PPS, 사고수리, 광택 & 유리막
+  serviceType: string; // 예: 투명PPS (전체), 컬러PPS, 사고수리, 광택 & 유리막
   status: 'reserved' | 'in_progress' | 'completed' | 'cancelled';
   // reserved: 입고 예약 대기
   // in_progress: 차량 입고 후 시공 진행중

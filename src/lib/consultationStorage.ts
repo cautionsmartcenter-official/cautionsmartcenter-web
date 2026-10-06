@@ -29,7 +29,7 @@ const SEED_DATA: ConsultationItem[] = [
     model: 'S-Class (S클래스 / 마이바흐)',
     codeName: 'W223 (7세대 후기형/마이바흐)',
     service: '투명PPS',
-    message: '신차 출고 후 본넷 및 앞범퍼 생활보호패키지 투명 PPS 전체 시공 견적 문의드립니다. 주말 입고 가능한지 확인 부탁드립니다.',
+    message: '신차 출고 후 본넷 및 앞범퍼 생활보호패키지 투명PPS 전체 시공 견적 문의드립니다. 주말 입고 가능한지 확인 부탁드립니다.',
     status: 'new',
     notes: '1차 유선 상담 대기 (시공 부위 확인 예정)',
     isRead: false,

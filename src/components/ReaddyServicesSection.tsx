@@ -30,7 +30,7 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
     },
     {
       id: 'pps-clear',
-      title: '투명 PPS',
+      title: '투명PPS',
       description: '독일 CARDIP® PPS · 250µm+ 도막의 스톤칩 보호 및 투명 마감',
       image: '/images/readdy/service-detail-ai-001.jpg',
       bgColor: 'bg-gradient-to-br from-red-50 to-gray-50',
@@ -38,7 +38,7 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
     },
     {
       id: 'pps-color',
-      title: '컬러 PPS',
+      title: '컬러PPS',
       description: '독일 CARDIP® Color · 정밀 조색 및 Peelable Paint 컬러 시스템',
       image: '/images/readdy/brand-tech-main-001.jpg',
       bgColor: 'bg-gradient-to-br from-amber-50 to-gray-50',

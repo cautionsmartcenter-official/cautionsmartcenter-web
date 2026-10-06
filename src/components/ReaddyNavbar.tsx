@@ -225,8 +225,8 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                           className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-44 bg-neutral-950/95 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl p-1.5 z-50"
                         >
                           {[
-                            { id: 'pps-clear', name: '투명 PPS' },
-                            { id: 'pps-color', name: '컬러 PPS' },
+                            { id: 'pps-clear', name: '투명PPS' },
+                            { id: 'pps-color', name: '컬러PPS' },
                             { id: 'paint', name: '판금도색' },
                             { id: 'repair', name: '수입차 정비' },
                             { id: 'detailing', name: '디테일링' }
@@ -483,8 +483,8 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                             >
                               <div className="bg-white/5 rounded-xl mx-2 my-1 flex flex-col p-1.5 space-y-1 border border-white/5">
                                 {[
-                                  { id: 'pps-clear', name: '투명 PPS' },
-                                  { id: 'pps-color', name: '컬러 PPS' },
+                                  { id: 'pps-clear', name: '투명PPS' },
+                                  { id: 'pps-color', name: '컬러PPS' },
                                   { id: 'paint', name: '판금도색' },
                                   { id: 'repair', name: '수입차 정비' },
                                   { id: 'detailing', name: '디테일링' }

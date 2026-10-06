@@ -22,12 +22,12 @@ export const OFFICIAL_LINKS = {
 };
 
 export const PORTFOLIO_DATA: PortfolioItem[] = [
-  // ── 1. 마이바흐 투톤 PPS (코션스마트센터 시그니처 마스터피스) ──
+  // ── 1. 마이바흐 투톤PPS (코션스마트센터 시그니처 마스터피스) ──
   {
     id: 'maybach-s580',
     category: 'maybach-twotone',
     categoryName: '마이바흐 투톤',
-    title: '메르세데스-마이바흐 S580 마스터피스 투톤 PPS',
+    title: '메르세데스-마이바흐 S580 마스터피스 투톤PPS',
     carModel: 'Mercedes-Maybach S 580 (Two-Tone)',
     image: '/images/portfolio/maybach/01.jpg',
     images: [
@@ -127,7 +127,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'maybach-s580-rosegold',
     category: 'maybach-twotone',
     categoryName: '마이바흐 투톤',
-    title: '마이바흐 S580 노틱 블루 & 라이트 로즈골드 비스포크 투톤 PPS',
+    title: '마이바흐 S580 노틱 블루 & 라이트 로즈골드 비스포크 투톤PPS',
     carModel: 'Mercedes-Maybach S 580 (Rose Gold Two-Tone)',
     image: '/images/portfolio/maybach_rosegold/01.jpg',
     images: [
@@ -149,12 +149,12 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     linkText: '인스타그램 로즈골드 투톤 영상'
   },
 
-  // ── 2. 컬러 PPS (스프레이 & 필오프 컬러 체인지) ──
+  // ── 2. 컬러PPS (스프레이 & 필오프 컬러 체인지) ──
   {
     id: 'color-cayenne-blue',
     category: 'color-pps',
-    categoryName: '컬러 PPS',
-    title: '포르쉐 카이엔 넵튠 블루(Neptune Blue) 전체 컬러 PPS',
+    categoryName: '컬러PPS',
+    title: '포르쉐 카이엔 넵튠 블루(Neptune Blue) 전체 컬러PPS',
     carModel: 'Porsche Cayenne (Neptune Blue PPS)',
     image: '/images/portfolio/cayenne_blue/01.jpg',
     images: [
@@ -178,7 +178,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: 'color-ferrari488',
     category: 'color-pps',
-    categoryName: '컬러 PPS',
+    categoryName: '컬러PPS',
     title: '페라리 488 GTB 순정 도장 보존 페라리 레드 PPS',
     carModel: 'Ferrari 488 GTB (Rosso Corsa)',
     image: '/images/portfolio/ferrari488/01.jpg',
@@ -189,7 +189,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/ferrari488/04.jpg', // [뒷면] 사람 없는 리어 쿼터뷰 & 테일램프
       '/images/portfolio/ferrari488/05.jpg'  // [디테일] 초선명 헤드라이트 점등 & 휀더 클로즈업
     ],
-    tags: ['페라리 488', '컬러 PPS', '페라리 레드', 'CARDIP 정품', '원형 복원 가능'],
+    tags: ['페라리 488', '컬러PPS', '페라리 레드', 'CARDIP 정품', '원형 복원 가능'],
     summary: '슈퍼카의 순정 도장면 손상 걱정 없이 언제든 떼어낼 수 있는 CARDIP Peelable Paint 페라리 레드 풀바디 컬러 체인지',
     details: [
       '원하는 페라리 오리지널 레드로 완벽 변신 + 스톤칩 방어 동시 구현',
@@ -203,7 +203,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: 'color-m3-touring',
     category: 'color-pps',
-    categoryName: '컬러 PPS',
+    categoryName: '컬러PPS',
     title: 'BMW M3 투어링 랩핑 제거 후 GT 실버 풀바디 PPS',
     carModel: 'BMW M3 Touring (GT Silver PPS)',
     image: '/images/portfolio/m3_touring/01.jpg',
@@ -215,7 +215,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/m3_touring/05.jpg'  // [디테일] 레이저 라이트 점등 디테일 (DSC08135)
     ],
     tags: ['M3 투어링', 'GT 실버', '랩핑 제거', '하이그로시 PPS', '고성능 왜건'],
-    summary: '기존 랩핑 필름을 안전하게 제거하고 은은하고 날렵한 GT 실버 컬러 PPS와 하이그로시 파츠 전체 보호 시공',
+    summary: '기존 랩핑 필름을 안전하게 제거하고 은은하고 날렵한 GT 실버 컬러PPS와 하이그로시 파츠 전체 보호 시공',
     details: [
       '기존 노후 랩핑 필름 안전 박리 및 도장면 정밀 디테일링 케어',
       'M 전용 바디킷과 오버휀더의 입체적인 굴곡에 완벽 밀착 도포',
@@ -228,8 +228,8 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: 'color-s450-grille',
     category: 'color-pps',
-    categoryName: '컬러 PPS',
-    title: '메르세데스-벤츠 S450 프론트 그릴 블랙 컬러 PPS (나이트 에디션)',
+    categoryName: '컬러PPS',
+    title: '메르세데스-벤츠 S450 프론트 그릴 블랙 컬러PPS (나이트 에디션)',
     carModel: 'Mercedes-Benz S 450 (Grille Black PPS)',
     image: '/images/portfolio/s450/01.jpg',
     images: [
@@ -240,10 +240,10 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/s450/05.jpg'  // [디테일] 하이글로시 블랙 그릴 & 헤드라이트 (DSC08290)
     ],
     tags: ['그릴 컬러PPS', '블랙 PPS', '크롬죽이기', '나이트에디션', '플래그십 세단', '스톤칩 방어'],
-    summary: '은색 크롬 라디에이터 그릴과 전면 몰딩을 도장 손상 없이 원상복구 가능한 고광택 블랙 컬러 PPS로 시공한 나이트 에디션 크롬죽이기',
+    summary: '은색 크롬 라디에이터 그릴과 전면 몰딩을 도장 손상 없이 원상복구 가능한 고광택 블랙 컬러PPS로 시공한 나이트 에디션 크롬죽이기',
     details: [
       '전면 라디에이터 그릴의 스톤칩 집중 방어와 동시에 딥 블랙 고광택 익스테리어 완성',
-      '크롬 파츠 손상 없이 언제든 100% 원상복구가 가능한 박리형(Peelable) 컬러 PPS 공법',
+      '크롬 파츠 손상 없이 언제든 100% 원상복구가 가능한 박리형(Peelable) 컬러PPS 공법',
       '일반 랩핑 필름의 들뜸이나 이질감 없이 순정 하이글로시 도장과 동일한 광택 및 내구성 확보'
     ],
     linkType: 'blog',
@@ -253,8 +253,8 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: 'color-g80-grille',
     category: 'color-pps',
-    categoryName: '컬러 PPS',
-    title: '제네시스 전기 G80 크레스트 그릴 하이글로시 블랙 컬러 PPS',
+    categoryName: '컬러PPS',
+    title: '제네시스 전기 G80 크레스트 그릴 하이글로시 블랙 컬러PPS',
     carModel: 'Genesis Electrified G80 (Grille Black PPS)',
     image: '/images/portfolio/g80_grille/01.jpg',
     images: [
@@ -265,7 +265,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/g80_grille/05.jpg'  // [디테일] 크레스트 그릴 & 코션 번호판 디테일 (20260914_180516)
     ],
     tags: ['그릴 컬러PPS', '블랙 PPS', '크레스트 그릴', '크롬죽이기', '전기차 PPS', '스톤칩 방어'],
-    summary: '전기 G80의 전면 크레스트 그릴 크롬을 도색 손상 없이 박리 가능한 하이글로시 딥 블랙 컬러 PPS로 시공하여 강렬한 스포티 룩 완성',
+    summary: '전기 G80의 전면 크레스트 그릴 크롬을 도색 손상 없이 박리 가능한 하이글로시 딥 블랙 컬러PPS로 시공하여 강렬한 스포티 룩 완성',
     details: [
       '전면 대형 크레스트 그릴의 스톤칩 집중 방어와 감각적인 올 블랙 드레스업 동시 구현',
       '전기차 충전구 및 전방 카메라/센서 간섭 없이 정밀 마스킹 및 분무 도포 공법 적용',
@@ -278,8 +278,8 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: 'color-modely-red',
     category: 'color-pps',
-    categoryName: '컬러 PPS',
-    title: '테슬라 모델 Y 신차 전체 페라리 레드 고광택 컬러 PPS',
+    categoryName: '컬러PPS',
+    title: '테슬라 모델 Y 신차 전체 페라리 레드 고광택 컬러PPS',
     carModel: 'Tesla Model Y (Ferrari Red PPS)',
     image: '/images/portfolio/modely_red/01.jpg',
     images: [
@@ -290,7 +290,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/modely_red/05.jpg'  // [디테일] 헤드라이트 점등 & 휠 클로즈업 (DSC08772)
     ],
     tags: ['테슬라 모델Y', '페라리 레드', '신차 전체PPS', '컬러 체인지', '전기차 전용', '고광택 피니시'],
-    summary: '신차 출고 직후 테슬라 모델 Y를 강렬하고 우아한 페라리 레드 고광택 컬러 PPS로 전체 시공하여 완벽한 슈퍼 EV로 완성',
+    summary: '신차 출고 직후 테슬라 모델 Y를 강렬하고 우아한 페라리 레드 고광택 컬러PPS로 전체 시공하여 완벽한 슈퍼 EV로 완성',
     details: [
       '일반 랩핑 필름의 오렌지필 없이 슈퍼카 순정 도장 이상의 깊은 펄감과 투명 광택 구현',
       '신차 얇은 클리어코트를 스톤칩·생활 스크래치로부터 보호하는 두터운 보호 도막층 형성',
@@ -303,8 +303,8 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: 'color-ev6-gt',
     category: 'color-pps',
-    categoryName: '컬러 PPS',
-    title: '기아 EV6 GT 스틸 매트 사틴 실버 전체 컬러 PPS',
+    categoryName: '컬러PPS',
+    title: '기아 EV6 GT 스틸 매트 사틴 실버 전체 컬러PPS',
     carModel: 'Kia EV6 GT (Satin Matte Silver PPS)',
     image: '/images/portfolio/ev6_gt/01.jpg',
     images: [
@@ -314,8 +314,8 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/ev6_gt/04.jpg', // [뒷면] 코션 사옥 앞 리어 쿼터뷰 & 테일램프 (DSC08113)
       '/images/portfolio/ev6_gt/05.jpg'  // [디테일] 포지드 카본 필러/미러 & 형광 캘리퍼 (DSC08121)
     ],
-    tags: ['기아 EV6 GT', '컬러 PPS', '사틴 무광', '스틸 매트 그레이', '전기차 전용', '스톤칩 방어'],
-    summary: '고성능 전기차 EV6 GT의 역동적인 바디 라인을 고급스러운 스틸 매트 사틴 실버 컬러 PPS로 감싸 슈퍼 전기차의 미래지향적 감성과 도장면 보호를 동시 구현',
+    tags: ['기아 EV6 GT', '컬러PPS', '사틴 무광', '스틸 매트 그레이', '전기차 전용', '스톤칩 방어'],
+    summary: '고성능 전기차 EV6 GT의 역동적인 바디 라인을 고급스러운 스틸 매트 사틴 실버 컬러PPS로 감싸 슈퍼 전기차의 미래지향적 감성과 도장면 보호를 동시 구현',
     details: [
       '일반 필름 랩핑과 차원이 다른 매끄럽고 은은한 프리미엄 사틴 무광 메탈릭 텍스처',
       '고속 주행 스톤칩 및 도장 손상을 완벽 방어하는 CARDIP 박리형 보호 도막층',
@@ -331,7 +331,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-gwagon',
     category: 'pps',
     categoryName: 'PPS',
-    title: '메르세데스-벤츠 G450d 신차 풀바디 초정밀 투명 PPS',
+    title: '메르세데스-벤츠 G450d 신차 풀바디 초정밀 투명PPS',
     carModel: 'Mercedes-Benz G 450d (W465)',
     image: '/images/portfolio/gwagon/01.jpg',
     images: [
@@ -356,7 +356,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-m3-sedan',
     category: 'pps',
     categoryName: 'PPS',
-    title: 'BMW M3 컴페티션 세단 신차 풀바디 투명 PPS 보호',
+    title: 'BMW M3 컴페티션 세단 신차 풀바디 투명PPS 보호',
     carModel: 'BMW M3 Competition Sedan (G80)',
     image: '/images/portfolio/m3_sedan/01.jpg',
     images: [
@@ -381,7 +381,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-model-x',
     category: 'pps',
     categoryName: 'PPS',
-    title: '테슬라 모델 X 신차 전체 무절개 투명 PPS & 팔콘윙 케어',
+    title: '테슬라 모델 X 신차 전체 무절개 투명PPS & 팔콘윙 케어',
     carModel: 'Tesla Model X (Full Body PPS)',
     image: '/images/portfolio/model_x/01.jpg',
     images: [
@@ -406,7 +406,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'pps-ex90',
     category: 'pps',
     categoryName: 'PPS',
-    title: '볼보 EX90 신차 풀바디 무절개 전체 투명 PPS',
+    title: '볼보 EX90 신차 풀바디 무절개 전체 투명PPS',
     carModel: 'Volvo EX90 (Flagship EV SUV)',
     image: '/images/portfolio/ex90/01.jpg',
     images: [
@@ -458,7 +458,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'paint-bmw-x6',
     category: 'paint',
     categoryName: '판금도색',
-    title: 'BMW X6 30d 바디 사고수리 복원 & 사틴 무광 PPS',
+    title: 'BMW X6 30d 바디 사고수리 복원 & 사틴 무광PPS',
     carModel: 'BMW X6 30d (Satin Matte PPS)',
     image: '/images/portfolio/bmw_x6/01.jpg',
     images: [
@@ -468,12 +468,12 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/bmw_x6/04.jpg', // [뒷면] 사옥 앞 리어 쿼터뷰 & 테일램프 (IMG_8606)
       '/images/portfolio/bmw_x6/05.jpg'  // [디테일] M 엠블럼 & 사틴 무광 텍스처 (IMG_8614)
     ],
-    tags: ['사고수리', '판금도색', '무광 PPS', '보험수리 전문', '원형 복원'],
+    tags: ['사고수리', '판금도색', '무광PPS', '보험수리 전문', '원형 복원'],
     summary: '사고로 손상된 외장 판넬을 정밀 판금 복원 및 열처리 재도색 후, 기존 사틴 무광 질감의 PPS까지 이질감 없이 완벽 재시공 출고',
     details: [
       '손상 부위 단차 0% 정밀 교정 및 방청 아연 프라이머 코팅',
       '독일 정품 수용성 도료 조색 매칭 및 열처리 건조',
-      '사고 수리 후 기존 무광 PPS 질감과 100% 동일하게 엣지 마감'
+      '사고 수리 후 기존 무광PPS 질감과 100% 동일하게 엣지 마감'
     ],
     linkType: 'blog',
     linkUrl: OFFICIAL_LINKS.blog,

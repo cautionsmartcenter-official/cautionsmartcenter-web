@@ -460,8 +460,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                   className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:border-primary"
                 >
                   <option value="all">시공종류: 전체</option>
-                  <option value="투명PPS">투명 PPS</option>
-                  <option value="컬러PPS">컬러 PPS</option>
+                  <option value="투명PPS">투명PPS</option>
+                  <option value="컬러PPS">컬러PPS</option>
                   <option value="사고수리">사고수리 & 판금도색</option>
                   <option value="광택">광택 & 유리막 코팅</option>
                 </select>
