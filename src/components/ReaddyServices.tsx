@@ -60,7 +60,7 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
       subtitle: '최첨단 AI 분사 무절개 투명 도장 보호',
       description: '독일 정품 CARDIP® PPS를 기반으로 250µm+ 도막 두께의 투명 보호층을 형성합니다. 칼을 전혀 대지 않는 무절개 스프레이 방식으로 시공되어 스톤칩과 스크래치를 완벽 차단하며, 필요 시 도장면 손상 없이 언제든 깔끔하게 벗겨낼 수 있습니다.',
       features: [
-        '독일 정품 CARDIP® PPS 11단계 정밀 시공',
+        '독일 정품 CARDIP® PPS 정밀 시공',
         '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
         '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
         '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)'

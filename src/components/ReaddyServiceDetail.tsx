@@ -139,7 +139,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
     description: '독일 정품 CARDIP® PPS를 기반으로 250µm+ 도막 두께의 투명 보호층을 형성합니다. 칼을 전혀 대지 않는 무절개 스프레이 방식으로 시공되어 스톤칩과 스크래치를 완벽 차단하며, 필요 시 도장면 손상 없이 언제든 깔끔하게 벗겨낼 수 있습니다.',
     heroImage: '/images/readdy/service-hero-ai.jpg',
     features: [
-      '독일 정품 CARDIP® PPS 11단계 정밀 시공',
+      '독일 정품 CARDIP® PPS 정밀 시공',
       '칼 없이 완성하는 Seamless 시공 (AI 로봇 정밀 분사)',
       '250µm+ 도막 두께와 높은 스톤칩 저항성 (DIN ISO 20567-1)',
       '무접착 방식으로 깔끔하게 벗겨지는 시스템 (도장면 손상 없는 제거)',
@@ -443,7 +443,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                       <div className="flex items-center gap-3">
                         <span className="w-7 h-7 rounded-lg bg-red-600 text-white font-mono font-black text-xs flex items-center justify-center shadow-sm">4</span>
                         <div>
-                          <div className="text-sm font-bold text-gray-900">컬러 코팅 (Color Coat)</div>
+                          <div className="text-sm font-bold text-gray-900">컬러 코팅 (Color Coat)(선택)</div>
                           <div className="text-xs text-red-700 font-medium">슈퍼카 순정 컬러 및 맞춤 컬러 적용 공정</div>
                         </div>
                       </div>
@@ -485,7 +485,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                       <div className="flex items-center gap-3">
                         <span className="w-7 h-7 rounded-lg bg-sky-600 text-white font-mono font-black text-xs flex items-center justify-center shadow-sm">1</span>
                         <div>
-                          <div className="text-sm font-bold text-gray-900">PPS BaseCoat (벗겨지는 베이스)</div>
+                          <div className="text-sm font-bold text-gray-900">PPS BaseCoat (피러블 페인트)</div>
                           <div className="text-xs text-sky-700 font-medium">기존 도장면 위에 형성되는 <span className="font-cardip font-bold text-black">CARDIP® PPS</span> 벗겨지는 보호 도막</div>
                         </div>
                       </div>
@@ -517,7 +517,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                   총 11회 도포
                 </div>
                 <div className="text-base sm:text-xl font-bold text-gray-900 mt-2">
-                  PPS BaseCoat 5회 + ClearCoat 보호층 2회 + 컬러 코팅 2회 + 최종 ClearCoat 2회
+                  PPS BaseCoat 5회 + ClearCoat 보호층 2회 + 컬러 코팅 2회 (선택) + 최종 ClearCoat 2회
                 </div>
                 <p className="text-xs sm:text-sm text-gray-600 mt-2 font-medium">
                   중간 정밀 샌딩 공정을 포함하여 오렌지필 없는 무결점 슈퍼카 도장면과 완벽한 보호 도막을 완성합니다.
