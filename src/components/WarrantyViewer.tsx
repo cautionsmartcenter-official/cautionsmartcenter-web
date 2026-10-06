@@ -30,6 +30,19 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
     ? ''
     : `${expiryDateObj.getFullYear()}-${String(expiryDateObj.getMonth() + 1).padStart(2, '0')}-${String(expiryDateObj.getDate()).padStart(2, '0')}`;
 
+  // 전화번호 포맷팅 (010-0000-0000)
+  const formatPhone = (phone?: string) => {
+    if (!phone) return '-';
+    const clean = phone.replace(/[^0-9]/g, '');
+    if (clean.length === 11) {
+      return clean.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    }
+    if (clean.length === 10) {
+      return clean.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+    }
+    return phone;
+  };
+
   // 링크 복사
   const handleCopyLink = () => {
     const url = getWarrantyViewUrl(warranty.warrantyNo);
@@ -189,8 +202,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-bold text-gray-900 font-sans tracking-wide"
             style={{
               top: '42.2%',
-              left: '17.2%',
-              width: '29%',
+              left: '20.5%',
+              width: '26%',
               fontSize: 'clamp(11px, 2.0vw, 15px)'
             }}
           >
@@ -202,12 +215,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-bold text-gray-900 font-mono tracking-wider"
             style={{
               top: '45.4%',
-              left: '17.2%',
-              width: '29%',
+              left: '20.5%',
+              width: '26%',
               fontSize: 'clamp(10px, 1.8vw, 14px)'
             }}
           >
-            {warranty.customerPhone}
+            {formatPhone(warranty.customerPhone)}
           </div>
 
           {/* 주소 */}
@@ -215,8 +228,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-medium text-gray-800 font-sans truncate text-left"
             style={{
               top: '48.6%',
-              left: '17.2%',
-              width: '30%',
+              left: '20.5%',
+              width: '26%',
               fontSize: 'clamp(9px, 1.4vw, 12px)'
             }}
             title={warranty.customerAddress}
@@ -230,8 +243,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-bold text-gray-900 font-mono tracking-wider"
             style={{
               top: '42.2%',
-              left: '65.5%',
-              width: '26%',
+              left: '67.5%',
+              width: '27%',
               fontSize: 'clamp(10px, 1.7vw, 13.5px)'
             }}
           >
@@ -243,8 +256,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-bold text-gray-900 font-mono tracking-wider"
             style={{
               top: '45.4%',
-              left: '65.5%',
-              width: '26%',
+              left: '67.5%',
+              width: '27%',
               fontSize: 'clamp(10px, 1.7vw, 13.5px)'
             }}
           >
@@ -257,8 +270,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-bold text-gray-900 font-sans truncate"
             style={{
               top: '58.8%',
-              left: '18.5%',
-              width: '29%',
+              left: '21.8%',
+              width: '25%',
               fontSize: 'clamp(10px, 1.8vw, 14px)'
             }}
             title={warranty.carModel}
@@ -271,8 +284,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-medium text-gray-800 font-sans truncate"
             style={{
               top: '61.9%',
-              left: '18.5%',
-              width: '29%',
+              left: '21.8%',
+              width: '25%',
               fontSize: 'clamp(10px, 1.7vw, 13px)'
             }}
           >
@@ -284,8 +297,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-bold text-gray-900 font-sans tracking-wider"
             style={{
               top: '58.8%',
-              left: '59.5%',
-              width: '28%',
+              left: '62.6%',
+              width: '32%',
               fontSize: 'clamp(11px, 2.0vw, 15px)'
             }}
           >
@@ -297,8 +310,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             className="absolute font-semibold text-gray-800 font-mono tracking-widest truncate"
             style={{
               top: '61.9%',
-              left: '59.5%',
-              width: '28%',
+              left: '62.6%',
+              width: '32%',
               fontSize: 'clamp(9px, 1.4vw, 12px)'
             }}
             title={warranty.vin}
