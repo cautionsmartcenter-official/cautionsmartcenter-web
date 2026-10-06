@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PORTFOLIO_DATA, OFFICIAL_LINKS, PortfolioItem } from '../config/portfolioData';
+import { Supercar3DShowroom } from './Supercar3DShowroom';
 
 export type { PortfolioItem };
 
@@ -233,6 +234,20 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
   const [selectedCategory, setSelectedCategory] = useState<string>('maybach-twotone');
   const [activeModalItem, setActiveModalItem] = useState<PortfolioItem | null>(null);
   const [modalImageIndex, setModalImageIndex] = useState<number>(0);
+  const [isShowroomOpen, setIsShowroomOpen] = useState<boolean>(() => {
+    return typeof window !== 'undefined' && (window.location.hash === '#showroom' || window.location.hash === '#3d');
+  });
+
+  // URL 해시 변경 시 3D 쇼룸 자동 오픈 감지
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash === '#showroom' || window.location.hash === '#3d') {
+        setIsShowroomOpen(true);
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   // 모달 열기 핸들러
   const handleOpenModal = (item: PortfolioItem, initialIndex = 0) => {
@@ -264,6 +279,22 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
 
   return (
     <div className="min-h-screen bg-white text-dark">
+      {/* ── 0. Supercar 3D Showroom Modal ── */}
+      {isShowroomOpen && (
+        <Supercar3DShowroom
+          onNavigateToContact={() => {
+            setIsShowroomOpen(false);
+            onNavigateToContact();
+          }}
+          onClose={() => {
+            setIsShowroomOpen(false);
+            if (window.location.hash === '#showroom' || window.location.hash === '#3d') {
+              window.location.hash = '#portfolio';
+            }
+          }}
+        />
+      )}
+
       {/* ── 1. Portfolio Hero Banner ── */}
       <section className="relative min-h-[50vh] sm:min-h-[58vh] flex items-center justify-center bg-black overflow-hidden text-white">
         <div className="absolute inset-0">
@@ -294,6 +325,18 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
               <br className="hidden sm:inline" />
               <strong>사진을 클릭하시면 한 장씩 다음 시공 컷으로 넘겨보실 수 있습니다.</strong>
             </p>
+
+            {/* 3D 슈퍼카 쇼룸 열기 버튼 */}
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-7">
+              <button
+                onClick={() => setIsShowroomOpen(true)}
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs sm:text-sm shadow-xl shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              >
+                <i className="ri-cube-line text-lg" />
+                <span>3D 슈퍼카 쇼룸 & 360° 뷰어 체험하기</span>
+                <i className="ri-arrow-right-line text-sm" />
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>

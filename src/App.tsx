@@ -90,6 +90,9 @@ export default function App() {
       } else if (hash === '#partners' || hash === '#branches' || hash === '#partner') {
         setActiveTab('partners');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash === '#portfolio' || hash === '#gallery') {
+        setActiveTab('portfolio');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (hash.startsWith('#warranty')) {
         setActiveTab('warranty');
         const params = new URLSearchParams(hash.split('?')[1] || '');
