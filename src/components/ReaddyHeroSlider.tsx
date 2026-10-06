@@ -15,7 +15,7 @@ const HERO_SLIDES: SlideItem[] = [
     id: 1,
     image: '/images/hero/slide1.png',
     tag: 'SIGNATURE COLOR CHANGE PPS',
-    title: '마이바흐 투톤 컬러PPS',
+    title: '마이바흐 투톤PPS',
     subtitle: 'MAYBACH S-CLASS TWO-TONE',
     description: '순정 투톤의 품격과 도장면 보호를 동시에 완성하는 최고급 Peelable Paint 피러블페인트 컬러PPS 노틱블루 | 라이트로즈골드'
   },
@@ -23,7 +23,7 @@ const HERO_SLIDES: SlideItem[] = [
     id: 2,
     image: '/images/hero/slide2.png',
     tag: 'SIGNATURE COLOR CHANGE PPS',
-    title: '마이바흐 투톤 컬러PPS',
+    title: '마이바흐 투톤PPS',
     subtitle: 'MAYBACH S-CLASS TWO-TONE',
     description: '순정 투톤의 품격과 도장면 보호를 동시에 완성하는 최고급 Peelable Paint 피러블페인트 컬러PPS 베르데실버 | 오팔라이트화이트'
   },

@@ -52,7 +52,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'maybach-gls600-kalahari',
     category: 'maybach-twotone',
     categoryName: '마이바흐 투톤',
-    title: '마이바흐 GLS600 상단 칼라하리 골드 투톤 컬러 PPS',
+    title: '마이바흐 GLS600 상단 칼라하리 골드 투톤PPS',
     carModel: 'Mercedes-Maybach GLS 600',
     image: '/images/portfolio/gls600/01.jpg',
     images: [
@@ -62,7 +62,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/gls600/04.jpg', // [뒷면] 리어 쿼터뷰
       '/images/portfolio/gls600/05.jpg'  // [디테일] 크롬 그릴 & 범퍼 메시 디테일
     ],
-    tags: ['마이바흐 GLS600', '칼라하리 골드', '투톤 컬러PPS', '럭셔리 SUV', '순정 도장 보존'],
+    tags: ['마이바흐 GLS600', '칼라하리 골드', '투톤PPS', '럭셔리 SUV', '순정 도장 보존'],
     summary: '최고급 럭셔리 SUV의 상단부를 칼라하리 골드로 정밀 분무 도포하여 품격 있는 투톤 비스포크 디자인을 완성',
     details: [
       '마이바흐 정품 출고 라인을 1mm 오차 없이 정밀하게 계측 시공',
