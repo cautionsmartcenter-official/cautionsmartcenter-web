@@ -193,7 +193,7 @@ export const SERVICE_DETAILS_DATA: Record<string, ServiceDetailData> = {
       },
       {
         title: '마이바흐 투톤(Two-Tone) 기술',
-        desc: '코션스마트센터의 정밀 코치라인 분할 기술을 통해 마이바흐, 롤스로이스 등의 명품 투톤 스타일을 도장면 손상 없이 완성합니다.'
+        desc: '코션스마트센터의 정밀 투톤 분할 기술을 통해 마이바흐, 롤스로이스 등의 명품 투톤 스타일을 도장면 손상 없이 완성합니다.'
       },
       {
         title: '컬러 체인지와 도장 보호를 동시에 구현',

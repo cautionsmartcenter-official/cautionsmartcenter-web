@@ -35,10 +35,10 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/maybach/02.jpg', // [전측면] 코션 번호판 프론트 쿼터뷰 (DSC08863)
       '/images/portfolio/maybach/03.jpg', // [측면] 사옥 앞 롱바디 측면뷰 (DSC08865)
       '/images/portfolio/maybach/04.jpg', // [뒷면] C필러 엠블럼 & 리어 테일램프 (DSC08883)
-      '/images/portfolio/maybach/05.jpg'  // [디테일] 1mm 초정밀 투톤 핀스트라이프 (SAM_9878)
+      '/images/portfolio/maybach/05.jpg'  // [디테일] 1mm 초정밀 투톤 분할 라인 (SAM_9878)
     ],
     tags: ['마이바흐 투톤', '베르데 실버', '오팔라이트 화이트', '박리형 컬러PPS', '순정 100% 원복'],
-    summary: '코션스마트센터의 독보적인 투톤 마스터 공법! 상단 베르데 실버와 하단 오팔라이트 화이트의 완벽한 핀스트라이프 투톤 완성',
+    summary: '코션스마트센터의 독보적인 투톤 마스터 공법! 상단 베르데 실버와 하단 오팔라이트 화이트의 완벽한 투톤 완성',
     details: [
       '마이바흐 정품 출고 라인을 1mm 오차 없이 정밀하게 계측 재현',
       '순정 도장 손상 없이 언제든 본딩 자국 없이 떼어낼 수 있는 CARDIP Peelable Paint',
@@ -65,7 +65,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     tags: ['마이바흐 GLS600', '칼라하리 골드', '투톤 컬러PPS', '럭셔리 SUV', '순정 도장 보존'],
     summary: '최고급 럭셔리 SUV의 상단부를 칼라하리 골드로 정밀 분무 도포하여 품격 있는 투톤 비스포크 디자인을 완성',
     details: [
-      '마이바흐 시그니처 핀스트라이프 투톤 라인을 1mm 오차 없이 정밀 시공',
+      '마이바흐 정품 출고 라인을 1mm 오차 없이 정밀하게 계측 시공',
       '기존 순정 블랙 도장면 위에 CARDIP Peelable Paint 분무 열처리 도포',
       '원복 시 본딩 잔여물 및 스크래치 없이 100% 필오프 원상복구 가능'
     ],
@@ -135,13 +135,13 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
       '/images/portfolio/maybach_rosegold/02.jpg', // [전측면] 얼짱 전측면 쿼터뷰 (DSC07018)
       '/images/portfolio/maybach_rosegold/03.jpg', // [측면] 롱바디 측면 사이드뷰 (DSC07020)
       '/images/portfolio/maybach_rosegold/04.jpg', // [뒷면] 코션 번호판 리어 쿼터뷰 (DSC07035)
-      '/images/portfolio/maybach_rosegold/05.jpg'  // [디테일] 투톤 코치라인 디테일 (DSC07022)
+      '/images/portfolio/maybach_rosegold/05.jpg'  // [디테일] 투톤 분할 라인 디테일 (DSC07022)
     ],
     tags: ['노틱 블루', '로즈골드 투톤', '비스포크 에디션', '마이바흐 세단', 'CARDIP 정품'],
     summary: '상단 노틱 블루와 하단 라이트 로즈골드의 환상적인 색감 조화로 세상에 단 하나뿐인 마이바흐 비스포크 아트를 완성',
     details: [
       '로즈골드의 은은하고 고급스러운 메탈릭 펄감을 전용 열처리 부스에서 완벽 안착',
-      '측면 코치라인(Coachline)을 숙련된 마스터 테크니션의 수작업으로 정밀 제도',
+      '측면 투톤 분할 라인을 숙련된 마스터 테크니션의 수작업으로 정밀 마스킹',
       '도장면 손상 걱정 없는 안전한 박리형 친환경 PPS 공법 적용'
     ],
     linkType: 'instagram',
