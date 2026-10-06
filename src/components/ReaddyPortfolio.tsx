@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PORTFOLIO_DATA, OFFICIAL_LINKS, PortfolioItem } from '../config/portfolioData';
 import { Supercar3DShowroom } from './Supercar3DShowroom';
+import { ReaddyYouTubeSection } from './ReaddyYouTubeSection';
 
 export type { PortfolioItem };
 
@@ -460,7 +461,10 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
         </div>
       </section>
 
-      {/* ── 5. Bottom Consultation Banner ── */}
+      {/* ── 5. Official YouTube Video Showcase (실제 시공 영상 & 독일 본사 인증) ── */}
+      <ReaddyYouTubeSection />
+
+      {/* ── 6. Bottom Consultation Banner ── */}
       <section className="py-20 bg-[#111827] text-white text-center">
         <div className="mx-auto px-6 lg:px-12 max-w-4xl">
           <motion.div

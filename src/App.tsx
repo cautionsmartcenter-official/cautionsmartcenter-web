@@ -17,7 +17,6 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { WarrantyViewer } from './components/WarrantyViewer';
 import { getWarrantyById, getWarranties, type WarrantyItem } from './lib/warrantyStorage';
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
-import { ReaddyYouTubeSection } from './components/ReaddyYouTubeSection';
 import { ReaddyPartners } from './components/ReaddyPartners';
 import { InlineTextEditor } from './components/InlineTextEditor';
 
@@ -290,10 +289,7 @@ export default function App() {
           {/* ════════════════ 3. READDY AI TECHNOLOGY SECTION (1:1 Exact) ════════════════ */}
           <ReaddyAiTechSection onNavigateToBrandTech={() => handleNavigateToBrandStory('technology')} />
 
-          {/* ════════════════ 4. READDY YOUTUBE SHOWCASE SECTION ════════════════ */}
-          <ReaddyYouTubeSection />
-
-          {/* ════════════════ 5. READDY CUSTOMER REVIEWS SECTION (1:1 Exact) ════════════════ */}
+          {/* ════════════════ 4. READDY CUSTOMER REVIEWS SECTION (1:1 Exact) ════════════════ */}
           <ReaddyReviewsSection />
 
           {/* ════════════════ 5. READDY CTA & SILHOUETTES SECTION (1:1 Exact) ════════════════ */}
