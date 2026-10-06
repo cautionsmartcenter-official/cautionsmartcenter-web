@@ -60,16 +60,34 @@ export const InlineTextEditor: React.FC = () => {
 
     const editMap = new Map<string, string>();
     edits.forEach((item) => {
-      editMap.set(item.originalText.trim(), item.newText);
+      const orig = item.originalText.trim();
+      editMap.set(orig, item.newText);
+      // 공백 정규화된 형태도 매핑
+      editMap.set(orig.replace(/\s+/g, ' '), item.newText);
     });
 
     const replaceTextInDOM = (node: Node) => {
       if (node.nodeType === Node.TEXT_NODE) {
-        const text = node.textContent?.trim() || '';
-        if (text && editMap.has(text)) {
-          const replacement = editMap.get(text);
+        const rawText = node.textContent || '';
+        const trimmed = rawText.trim();
+        const normalized = trimmed.replace(/\s+/g, ' ');
+
+        let matchedKey: string | null = null;
+        if (editMap.has(trimmed)) matchedKey = trimmed;
+        else if (editMap.has(normalized)) matchedKey = normalized;
+        else if (editMap.has(rawText)) matchedKey = rawText;
+
+        if (matchedKey) {
+          const replacement = editMap.get(matchedKey);
           if (replacement && node.textContent !== replacement) {
-            node.textContent = node.textContent!.replace(text, replacement);
+            node.textContent = node.textContent!.replace(matchedKey, replacement);
+            if (node.parentElement) {
+              node.parentElement.dataset.originalText = matchedKey;
+              if (replacement.includes('\n')) {
+                node.parentElement.style.whiteSpace = 'pre-line';
+                node.parentElement.classList.add('inline-text-has-breaks');
+              }
+            }
           }
         }
       } else if (node.nodeType === Node.ELEMENT_NODE) {
@@ -157,15 +175,21 @@ export const InlineTextEditor: React.FC = () => {
         activeElementRef.current.blur();
       }
 
-      // 기존 텍스트 원본 기록
-      if (!target.dataset.originalText) {
-        target.dataset.originalText = target.innerText.trim();
+      // 기존 텍스트 원본 기록 (이전에 수정된 항목인지 확인하여 원본 유지)
+      const currentText = target.innerText.trim();
+      const existingEdit = edits.find((item) => item.newText.trim() === currentText);
+
+      if (existingEdit) {
+        target.dataset.originalText = existingEdit.originalText;
+      } else if (!target.dataset.originalText) {
+        target.dataset.originalText = currentText;
       }
 
       target.contentEditable = 'true';
       target.spellcheck = false;
       target.classList.remove('inline-editable-hover');
       target.classList.add('inline-editing-active');
+      target.style.whiteSpace = 'pre-wrap';
       activeElementRef.current = target;
       target.focus();
 
@@ -190,6 +214,12 @@ export const InlineTextEditor: React.FC = () => {
       const original = (target.dataset.originalText || '').trim();
       const current = target.innerText.trim();
 
+      // 줄바꿈이 있는 경우 영구적으로 두 줄로 표시되도록 스타일 유지
+      if (current.includes('\n') || target.querySelector('br')) {
+        target.style.whiteSpace = 'pre-line';
+        target.classList.add('inline-text-has-breaks');
+      }
+
       if (original && current && original !== current) {
         // 기존 편집 목록 업데이트
         setEdits((prev) => {
@@ -210,22 +240,67 @@ export const InlineTextEditor: React.FC = () => {
           return updated;
         });
 
-        triggerToast(`✏️ 수정 기록됨: "${original.substring(0, 15)}..." ➔ "${current.substring(0, 15)}..."`);
+        const shortOrig = original.substring(0, 15).replace(/\n/g, ' ↵ ');
+        const shortCurr = current.substring(0, 15).replace(/\n/g, ' ↵ ');
+        triggerToast(`✏️ 수정 완료: "${shortOrig}..." ➔ "${shortCurr}..."`);
       }
     };
 
-    // Enter 키 누르면 줄바꿈 대신 편집 완료 (p, li, span, h1-h6 등)
+    // Enter 키 누르면 줄바꿈(두 줄) 삽입, Ctrl+Enter / Esc 시 완료
     const handleKeyDownInEditable = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (activeElementRef.current) {
           activeElementRef.current.blur();
         }
-      } else if (e.key === 'Enter' && !e.shiftKey) {
-        // 제목이나 한 줄 텍스트는 엔터 시 편집 완료
-        const target = activeElementRef.current;
-        if (target && !['p', 'div'].includes(target.tagName.toLowerCase())) {
+      } else if (e.key === 'Enter') {
+        // Ctrl + Enter 또는 Cmd + Enter: 편집 완료 및 포커스 아웃
+        if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
-          target.blur();
+          if (activeElementRef.current) {
+            activeElementRef.current.blur();
+          }
+          return;
+        }
+
+        // 일반 Enter 또는 Shift + Enter: 줄바꿈(두 줄 만들기) 삽입
+        e.preventDefault();
+        const target = activeElementRef.current;
+        if (!target) return;
+
+        // 즉시 두 줄로 줄바꿈 표시되도록 white-space pre-line 적용
+        target.style.whiteSpace = 'pre-line';
+        target.classList.add('inline-text-has-breaks');
+
+        // 1. 브라우저 내장 줄바꿈 명령
+        let inserted = false;
+        try {
+          inserted = document.execCommand('insertLineBreak');
+        } catch {
+          inserted = false;
+        }
+
+        // 2. insertText '\n' 대체 시도
+        if (!inserted) {
+          try {
+            inserted = document.execCommand('insertText', false, '\n');
+          } catch {
+            inserted = false;
+          }
+        }
+
+        // 3. Selection Range 직접 DOM <br> 삽입
+        if (!inserted) {
+          const sel = window.getSelection();
+          if (sel && sel.rangeCount > 0) {
+            const range = sel.getRangeAt(0);
+            range.deleteContents();
+            const br = document.createElement('br');
+            range.insertNode(br);
+            range.setStartAfter(br);
+            range.setEndAfter(br);
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
         }
       }
     };
@@ -254,11 +329,20 @@ export const InlineTextEditor: React.FC = () => {
 
     const lines = [
       '### [사이트 문구 수정 요청 목록]',
-      '아래 수정된 문구들을 프로젝트 코드에 영구 반영해줘:\n'
+      '아래 수정된 문구들을 프로젝트 코드에 영구 반영해줘 (두 줄/줄바꿈 포함):\n'
     ];
 
     edits.forEach((item, index) => {
-      lines.push(`${index + 1}. "${item.originalText}" ➔ "${item.newText}"`);
+      if (item.newText.includes('\n')) {
+        lines.push(`${index + 1}. [두 줄/줄바꿈 적용]`);
+        lines.push(`   - 기존: "${item.originalText}"`);
+        lines.push(`   - 변경:`);
+        lines.push('   ```');
+        lines.push(item.newText);
+        lines.push('   ```');
+      } else {
+        lines.push(`${index + 1}. "${item.originalText}" ➔ "${item.newText}"`);
+      }
     });
 
     const textToCopy = lines.join('\n');
@@ -310,12 +394,18 @@ export const InlineTextEditor: React.FC = () => {
           position: relative !important;
         }
         .inline-editing-active {
+          white-space: pre-wrap !important;
+          word-break: break-word !important;
           outline: 2px solid #ef4444 !important;
           outline-offset: 2px !important;
           background-color: rgba(239, 68, 68, 0.15) !important;
           box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2) !important;
           border-radius: 4px !important;
           cursor: text !important;
+        }
+        .inline-text-has-breaks {
+          white-space: pre-line !important;
+          word-break: break-word !important;
         }
       `}</style>
 
@@ -328,12 +418,12 @@ export const InlineTextEditor: React.FC = () => {
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
             </span>
             <span>
-              ✏️ <strong>실시간 문구 편집 모드 ON</strong>: 수정하고 싶은 글씨를 <strong>화면에서 마우스로 클릭</strong>해 바로 타이핑하세요!
+              ✏️ <strong>실시간 문구 편집 ON</strong>: 글씨를 클릭해 타이핑하세요! (<strong>Enter 키: 다음 줄로 줄바꿈</strong> / 완료: 바깥 클릭 또는 Ctrl+Enter)
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="hidden md:inline text-xs text-white/80 font-normal">
-              (수정 후 아무 곳이나 클릭하면 자동 저장)
+              (자동 저장됨)
             </span>
             <button
               onClick={() => setIsEditMode(false)}
@@ -453,11 +543,18 @@ export const InlineTextEditor: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                       <div className="p-2.5 rounded-xl bg-red-50 border border-red-100 text-red-800">
                         <span className="text-[10px] font-bold text-red-500 block mb-1">수정 전 (원본)</span>
-                        <p className="line-through opacity-80 break-words">{item.originalText}</p>
+                        <p className="line-through opacity-80 break-words whitespace-pre-line">{item.originalText}</p>
                       </div>
                       <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-900 font-bold">
-                        <span className="text-[10px] font-bold text-emerald-600 block mb-1">수정 후 (새 문구)</span>
-                        <p className="break-words">{item.newText}</p>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-bold text-emerald-600">수정 후 (새 문구)</span>
+                          {item.newText.includes('\n') && (
+                            <span className="text-[9px] bg-emerald-200 text-emerald-800 px-1.5 py-0.2 rounded font-bold">
+                              줄바꿈(두 줄) 적용
+                            </span>
+                          )}
+                        </div>
+                        <p className="break-words whitespace-pre-line">{item.newText}</p>
                       </div>
                     </div>
                   </div>
