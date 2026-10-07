@@ -169,7 +169,7 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
                 <div>
                   <div className="text-sm font-semibold text-gray-900 mb-1">주소</div>
                   <div className="text-base text-gray-600">
-                    경기도 광주시 태재로 26 (신현동) / 분당 본점
+                    경기도 광주시 태재로 26 (신현동) / 본점
                   </div>
                   <button
                     type="button"
@@ -191,8 +191,8 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-gray-900 mb-1">운영 시간</div>
-                  <div className="text-base text-gray-600">평일 09:00 - 18:30</div>
-                  <div className="text-sm text-gray-500">주말 및 공휴일 예약제 운영</div>
+                  <div className="text-base text-gray-600">평일 09:00 - 18:00</div>
+                  <div className="text-sm text-gray-500">주말 · 공휴일 휴무</div>
                 </div>
               </div>
             </div>

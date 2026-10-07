@@ -130,7 +130,7 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
                   }}
                   className="text-sm text-gray-400 hover:text-white transition-colors text-left cursor-pointer group"
                 >
-                  <span>경기도 광주시 태재로 26 (신현동) / 분당 본점</span>
+                  <span>경기도 광주시 태재로 26 (신현동) / 본점</span>
                   <span className="block text-[11px] text-red-500 group-hover:text-red-400 transition-colors font-medium mt-0.5">
                     오시는 길 & 길찾기 안내 →
                   </span>

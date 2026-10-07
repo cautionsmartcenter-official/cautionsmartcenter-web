@@ -25,14 +25,6 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
       <div className="mx-auto px-6 lg:px-12 max-w-7xl">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 bg-black text-white text-xs font-semibold rounded-full tracking-wider mb-4"
-          >
-            LOCATION & DIRECTIONS
-          </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
@@ -69,8 +61,7 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-200 bg-gray-50">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-primary" />
-                <span className="text-xs font-bold text-black">코션스마트센터 분당 본점</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-gray-200 text-gray-700 font-mono hidden sm:inline">총판 본사</span>
+                <span className="text-xs font-bold text-black">코션스마트센터 본점</span>
               </div>
               <span className="text-xs text-gray-500 font-mono">태재로 26</span>
             </div>
@@ -85,16 +76,6 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
                 allowFullScreen
               />
 
-              {/* Floating Pin Overlay */}
-              <div className="absolute bottom-4 left-4 bg-black/90 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-gray-800 shadow-lg flex items-center gap-3 pointer-events-none">
-                <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-white" />
-                </div>
-                <div className="text-left">
-                  <p className="text-xs font-bold text-white">경기 광주시 태재로 26</p>
-                  <p className="text-[11px] text-gray-300">태재고개 신현동 입구 (분당 인접)</p>
-                </div>
-              </div>
             </div>
 
             {/* Navigation Buttons: Clean Black & White */}
@@ -143,10 +124,7 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
             <div className="p-6 sm:p-7 rounded-2xl bg-gray-50/70 border border-gray-200 shadow-sm relative">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
-                  <span className="text-[11px] font-mono text-gray-500 font-bold uppercase tracking-wider block mb-1">
-                    HEADQUARTERS ADDRESS
-                  </span>
-                  <h3 className="text-xl font-black text-black">코션스마트센터 분당 본점</h3>
+                  <h3 className="text-xl font-black text-black">코션스마트센터 본점</h3>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shrink-0">
                   <MapPin className="w-5 h-5" />
@@ -210,9 +188,9 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
                   <span className="text-xs font-bold text-gray-600">운영 시간</span>
                 </div>
                 <div className="text-sm font-bold text-black">
-                  평일 09:00 - 18:30
+                  평일 09:00 - 18:00
                 </div>
-                <span className="text-[11px] text-gray-400 mt-1 block">주말/공휴일 사전 예약제</span>
+                <span className="text-[11px] text-gray-400 mt-1 block">주말 · 공휴일 휴무</span>
               </div>
             </div>
 

@@ -160,7 +160,7 @@ export function ConsultationFormSection({ initialService }: ConsultationFormSect
 
           <div className="mt-8 pt-6 border-t border-white/10 text-xs font-mono text-gray-500 flex items-center gap-2">
             <Clock className="w-4 h-4 text-amber-400" />
-            <span>운영시간: 평일 09:00 - 18:30 (주말 예약제 운영)</span>
+            <span>운영시간: 평일 09:00 - 18:00 (주말 · 공휴일 휴무)</span>
           </div>
         </div>
 
