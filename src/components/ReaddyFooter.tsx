@@ -21,6 +21,7 @@ export const ReaddyFooter: React.FC<ReaddyFooterProps> = ({ onSelectTab }) => {
       { name: '오시는 길', id: 'location' }
     ],
     support: [
+      { name: '정품 전자보증서 (본인 인증)', id: 'warranty' },
       { name: '공지사항', id: 'notice' },
       { name: '자주묻는질문 (FAQ)', id: 'faq' },
       { name: '무료 견적 / 상담 신청', id: 'contact' }

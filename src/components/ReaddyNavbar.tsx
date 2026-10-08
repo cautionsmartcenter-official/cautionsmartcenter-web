@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Bell, HelpCircle } from 'lucide-react';
+import { ChevronDown, Bell, HelpCircle, ShieldCheck } from 'lucide-react';
 
 interface ReaddyNavbarProps {
   activeTab: string;
@@ -360,7 +360,21 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
               </AnimatePresence>
             </div>
 
-            {/* Red Oval CTA Button */}
+            {/* 정품 보증서 조회 (본인 인증 전용) */}
+            <button
+              onClick={() => {
+                onSelectTab('warranty');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`flex items-center gap-1.5 text-sm font-semibold tracking-wide transition-colors whitespace-nowrap cursor-pointer px-2.5 py-1.5 rounded-lg hover:bg-white/5 ${
+                activeTab === 'warranty' ? 'text-red-500 font-bold' : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 text-red-500" />
+              <span>정품 보증서</span>
+            </button>
+
+            {/* Red Oval CTA Button (일반 방문자 상담 신청 메인 버튼) */}
             <button
               onClick={() => {
                 if (activeTab !== 'home') {
@@ -589,6 +603,19 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                 </div>
               </div>
 
+              {/* Mobile Warranty Button (본인 인증 전용) */}
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onSelectTab('warranty');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-white/10 text-gray-200 border border-white/10 rounded-xl text-sm font-semibold transition-all mt-3 cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4 text-red-500" />
+                <span>정품 보증서 조회 (본인 인증)</span>
+              </button>
+
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
@@ -601,7 +628,7 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
                     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="block w-full mt-4 py-3.5 bg-red-600 hover:bg-red-700 active:scale-98 text-white text-base font-bold rounded-xl text-center cursor-pointer shadow-lg shadow-red-600/30 transition-all"
+                className="block w-full mt-2.5 py-3.5 bg-red-600 hover:bg-red-700 active:scale-98 text-white text-base font-bold rounded-xl text-center cursor-pointer shadow-lg shadow-red-600/30 transition-all"
               >
                 무료 상담 & 견적 신청
               </button>
