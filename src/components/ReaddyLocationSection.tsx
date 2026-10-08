@@ -25,16 +25,6 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
       <div className="mx-auto px-6 lg:px-12 max-w-7xl">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-black text-white rounded-full mb-4 shadow-sm"
-          >
-            <MapPin className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-bold tracking-wider">LOCATION & DIRECTIONS</span>
-          </motion.div>
-
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}

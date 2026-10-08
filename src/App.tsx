@@ -256,7 +256,7 @@ export default function App() {
           {/* ════════════════ 5. READDY CTA & SILHOUETTES SECTION (1:1 Exact) ════════════════ */}
           <ReaddyCtaSection />
 
-          {/* ════════════════ 6. READDY LOCATION & DIRECTIONS SECTION (오시는 길 & 본점 안내) ════════════════ */}
+          {/* ════════════════ 6. READDY LOCATION SECTION (오시는 길 & 본점 안내) ════════════════ */}
           <ReaddyLocationSection onNavigateToContact={() => handleNavigateToContact()} />
 
           {/* ════════════════ 7. READDY CONTACT FORM SECTION (1:1 Exact) ════════════════ */}
