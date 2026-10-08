@@ -44,7 +44,7 @@ export const BRANCH_DATA: BranchItem[] = [
     services: ['PPS'],
     rawMaterial: '독일 CARDIP® 정품 PPS 소재',
     description: '인천 지역에서 코션스마트센터 브랜드로 자동차 사고수리 및 외장 시공 서비스를 운영하고 있습니다.',
-    badges: ['협력 운영점', '1급 하이테크 공업사', 'CurveRobot 첨단 설비'],
+    badges: [],
     statusNotice: '※ 공식 가맹 및 파트너 계약 진행 중'
   }
 ];

@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin,
   Phone,
-  ShieldCheck,
   Building2,
   Send,
   CheckCircle2,
@@ -165,12 +164,6 @@ export const ReaddyPartners: React.FC = () => {
                       {HEADQUARTER_INFO.address}
                     </p>
                     <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-gray-700">
-                      <span className="px-2.5 py-0.5 bg-gray-100 rounded-md font-bold text-gray-800 border border-gray-200">
-                        공급 품목: PPS
-                      </span>
-                      <span className="px-2.5 py-0.5 bg-red-50 rounded-md font-bold text-red-600 border border-red-200">
-                        사용 소재: {HEADQUARTER_INFO.rawMaterial}
-                      </span>
                       <span className="px-2.5 py-0.5 bg-gray-100 rounded-md font-bold text-gray-800 border border-gray-200 flex items-center gap-1">
                         <Phone className="w-3 h-3 text-gray-500" />
                         {HEADQUARTER_INFO.phone}
@@ -229,47 +222,12 @@ export const ReaddyPartners: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Card Body: 요청하신 문구 100% 반영 */}
+                      {/* Card Body */}
                       <div className="p-6 sm:p-8 space-y-6">
-                        {/* Services & Raw Material Spec */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                          <div>
-                            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                              공급 품목
-                            </span>
-                            <div className="flex items-center gap-1.5">
-                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-black bg-red-50 text-red-600 border border-red-200">
-                                {branch.services.join(', ')}
-                              </span>
-                            </div>
-                          </div>
-                          <div>
-                            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                              사용 소재
-                            </span>
-                            <p className="text-xs sm:text-sm font-bold text-gray-900 flex items-center gap-1">
-                              <ShieldCheck className="w-4 h-4 text-red-600 shrink-0" />
-                              <span>{branch.rawMaterial}</span>
-                            </p>
-                          </div>
-                        </div>
-
                         {/* Description: "인천 지역에서 코션스마트센터 브랜드로 자동차 사고수리 및 외장 시공 서비스를 운영하고 있습니다." */}
                         <p className="text-sm text-gray-600 leading-relaxed break-keep">
                           {branch.description}
                         </p>
-
-                        {/* Branch Features Badges */}
-                        <div className="flex flex-wrap gap-2 pt-1">
-                          {branch.badges.map((badge, idx) => (
-                            <span
-                              key={idx}
-                              className="px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
-                            >
-                              ✓ {badge}
-                            </span>
-                          ))}
-                        </div>
 
                         {/* Detailed Address & Phone Only */}
                         <div className="space-y-3 pt-5 border-t border-gray-100 text-sm text-gray-700">
@@ -375,9 +333,7 @@ export const ReaddyPartners: React.FC = () => {
                   <p>독일 CARDIP® PPS의 전문 시공 파트너로 함께할</p>
                   <p className="font-bold text-gray-900">전문 1급 공업사 및 하이테크 자동차 시공점 대표님을 모집합니다.</p>
                 </div>
-                <p className="text-xs sm:text-sm font-bold text-red-600 mt-4">
-                  ※ 공급 품목 : 독일 CARDIP® 정품 PPS 소재
-                </p>
+
               </div>
 
               {/* 3대 핵심 혜택 (제목 한 줄 완벽 유지) */}
