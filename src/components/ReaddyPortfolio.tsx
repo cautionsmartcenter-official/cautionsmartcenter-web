@@ -154,25 +154,13 @@ const PortfolioCard: React.FC<{
             {item.title}
           </h3>
 
-          <p className="text-sm sm:text-base text-gray-600 line-clamp-2 leading-relaxed mb-4">
+          <p className="text-sm sm:text-base text-gray-600 line-clamp-2 leading-relaxed font-medium">
             {item.summary}
           </p>
         </div>
 
-        <div>
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-5">
-            {item.tags.map((tag, tIdx) => (
-              <span
-                key={tIdx}
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-semibold"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Action Button */}
+        {/* Action Button */}
+        <div className="pt-4 border-t border-gray-100 mt-5">
           <button
             onClick={() => {
               const serviceTarget =
@@ -187,7 +175,7 @@ const PortfolioCard: React.FC<{
                   : '투명PPS';
               onNavigateToContact(serviceTarget);
             }}
-            className="w-full flex items-center justify-between pt-4 border-t border-gray-100 cursor-pointer group/btn"
+            className="w-full flex items-center justify-between cursor-pointer group/btn"
           >
             <span className="text-sm font-bold text-gray-700 group-hover/btn:text-primary transition-colors flex items-center gap-1.5">
               <i className="ri-message-3-line text-primary text-base" />
