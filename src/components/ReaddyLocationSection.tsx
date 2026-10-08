@@ -21,10 +21,19 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
   };
 
   return (
-    <section id="location" className="py-20 lg:py-28 bg-white text-black relative border-t border-gray-200">
+    <section id="location" className="py-20 lg:py-28 bg-[#F4F6F9] text-black relative border-t border-b border-gray-200">
       <div className="mx-auto px-6 lg:px-12 max-w-7xl">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-black text-white rounded-full mb-4 shadow-sm"
+          >
+            <MapPin className="w-3.5 h-3.5 text-primary" />
+            <span className="text-xs font-bold tracking-wider">LOCATION & DIRECTIONS</span>
+          </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 15 }}
@@ -121,12 +130,12 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
             className="lg:col-span-5 flex flex-col justify-between space-y-5"
           >
             {/* Address Box */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-gray-50/70 border border-gray-200 shadow-sm relative">
+            <div className="p-6 sm:p-7 rounded-2xl bg-white border border-gray-200/90 shadow-sm relative">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
                   <h3 className="text-xl font-black text-black">코션스마트센터 본점</h3>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shrink-0 shadow-sm">
                   <MapPin className="w-5 h-5" />
                 </div>
               </div>
@@ -136,7 +145,7 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
                   {roadAddress}
                 </div>
                 <div className="text-xs text-gray-600 flex items-center gap-2">
-                  <span className="px-1.5 py-0.5 bg-gray-200 rounded text-gray-700 font-mono">지번</span>
+                  <span className="px-1.5 py-0.5 bg-gray-100 rounded text-gray-700 font-mono">지번</span>
                   <span>{jibunAddress}</span>
                 </div>
               </div>
@@ -144,7 +153,7 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
               {/* Copy Address Button */}
               <button
                 onClick={handleCopyAddress}
-                className="w-full py-2.5 px-4 bg-white hover:bg-gray-100 border border-gray-300 rounded-xl text-xs font-semibold text-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                className="w-full py-2.5 px-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-semibold text-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
                 {copied ? (
                   <>
@@ -163,7 +172,7 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
             {/* Hours & Phone Card */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Phone Card */}
-              <div className="p-5 rounded-2xl bg-gray-50/70 border border-gray-200 shadow-sm">
+              <div className="p-5 rounded-2xl bg-white border border-gray-200/90 shadow-sm">
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="w-7 h-7 rounded-lg bg-black text-white flex items-center justify-center shrink-0">
                     <Phone className="w-3.5 h-3.5" />
@@ -180,7 +189,7 @@ export const ReaddyLocationSection: React.FC<ReaddyLocationSectionProps> = ({ on
               </div>
 
               {/* Hours Card */}
-              <div className="p-5 rounded-2xl bg-gray-50/70 border border-gray-200 shadow-sm">
+              <div className="p-5 rounded-2xl bg-white border border-gray-200/90 shadow-sm">
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="w-7 h-7 rounded-lg bg-black text-white flex items-center justify-center shrink-0">
                     <Clock className="w-3.5 h-3.5" />
