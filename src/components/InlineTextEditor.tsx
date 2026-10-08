@@ -613,29 +613,24 @@ export const InlineTextEditor: React.FC = () => {
         </div>
       )}
 
-      {/* ── 상단 편집 모드 안내 배너 (편집 모드 켜졌을 때) ── */}
+      {/* ── 하단 플로팅 편집 모드 안내 (상단 헤더를 가리지 않도록 하단 플로팅으로 배치) ── */}
       {isEditMode && (
-        <div className="fixed top-0 inset-x-0 z-[9999] bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white shadow-xl px-4 py-2 flex items-center justify-between text-xs sm:text-sm font-bold animate-fade-in border-b border-white/20">
-          <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+        <div className="fixed bottom-20 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-md z-[9999] bg-slate-950/95 text-white shadow-2xl px-4 py-2.5 rounded-2xl flex items-center justify-between text-xs font-medium border border-red-500/30 backdrop-blur-xl animate-fade-in">
+          <div className="flex items-center gap-2 pr-2">
+            <span className="flex h-2 w-2 relative shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
-            <span>
-              ✏️ <strong>실시간 문구 편집 & 삭제 모드</strong>: 글씨를 클릭해 수정하거나 <strong>[삭제]</strong> 버튼을 눌러 불필요한 영문/문구를 바로 지우세요!
+            <span className="leading-tight text-gray-200">
+              <strong className="text-white font-bold">문구 편집 모드</strong>: 화면의 글씨를 클릭해 직접 수정하세요.
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="hidden md:inline text-xs text-white/80 font-normal">
-              (자동 저장됨)
-            </span>
-            <button
-              onClick={() => setIsEditMode(false)}
-              className="px-2.5 py-1 bg-black/30 hover:bg-black/50 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
-            >
-              편집 모드 종료 ✕
-            </button>
-          </div>
+          <button
+            onClick={() => setIsEditMode(false)}
+            className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-gray-200 hover:text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 ml-1"
+          >
+            편집 종료
+          </button>
         </div>
       )}
 

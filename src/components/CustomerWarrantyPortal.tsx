@@ -132,37 +132,40 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col justify-between">
       {/* ── Top Header Bar (White Clean Theme) ── */}
-      <header className="w-full border-b border-gray-200 bg-white px-6 lg:px-12 py-4 sticky top-0 z-30 flex items-center justify-between">
+      <header className="w-full border-b border-gray-200 bg-white px-4 sm:px-8 py-3.5 sticky top-0 z-30 flex items-center justify-between">
         <button
           onClick={onBackToHome}
-          className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-black transition-colors cursor-pointer p-1.5 -ml-1.5 rounded-lg hover:bg-gray-100"
+          title="홈페이지로 돌아가기"
         >
-          <ArrowLeft className="w-4 h-4 text-red-600" />
-          <span>홈페이지로 돌아가기</span>
+          <ArrowLeft className="w-5 h-5 text-gray-800" />
+          <span className="hidden sm:inline">홈페이지로 돌아가기</span>
         </button>
 
-        <span className="text-sm font-bold text-gray-800 tracking-wide">
+        <span className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
           정품 전자보증서
         </span>
 
-        {customer ? (
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-700 hidden sm:inline">
-              <strong className="font-bold text-gray-900">{customer.name}</strong> 님
-            </span>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold border border-gray-200 transition-colors cursor-pointer"
-            >
-              <LogOut className="w-3.5 h-3.5 text-gray-500" />
-              <span>로그아웃</span>
-            </button>
-          </div>
-        ) : (
-          <div className="text-xs text-gray-500 font-medium">
-            본인 인증 전용
-          </div>
-        )}
+        {/* Right side: logout button if logged in, or balanced spacer */}
+        <div className="flex items-center justify-end min-w-[36px]">
+          {customer ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-700 hidden md:inline">
+                <strong className="font-bold text-gray-900">{customer.name}</strong> 님
+              </span>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold border border-gray-200 transition-colors cursor-pointer"
+                title="로그아웃"
+              >
+                <LogOut className="w-3.5 h-3.5 text-gray-500" />
+                <span className="hidden sm:inline">로그아웃</span>
+              </button>
+            </div>
+          ) : (
+            <div className="w-7 sm:w-28" />
+          )}
+        </div>
       </header>
 
       {/* ── Main Content Area ── */}
