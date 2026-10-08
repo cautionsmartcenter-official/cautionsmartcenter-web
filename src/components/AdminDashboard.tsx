@@ -324,21 +324,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
   ───────────────────────────────────────────────────────────── */
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans pb-20">
-      {/* ── Top Header ── */}
+      {/* ── Top Header (모바일 & 데스크톱 완벽 반응형) ── */}
       <header className="bg-slate-900 text-white sticky top-0 z-40 border-b border-slate-800 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="px-2.5 py-1 bg-primary text-white text-xs font-black rounded-md tracking-wider">
-              ADMIN
-            </span>
-            <div className="hidden sm:block">
-              <h1 className="text-base font-black tracking-tight text-white flex items-center gap-2">
-                코션스마트센터 관리자
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          {/* 상단 메인 바: 로고 & 유틸리티 버튼 */}
+          <div className="h-14 sm:h-16 flex items-center justify-between gap-2">
+            {/* 좌측: ADMIN 뱃지 & 타이틀 */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-primary text-white text-[11px] sm:text-xs font-black rounded-md tracking-wider">
+                ADMIN
+              </span>
+              <h1 className="text-sm sm:text-base font-black tracking-tight text-white flex items-center gap-1.5 truncate">
+                코션스마트센터 <span className="text-slate-400 font-normal hidden xs:inline text-xs">관리자</span>
               </h1>
             </div>
 
-            {/* ── 상단 탭 전환 바 ── */}
-            <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700 ml-1 sm:ml-3">
+            {/* 데스크톱 전용 탭 바 (lg 이상 넓은 화면에서만 인라인 표시) */}
+            <div className="hidden lg:flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700">
               <button
                 onClick={() => setAdminSection('consultations')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
@@ -379,84 +381,142 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                 <span>정품 전자보증서</span>
               </button>
             </div>
+
+            {/* 우측 유틸리티 버튼 모음 */}
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+              {/* 소리 알림 ON/OFF */}
+              <button
+                onClick={handleToggleSound}
+                className={`p-2 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold border transition-all flex items-center gap-1 cursor-pointer ${
+                  soundOn
+                    ? 'bg-emerald-950/60 text-emerald-300 border-emerald-600/70 hover:bg-emerald-900/60 shadow-sm'
+                    : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'
+                }`}
+                title={soundOn ? '실시간 알림음 켜짐 (클릭 시 무음)' : '실시간 알림음 꺼짐 (클릭 시 소리 켬)'}
+              >
+                <i className={soundOn ? 'ri-volume-up-fill text-emerald-400 text-sm' : 'ri-volume-mute-fill text-slate-400 text-sm'} />
+                <span className="hidden md:inline">{soundOn ? '소리 ON' : '무음'}</span>
+              </button>
+
+              {/* 알림 테스트 버튼 */}
+              <button
+                onClick={handleTestAlert}
+                className="p-2 sm:px-2.5 sm:py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
+                title="알림 테스트 (딩동 소리 + 팝업)"
+              >
+                <i className="ri-notification-badge-fill text-amber-400 text-sm" />
+                <span className="hidden md:inline">알림 테스트</span>
+              </button>
+
+              {/* 브라우저 푸시 알림 켜기 버튼 (미허용 시에만 노출) */}
+              {permissionStatus !== 'granted' && (
+                <button
+                  onClick={handleRequestPushPermission}
+                  className="p-2 sm:px-2.5 sm:py-1.5 bg-indigo-900/60 hover:bg-indigo-900/90 text-indigo-200 text-xs font-semibold rounded-lg border border-indigo-700/70 transition-colors flex items-center gap-1 cursor-pointer"
+                  title="브라우저 푸시 알림 켜기"
+                >
+                  <i className="ri-notification-3-line text-indigo-300 text-sm" />
+                  <span className="hidden lg:inline">푸시 알림</span>
+                </button>
+              )}
+
+              {/* 상담 섹션일 때 엑셀 다운로드 */}
+              {adminSection === 'consultations' && (
+                <button
+                  onClick={exportConsultationsToCSV}
+                  className="p-2 sm:px-2.5 sm:py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
+                  title="상담 내역 엑셀 다운로드"
+                >
+                  <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
+                  <span className="hidden sm:inline">엑셀</span>
+                </button>
+              )}
+
+              {/* 보증서 섹션일 때 보증서 대장 엑셀 다운로드 */}
+              {adminSection === 'warranties' && (
+                <button
+                  onClick={exportWarrantiesToCSV}
+                  className="p-2 sm:px-2.5 sm:py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
+                  title="보증서 발급 대장 엑셀 다운로드"
+                >
+                  <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
+                  <span className="hidden sm:inline">대장 엑셀</span>
+                </button>
+              )}
+
+              {/* 홈페이지 바로가기 */}
+              <button
+                onClick={onExit}
+                className="p-2 sm:px-2.5 sm:py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                title="홈페이지로 이동"
+              >
+                <i className="ri-home-4-line text-sm" />
+                <span className="hidden md:inline">홈페이지</span>
+              </button>
+
+              {/* 로그아웃 */}
+              <button
+                onClick={handleLogout}
+                className="p-2 sm:px-2.5 sm:py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                title="로그아웃"
+              >
+                <i className="ri-logout-box-r-line text-sm" />
+                <span className="hidden md:inline">로그아웃</span>
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
-            {/* ── 소리 알림 ON/OFF ── */}
-            <button
-              onClick={handleToggleSound}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-all flex items-center gap-1.5 cursor-pointer ${
-                soundOn
-                  ? 'bg-emerald-950/60 text-emerald-300 border-emerald-600/70 hover:bg-emerald-900/60 shadow-sm'
-                  : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'
-              }`}
-              title={soundOn ? '실시간 알림음이 켜져 있습니다 (클릭 시 무음)' : '알림음이 꺼져 있습니다 (클릭 시 소리 켬)'}
-            >
-              <i className={soundOn ? 'ri-volume-up-fill text-emerald-400 text-sm' : 'ri-volume-mute-fill text-slate-400 text-sm'} />
-              <span className="hidden sm:inline">{soundOn ? '소리 ON' : '무음'}</span>
-            </button>
-
-            {/* ── 알림 테스트 버튼 ── */}
-            <button
-              onClick={handleTestAlert}
-              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-amber-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
-              title="새 상담 신청 도착 시 울리는 알림음과 화면 팝업을 직접 테스트합니다"
-            >
-              <i className="ri-notification-badge-fill text-amber-400 text-sm" />
-              <span className="hidden sm:inline">알림 테스트</span>
-            </button>
-
-            {/* ── 브라우저 푸시 알림 켜기 버튼 (미허용 시에만 노출) ── */}
-            {permissionStatus !== 'granted' && (
+          {/* 모바일 & 태블릿 전용 하단 탭 바 (글자 세로 꺾임 완전 해결) */}
+          <div className="lg:hidden pb-3 pt-1">
+            <div className="grid grid-cols-3 gap-1 bg-slate-800/95 p-1 rounded-xl border border-slate-700/80 shadow-inner">
               <button
-                onClick={handleRequestPushPermission}
-                className="px-2.5 py-1.5 bg-indigo-900/60 hover:bg-indigo-900/90 text-indigo-200 text-xs font-semibold rounded-lg border border-indigo-700/70 transition-colors flex items-center gap-1 cursor-pointer animate-pulse"
-                title="모바일 상단바나 PC 알림창으로 푸시 알림을 받기 위해 권한을 허용합니다"
+                onClick={() => setAdminSection('consultations')}
+                className={`py-2 px-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                  adminSection === 'consultations'
+                    ? 'bg-primary text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
               >
-                <i className="ri-notification-3-line text-indigo-300 text-sm" />
-                <span className="hidden md:inline">푸시 알림 켜기</span>
+                <i className="ri-inbox-line text-sm shrink-0" />
+                <span className="truncate">상담 접수</span>
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                  adminSection === 'consultations' ? 'bg-white/25 text-white' : 'bg-slate-700 text-slate-300'
+                }`}>
+                  {stats.total}
+                </span>
               </button>
-            )}
 
-            {/* 상담 섹션일 때 엑셀 다운로드 */}
-            {adminSection === 'consultations' && (
               <button
-                onClick={exportConsultationsToCSV}
-                className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
-                title="상담 내역을 엑셀 CSV 파일로 저장합니다"
+                onClick={() => setAdminSection('calendar')}
+                className={`py-2 px-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                  adminSection === 'calendar'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
               >
-                <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
-                <span className="hidden sm:inline">엑셀</span>
+                <i className="ri-calendar-event-line text-blue-300 text-sm shrink-0" />
+                <span className="truncate">시공 캘린더</span>
+                {scheduleCount > 0 && (
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                    adminSection === 'calendar' ? 'bg-white/25 text-white' : 'bg-slate-700 text-slate-300'
+                  }`}>
+                    {scheduleCount}
+                  </span>
+                )}
               </button>
-            )}
 
-            {/* 보증서 섹션일 때 보증서 대장 엑셀 다운로드 */}
-            {adminSection === 'warranties' && (
               <button
-                onClick={exportWarrantiesToCSV}
-                className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
-                title="보증서 발급 대장을 엑셀 CSV 파일로 저장합니다"
+                onClick={() => setAdminSection('warranties')}
+                className={`py-2 px-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                  adminSection === 'warranties'
+                    ? 'bg-red-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
               >
-                <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
-                <span className="hidden sm:inline">대장 엑셀</span>
+                <i className="ri-shield-check-fill text-yellow-300 text-sm shrink-0" />
+                <span className="truncate">전자보증서</span>
               </button>
-            )}
-
-            <button
-              onClick={onExit}
-              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <i className="ri-home-4-line text-sm" />
-              <span className="hidden sm:inline">홈페이지</span>
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="px-2.5 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <i className="ri-logout-box-r-line text-sm" />
-              <span className="hidden sm:inline">로그아웃</span>
-            </button>
+            </div>
           </div>
         </div>
       </header>
@@ -553,56 +613,56 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
              C. 상담 & 견적 접수 관리 섹션
           ───────────────────────────────────────────────────────────── */
           <div>
-            {/* ── 1. 통계 카드 섹션 ── */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {/* ── 1. 통계 카드 섹션 (모바일 2열 최적화) ── */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-5 sm:mb-8">
               {/* 전체 접수 */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-500">총 상담 접수</span>
-                  <span className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-                    <i className="ri-inbox-line" />
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-500">총 상담 접수</span>
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                    <i className="ri-inbox-line text-sm" />
                   </span>
                 </div>
-                <div className="mt-3 text-2xl sm:text-3xl font-black text-slate-900">
+                <div className="mt-2 sm:mt-3 text-xl sm:text-3xl font-black text-slate-900">
                   {stats.total} <span className="text-xs font-medium text-slate-500">건</span>
                 </div>
               </div>
 
               {/* 신규 미확인 */}
-              <div className="bg-white p-5 rounded-2xl border border-red-200 shadow-sm relative overflow-hidden">
+              <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-red-200 shadow-sm relative overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-red-600">신규 대기</span>
-                  <span className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 animate-pulse">
-                    <i className="ri-notification-3-line" />
+                  <span className="text-[11px] sm:text-xs font-bold text-red-600">신규 대기</span>
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 animate-pulse">
+                    <i className="ri-notification-3-line text-sm" />
                   </span>
                 </div>
-                <div className="mt-3 text-2xl sm:text-3xl font-black text-red-600">
+                <div className="mt-2 sm:mt-3 text-xl sm:text-3xl font-black text-red-600">
                   {stats.newCount} <span className="text-xs font-medium text-slate-500">건</span>
                 </div>
               </div>
 
               {/* 상담/견적 진행중 */}
-              <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-sm">
+              <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-amber-200 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-600">상담 & 견적 중</span>
-                  <span className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
-                    <i className="ri-customer-service-2-line" />
+                  <span className="text-[11px] sm:text-xs font-bold text-amber-600">상담 & 견적 중</span>
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                    <i className="ri-customer-service-2-line text-sm" />
                   </span>
                 </div>
-                <div className="mt-3 text-2xl sm:text-3xl font-black text-amber-600">
+                <div className="mt-2 sm:mt-3 text-xl sm:text-3xl font-black text-amber-600">
                   {stats.inProgress} <span className="text-xs font-medium text-slate-500">건</span>
                 </div>
               </div>
 
               {/* 시공 예약/완료 */}
-              <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm">
+              <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-emerald-200 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-emerald-600">예약 & 완료</span>
-                  <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                    <i className="ri-checkbox-circle-line" />
+                  <span className="text-[11px] sm:text-xs font-bold text-emerald-600">예약 & 완료</span>
+                  <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <i className="ri-checkbox-circle-line text-sm" />
                   </span>
                 </div>
-                <div className="mt-3 text-2xl sm:text-3xl font-black text-emerald-600">
+                <div className="mt-2 sm:mt-3 text-xl sm:text-3xl font-black text-emerald-600">
                   {stats.completed} <span className="text-xs font-medium text-slate-500">건</span>
                 </div>
               </div>
@@ -681,8 +741,179 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
               </div>
             </div>
 
-            {/* ── 3. 상담 접수 테이블 ── */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            {/* ── 3-A. 모바일 전용 카드형 리스트 (가로 스크롤 없이 한눈에 보기 완벽 지원) ── */}
+            <div className="block md:hidden space-y-3">
+              {filteredList.length === 0 ? (
+                <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400">
+                  <i className="ri-file-search-line text-3xl block mb-2 text-slate-300" />
+                  해당 조건의 상담 접수 내역이 없습니다.
+                </div>
+              ) : (
+                filteredList.map((item) => {
+                  const statusMeta = STATUS_LABELS[item.status] || STATUS_LABELS.new;
+                  const dateFormatted = new Date(item.createdAt).toLocaleString('ko-KR', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  });
+
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={() => {
+                        setSelectedItem(item);
+                        setCurrentNote(item.notes || '');
+                      }}
+                      className={`bg-white rounded-2xl border p-4 shadow-sm transition-all cursor-pointer space-y-3 ${
+                        item.status === 'new'
+                          ? 'border-red-300 bg-red-50/15 ring-1 ring-red-200'
+                          : 'border-slate-200 hover:border-slate-300'
+                      }`}
+                    >
+                      {/* 카드 상단: 상태 선택 드롭다운 & 접수일시 */}
+                      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100" onClick={(e) => e.stopPropagation()}>
+                        <select
+                          value={item.status}
+                          onChange={(e) =>
+                            handleStatusChange(item.id, e.target.value as ConsultationItem['status'])
+                          }
+                          className={`text-xs font-bold px-3 py-1 rounded-full border ${statusMeta.bg} ${statusMeta.color} focus:outline-none cursor-pointer shadow-sm`}
+                        >
+                          <option value="new">신규 접수</option>
+                          <option value="contacted">상담 진행중</option>
+                          <option value="quoted">견적 발송</option>
+                          <option value="reserved">시공 예약</option>
+                          <option value="completed">시공 완료</option>
+                          <option value="cancelled">취소/보류</option>
+                        </select>
+
+                        <span className="text-[11px] text-slate-400 font-mono">
+                          {dateFormatted}
+                        </span>
+                      </div>
+
+                      {/* 고객명 & 연락처 & 희망시공 */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-base font-bold text-slate-900">{item.name}</span>
+                            {item.status === 'new' && (
+                              <span className="px-1.5 py-0.2 bg-red-600 text-white text-[10px] font-black rounded-full animate-pulse">
+                                NEW
+                              </span>
+                            )}
+                          </div>
+                          <a
+                            href={`tel:${item.phone}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-xs text-primary font-bold hover:underline mt-0.5"
+                            title="전화 걸기"
+                          >
+                            <i className="ri-phone-fill text-xs" />
+                            <span>{item.phone}</span>
+                          </a>
+                        </div>
+
+                        {/* 희망 시공 배지 */}
+                        <div className="text-right">
+                          <span className="inline-block px-2.5 py-1 bg-slate-100 text-slate-800 rounded-lg text-xs font-bold border border-slate-200">
+                            {item.service || '일반 상담'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 차량 정보 요약 */}
+                      <div className="bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
+                        <span className="text-slate-500 font-medium">차량정보</span>
+                        <span className="font-bold text-slate-800 text-right truncate max-w-[220px]">
+                          {item.brand ? `${item.brand} ` : ''}{item.model || '미입력'}
+                          {item.codeName ? ` (${item.codeName})` : ''}
+                        </span>
+                      </div>
+
+                      {/* 고객 문의 내용 */}
+                      {item.message && (
+                        <div className="text-xs text-slate-600 bg-slate-50/70 p-2.5 rounded-xl border border-slate-100 line-clamp-2 leading-relaxed">
+                          <span className="font-bold text-slate-700 mr-1">문의:</span>
+                          "{item.message}"
+                        </div>
+                      )}
+
+                      {/* 관리자 메모가 있는 경우 표시 */}
+                      {item.notes && (
+                        <div className="text-xs text-amber-800 bg-amber-50/80 p-2 rounded-xl border border-amber-200 flex items-start gap-1.5">
+                          <i className="ri-file-text-line text-amber-600 shrink-0 mt-0.5" />
+                          <span className="line-clamp-1">{item.notes}</span>
+                        </div>
+                      )}
+
+                      {/* 하단 관리 단축 액션 버튼 */}
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-100" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setCurrentNote(item.notes || '');
+                          }}
+                          className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                        >
+                          <i className="ri-file-list-3-line text-slate-500" />
+                          <span>상세 / 메모</span>
+                        </button>
+
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => {
+                              setCalendarPrefill({
+                                customerName: item.name,
+                                customerPhone: item.phone,
+                                carModel: [item.brand, item.model, item.codeName].filter(Boolean).join(' '),
+                                serviceType: item.service || '',
+                                notes: `상담 접수 번호(${item.id}) 연계: ${item.message || ''}`
+                              });
+                              setAdminSection('calendar');
+                            }}
+                            className="px-2.5 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer"
+                            title="시공 예약 캘린더 등록"
+                          >
+                            <i className="ri-calendar-event-line" />
+                            <span>예약</span>
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setWarrantyPrefill({
+                                customerName: item.name,
+                                customerPhone: item.phone,
+                                carModel: [item.brand, item.model, item.codeName].filter(Boolean).join(' '),
+                                notes: `상담 접수 번호(${item.id}) 연계`
+                              });
+                              setAdminSection('warranties');
+                            }}
+                            className="px-2.5 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer"
+                            title="정품 전자보증서 발급"
+                          >
+                            <i className="ri-shield-check-line" />
+                            <span>보증서</span>
+                          </button>
+
+                          <button
+                            onClick={() => handleDelete(item.id, item.name)}
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                            title="삭제"
+                          >
+                            <i className="ri-delete-bin-line text-sm" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* ── 3-B. 데스크톱 전용 테이블 (md 이상 넓은 화면에서만 표시) ── */}
+            <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs sm:text-sm">
                   <thead>
@@ -788,7 +1019,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                               )}
                             </td>
 
-                            {/* 관리 액션 버튼 (독립 너비 고정, 겹침 완전 방지) */}
+                            {/* 관리 액션 버튼 */}
                             <td className="py-3.5 px-4 text-center whitespace-nowrap w-36 min-w-[140px]" onClick={(e) => e.stopPropagation()}>
                               <div className="flex items-center justify-center gap-1.5">
                                 {/* 상세 보기 */}
@@ -809,7 +1040,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                     setCalendarPrefill({
                                       customerName: item.name,
                                       customerPhone: item.phone,
-                                      carModel: item.model || '',
+                                      carModel: [item.brand, item.model, item.codeName].filter(Boolean).join(' '),
                                       serviceType: item.service || '',
                                       notes: `상담 접수 번호(${item.id}) 연계: ${item.message || ''}`
                                     });
@@ -827,7 +1058,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                     setWarrantyPrefill({
                                       customerName: item.name,
                                       customerPhone: item.phone,
-                                      carModel: item.model || '',
+                                      carModel: [item.brand, item.model, item.codeName].filter(Boolean).join(' '),
                                       notes: `상담 접수 번호(${item.id}) 연계`
                                     });
                                     setAdminSection('warranties');
