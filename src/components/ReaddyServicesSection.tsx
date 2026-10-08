@@ -146,10 +146,7 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
                   </div>
 
                   {/* Bottom Action Footer */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                    <span className="text-xs font-bold text-gray-500 group-hover:text-primary transition-colors">
-                      자세히 보기
-                    </span>
+                  <div className="flex items-center justify-end pt-4 border-t border-gray-100 mt-auto">
                     <div className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-primary text-gray-700 group-hover:text-white transition-all shadow-sm">
                       <i className="ri-arrow-right-line text-base group-hover:translate-x-0.5 transition-transform" />
                     </div>
