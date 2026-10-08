@@ -141,16 +141,9 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
           <span>홈페이지로 돌아가기</span>
         </button>
 
-        <div className="flex items-center gap-3">
-          <img
-            src="/images/logos/logo_black_text.png"
-            alt="CAUTION SMART CENTER"
-            className="h-6 sm:h-7 w-auto object-contain"
-          />
-          <span className="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">
-            정품 전자보증서
-          </span>
-        </div>
+        <span className="text-sm font-bold text-gray-800 tracking-wide">
+          정품 전자보증서
+        </span>
 
         {customer ? (
           <div className="flex items-center gap-3">
@@ -190,19 +183,8 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
               본인 인증(로그인)을 통해 고객님의 정품 시공 보증서를 안전하게 조회하고 보관하실 수 있습니다.
             </p>
 
-            {/* Privacy & Price Protection Notice Box */}
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 mb-8 text-left max-w-2xl mx-auto">
-              <h4 className="text-sm font-bold text-gray-900 mb-1.5">
-                개인정보 및 시공 가격 보호 안내
-              </h4>
-              <p className="text-xs sm:text-[13px] text-gray-600 leading-relaxed">
-                정품 보증서에는 차주님의 성함, 연락처 및 상세 시공 가격이 기재되어 있습니다. 
-                타인의 임의 조회를 방지하고자, 본인 인증을 완료하신 고객님께만 보증서가 제공됩니다.
-              </p>
-            </div>
-
             {/* Social 1-Click Login Action Buttons */}
-            <div className="max-w-md mx-auto space-y-3">
+            <div className="max-w-md mx-auto space-y-3 pt-2">
               {/* Kakao 1-sec login */}
               <button
                 onClick={() => handleOpenLogin('kakao')}
@@ -224,38 +206,9 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
               </button>
             </div>
 
-            {/* Features (Clean cards without unnecessary emojis) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-10 pt-8 border-t border-gray-100 text-left">
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-900 mb-1">
-                  <Check className="w-4 h-4 text-red-600" />
-                  <span>철저한 보안 보호</span>
-                </div>
-                <p className="text-[11px] text-gray-600 leading-relaxed">
-                  타인의 임의 조회를 차단하여 시공 내역 및 가격 정보를 안전하게 보호합니다.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-900 mb-1">
-                  <Check className="w-4 h-4 text-red-600" />
-                  <span>정품 전자보증서 보관</span>
-                </div>
-                <p className="text-[11px] text-gray-600 leading-relaxed">
-                  독일 정품 CARDIP PPS 보증서를 스마트폰에서 언제든 분실 없이 확인합니다.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-900 mb-1">
-                  <Check className="w-4 h-4 text-red-600" />
-                  <span>사고 보험 처리 증빙</span>
-                </div>
-                <p className="text-[11px] text-gray-600 leading-relaxed">
-                  접촉 사고 발생 시 보험사 제출용 정품 시공 증빙 자료로 즉시 활용 가능합니다.
-                </p>
-              </div>
-            </div>
+            <p className="text-xs text-gray-400 mt-8">
+              독일 CARDIP 공식 수입원 (주)코션스마트센터 정품 시공 보증 시스템
+            </p>
           </motion.div>
         ) : (
           /* ──────────────────────────────────────────────────────────

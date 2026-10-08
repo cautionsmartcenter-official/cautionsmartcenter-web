@@ -120,14 +120,17 @@ export default function App() {
     const urlWarrantyNo = params.get('no') || params.get('id');
 
     return (
-      <CustomerWarrantyPortal
-        initialWarrantyNo={urlWarrantyNo}
-        onBackToHome={() => {
-          window.location.hash = '';
-          setActiveTab('home');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-      />
+      <>
+        <CustomerWarrantyPortal
+          initialWarrantyNo={urlWarrantyNo}
+          onBackToHome={() => {
+            window.location.hash = '';
+            setActiveTab('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+        <InlineTextEditor />
+      </>
     );
   }
 
