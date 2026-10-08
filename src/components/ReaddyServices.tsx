@@ -187,32 +187,19 @@ export const ReaddyServices: React.FC<ReaddyServicesProps> = ({
                     ))}
                   </div>
                   <div className="mt-8 flex flex-wrap items-center gap-4">
-                    {onSelectServiceDetail && (
-                      <button
-                        onClick={() => onSelectServiceDetail(srv.id)}
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white text-sm font-semibold rounded-full hover:bg-primary-dark transition-all whitespace-nowrap cursor-pointer group shadow-md"
-                      >
-                        <span>자세히 보기</span>
-                        <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    )}
-                    {onNavigateToContact ? (
-                      <button
-                        onClick={() => onNavigateToContact(srv.serviceParam || srv.title)}
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-dark text-white text-sm font-semibold rounded-full hover:bg-dark-light transition-all whitespace-nowrap cursor-pointer group shadow-md"
-                      >
-                        <span>상담 신청하기</span>
-                        <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    ) : (
-                      <a
-                        href="#contact"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-dark text-white text-sm font-semibold rounded-full hover:bg-dark-light transition-all whitespace-nowrap cursor-pointer group shadow-md"
-                      >
-                        <span>상담 신청하기</span>
-                        <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
-                      </a>
-                    )}
+                    <button
+                      onClick={() => {
+                        if (onSelectServiceDetail) {
+                          onSelectServiceDetail(srv.id);
+                        } else if (onNavigateToContact) {
+                          onNavigateToContact(srv.serviceParam || srv.title);
+                        }
+                      }}
+                      className="inline-flex items-center gap-2 px-8 py-4 bg-dark text-white text-sm font-semibold rounded-full hover:bg-primary transition-all whitespace-nowrap cursor-pointer group shadow-md"
+                    >
+                      <span>자세히 보기</span>
+                      <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform" />
+                    </button>
                   </div>
                 </div>
               </motion.div>
