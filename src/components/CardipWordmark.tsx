@@ -28,7 +28,7 @@ export interface CardipWordmarkProps {
  * - No unauthorized gradients or non-brand colors.
  */
 export const CardipWordmark: React.FC<CardipWordmarkProps> = ({
-  variant = 'color',
+  variant = 'black',
   onDark = false,
   withRegistered = true,
   className = ''

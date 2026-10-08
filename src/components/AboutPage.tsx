@@ -176,7 +176,7 @@ export const AboutPage: React.FC = () => {
                 General Distributor South Korea
               </span>
               <h3 className="text-2xl sm:text-4xl font-black font-cardip text-white mt-3 leading-tight">
-                독일 <span className="text-cardip-red font-cardip font-black">CARDIP®</span> 한국 공식 디스트리뷰터
+                독일 <span className="font-cardip font-black text-white">CARDIP®</span> 한국 공식 디스트리뷰터
               </h3>
               <p className="text-gray-300 text-sm sm:text-base mt-2 max-w-3xl font-sans leading-relaxed">
                 독일에서 연구·생산되는 <span className="font-cardip font-bold text-white">CARDIP®</span> PPS 제품을 기반으로, 독일 본사의 기술 교육과 기준에 따라 제품 공급 및 전문 시공 서비스를 제공합니다.

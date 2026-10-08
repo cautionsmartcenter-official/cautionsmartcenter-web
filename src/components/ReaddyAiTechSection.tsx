@@ -68,7 +68,7 @@ export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavi
 
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6 tracking-tight">
               CurveRobot 지능형 로봇 도장과 <br />
-              <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS 시공 기술
+              <span className="font-cardip font-black text-black">CARDIP®</span> PPS 시공 기술
             </h2>
 
             <p className="text-base text-gray-600 leading-relaxed mb-6">

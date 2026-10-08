@@ -399,7 +399,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                   </span>
                 </div>
                 <h3 className="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight">
-                  <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS 정밀 시공 구조 (11단계 멀티레이어)
+                  <span className="font-cardip font-black text-black">CARDIP®</span> PPS 정밀 시공 구조 (11단계 멀티레이어)
                 </h3>
                 <p className="text-xs sm:text-base text-gray-600 mt-3 max-w-2xl mx-auto leading-relaxed">
                   차량 원도장면을 100% 안전하게 보호하고 필요 시 도장 손상 없이 깔끔하게 벗겨지는 Peelable Paint 총 11회 정밀 분사 멀티레이어 도료 시스템
@@ -532,7 +532,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                   COMPREHENSIVE COMPARISON
                 </span>
                 <h3 className="text-2xl sm:text-4xl font-black text-gray-900">
-                  필름(PPF) vs 독일 <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS 비교
+                  필름(PPF) vs 독일 <span className="font-cardip font-black text-black">CARDIP®</span> PPS 비교
                 </h3>
               </div>
 
@@ -548,7 +548,7 @@ export const ReaddyServiceDetail: React.FC<ReaddyServiceDetailProps> = ({
                         필름 (PPF)
                       </th>
                       <th className="py-4 px-6 text-xs sm:text-sm font-mono font-bold text-cardip-red uppercase bg-red-50/50 border-l border-red-100">
-                        독일 <span className="font-cardip font-black text-cardip-red">CARDIP®</span> PPS (코션)
+                        독일 <span className="font-cardip font-black text-black">CARDIP®</span> PPS (코션)
                       </th>
                     </tr>
                   </thead>

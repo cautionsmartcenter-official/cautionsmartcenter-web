@@ -180,7 +180,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               className="text-2xl sm:text-4xl md:text-5xl lg:text-[52px] font-black text-cardip-dark tracking-tight leading-tight mb-6"
             >
               <span className="block break-keep">
-                독일 <span className="text-cardip-red font-cardip font-black">CARDIP®</span> 한국 공식 디스트리뷰터
+                독일 <span className="text-black font-cardip font-black">CARDIP®</span> 한국 공식 디스트리뷰터
               </span>
             </motion.h2>
 
@@ -218,7 +218,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   </span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 tracking-tight leading-tight">
-                  독일 정품 <span className="text-cardip-red font-cardip font-black">CARDIP®</span> PPS
+                  독일 정품 <span className="text-black font-cardip font-black">CARDIP®</span> PPS
                 </h3>
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed font-sans">
                   독일 Colosol Coatings GmbH 본사의 <strong className="text-gray-900 font-cardip">CARDIP® Aqua+ PPS</strong>는 차체에 칼을 대지 않는 100% 무절개 스프레이 분사 방식으로 원도장을 안전하게 보호하며, 필요 시 언제든 흔적 없이 깔끔하게 벗겨낼 수 있는 Peelable Paint 세계적인 정품 액상 보호 도막 시스템입니다.
