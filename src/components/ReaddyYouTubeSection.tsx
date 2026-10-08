@@ -314,17 +314,21 @@ export const ReaddyYouTubeSection: React.FC = () => {
         </div>
 
         {/* Channel Banner Callout */}
-        <div className="rounded-2xl sm:rounded-3xl bg-white border border-gray-200 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center text-white shrink-0 shadow-md shadow-red-600/30">
-              <Youtube className="w-7 h-7" />
+        <div className="rounded-2xl sm:rounded-3xl bg-white border border-gray-200 p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 sm:gap-6 shadow-sm">
+          <div className="flex items-start sm:items-center gap-3.5 sm:gap-4 text-left w-full sm:w-auto">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-red-600 flex items-center justify-center text-white shrink-0 shadow-md shadow-red-600/30">
+              <Youtube className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <div>
-              <div className="flex items-center gap-2 justify-center sm:justify-start mb-1">
-                <span className="text-sm sm:text-base font-bold text-black tracking-tight">@cautionsmartcenter_official</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800 text-xs font-bold border border-gray-200">공식 채널</span>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                <span className="text-sm sm:text-base font-bold text-black tracking-tight break-all">
+                  @cautionsmartcenter_official
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800 text-[11px] sm:text-xs font-bold border border-gray-200 whitespace-nowrap shrink-0">
+                  공식 채널
+                </span>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed break-keep">
                 구독과 알림 설정을 하시면 매주 업데이트되는 슈퍼카 시공 현장과 시공 팁을 가장 먼저 만나보실 수 있습니다.
               </p>
             </div>

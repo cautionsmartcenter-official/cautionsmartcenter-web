@@ -477,7 +477,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     ],
     linkType: 'blog',
     linkUrl: OFFICIAL_LINKS.blog,
-    linkText: '네이버 블로그 복원기'
+    linkText: '네이버 블로그 보러가기'
   },
 
   // ── 4. 정비수리 (코션스마트센터 실제 슈퍼카/하이엔드 정비 실사 포트폴리오) ──

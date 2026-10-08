@@ -466,7 +466,7 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                 className="inline-flex items-center gap-2 px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm sm:text-base font-bold rounded-full border border-gray-200 transition-all cursor-pointer"
               >
                 <i className="ri-instagram-line text-pink-600" />
-                <span>인스타그램 전체 시공기</span>
+                <span>인스타그램 보러가기</span>
               </a>
               <a
                 href={OFFICIAL_LINKS.blog}
@@ -475,7 +475,7 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                 className="inline-flex items-center gap-2 px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm sm:text-base font-bold rounded-full border border-gray-200 transition-all cursor-pointer"
               >
                 <span className="w-4 h-4 rounded bg-[#03C75A] text-white font-black text-[10px] flex items-center justify-center">N</span>
-                <span>네이버 블로그 복원기</span>
+                <span>네이버 블로그 보러가기</span>
               </a>
             </div>
           </motion.div>
