@@ -117,12 +117,6 @@ export const ReaddyYouTubeSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 border border-red-200 mb-4">
-              <Youtube className="w-4 h-4 text-red-600" />
-              <span className="text-xs font-mono font-bold text-red-600 tracking-wider uppercase">
-                OFFICIAL YOUTUBE MEDIA
-              </span>
-            </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-sans uppercase tracking-tight text-gray-900 leading-tight">
               영상으로 증명하는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-amber-600">압도적 기술력</span>
             </h2>
@@ -281,7 +275,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
                 {/* Text Information */}
                 <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <span className="text-xs font-mono font-bold text-red-600 block mb-1.5">
+                    <span className="text-xs font-bold text-red-600 block mb-1.5">
                       {video.category}
                     </span>
                     <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug mb-2">
@@ -326,9 +320,9 @@ export const ReaddyYouTubeSection: React.FC = () => {
               <Youtube className="w-7 h-7" />
             </div>
             <div>
-              <div className="flex items-center gap-2 justify-center sm:justify-start mb-0.5">
-                <span className="text-xs font-mono font-bold text-red-600">@cautionsmartcenter_official</span>
-                <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-bold">공식 채널</span>
+              <div className="flex items-center gap-2 justify-center sm:justify-start mb-1">
+                <span className="text-sm sm:text-base font-bold text-black tracking-tight">@cautionsmartcenter_official</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800 text-xs font-bold border border-gray-200">공식 채널</span>
               </div>
               <p className="text-xs sm:text-sm text-gray-600">
                 구독과 알림 설정을 하시면 매주 업데이트되는 슈퍼카 시공 현장과 시공 팁을 가장 먼저 만나보실 수 있습니다.
