@@ -239,7 +239,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
+              className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
                 <div className="w-full aspect-[4/3] bg-[#020E1A] rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
@@ -250,7 +250,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   />
                 </div>
 
-                <div className="space-y-2 mb-4">
+                <div className="space-y-2 mb-6">
                   <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full tracking-wider">
                     250µm+ TOTAL FILM THICKNESS
                   </span>
@@ -259,23 +259,26 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   </h3>
                 </div>
 
-                <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
-                  일반 보호필름(150µm)을 압도하는 <strong className="text-cardip-dark">250µm 이상(실측 최대 428µm)</strong>의 초후도 탄성 피막을 형성하여, 고속 주행 스톤칩과 가혹한 도로 환경으로부터 차량 원도장을 빈틈없이 강력하게 보호합니다.
-                </p>
-              </div>
-
-              <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">실측 최대 428µm 고강도 탄성 보호막 형성</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">독일 공인 DIN ISO 20567-1 스톤칩 저항 인증</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">복잡한 3D 굴곡과 에어로파츠까지 균일 도포</span>
+                {/* 3 Core Points */}
+                <div className="space-y-3.5 pt-4 border-t border-gray-100">
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      실측 최대 <strong className="text-black font-black">428µm</strong> 고강도 탄성 보호막 형성
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      독일 공인 <strong className="text-black font-black">DIN ISO 20567-1</strong> 스톤칩 저항 인증
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      칼 없는 무절개로 <strong className="text-black font-black">3D 굴곡까지 균일 도포</strong>
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -286,7 +289,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
+              className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
                 <div className="w-full aspect-[4/3] bg-[#020E1A] rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
@@ -297,7 +300,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   />
                 </div>
 
-                <div className="space-y-2 mb-4">
+                <div className="space-y-2 mb-6">
                   <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full tracking-wider">
                     AQUA+ PPS PRO CLEAR 5050
                   </span>
@@ -306,23 +309,26 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   </h3>
                 </div>
 
-                <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
-                  독일 본사의 특허 원료로 현장 인위적 희석 없이 <strong className="text-cardip-dark">100% 규격 원액 그대로 다이렉트 분사</strong>되며, 수성 및 유성 등 모든 상도 도료 및 프리미엄 클리어코트와 완벽히 결합합니다.
-                </p>
-              </div>
-
-              <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">100% 독일 Colosol 본사 직수입 정품 원액</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">유해물질(VOCs) 없는 친환경 수성 시스템</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">오렌지필 제로 세계 최고 수준 표면 평활도</span>
+                {/* 3 Core Points */}
+                <div className="space-y-3.5 pt-4 border-t border-gray-100">
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      100% 독일 Colosol 본사 <strong className="text-black font-black">직수입 정품 규격 원액</strong>
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      유해물질(VOCs) 없는 <strong className="text-black font-black">친환경 수성 시스템</strong>
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      오렌지필 제로 <strong className="text-black font-black">세계 최고 수준 표면 평활도</strong>
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -333,7 +339,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="bg-white rounded-3xl p-8 sm:p-9 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
+              className="bg-white rounded-3xl p-7 sm:p-8 border-2 border-gray-200 hover:border-cardip-red/50 transition-all shadow-md flex flex-col justify-between group"
             >
               <div>
                 <div className="w-full aspect-[4/3] bg-[#020E1A] rounded-2xl p-2 flex items-center justify-center mb-6 overflow-hidden border border-gray-800">
@@ -344,7 +350,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   />
                 </div>
 
-                <div className="space-y-2 mb-4">
+                <div className="space-y-2 mb-6">
                   <span className="inline-block text-xs font-bold font-roboto text-cardip-red bg-red-50 border border-red-200 px-3 py-1 rounded-full tracking-wider">
                     PEELABLE PAINT SYSTEM
                   </span>
@@ -353,23 +359,26 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                   </h3>
                 </div>
 
-                <p className="text-base text-gray-700 leading-relaxed font-sans mb-6">
-                  특허받은 <strong className="text-cardip-dark">Easy-Peel-Polymer™</strong> 기술로 화학 본드 접착제 없이도 완벽히 밀착되며, 필요 시 칼자국이나 본드 잔여물, 도장 손상 없이 언제든 신차 출고 상태 그대로 깨끗하게 벗겨집니다.
-                </p>
-              </div>
-
-              <div className="space-y-2.5 pt-5 border-t border-gray-100 bg-gray-50/70 rounded-xl p-4 text-sm text-gray-800">
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">화학 본드 잔여물 0% 무접착 밀착 시스템</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">칼을 쓰지 않는 100% 무스크래치 무절개 시공</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ri-checkbox-circle-fill text-cardip-red text-base" />
-                  <span className="font-medium">원도장 손상 없이 신차 본래 모습으로 완벽 복구</span>
+                {/* 3 Core Points */}
+                <div className="space-y-3.5 pt-4 border-t border-gray-100">
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      화학 본드 잔여물 0% <strong className="text-black font-black">무접착 밀착 시스템</strong>
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      칼을 전혀 쓰지 않는 <strong className="text-black font-black">100% 무스크래치 무절개 시공</strong>
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <i className="ri-checkbox-circle-fill text-cardip-red text-lg shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                      원도장 손상 없이 <strong className="text-black font-black">신차 본래 모습으로 완벽 복구</strong>
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>
