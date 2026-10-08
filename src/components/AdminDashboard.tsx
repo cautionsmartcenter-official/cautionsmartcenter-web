@@ -7,8 +7,17 @@ import {
   deleteConsultation,
   clearAllConsultations,
   exportConsultationsToCSV,
+  subscribeToNewConsultations,
   type ConsultationItem
 } from '../lib/consultationStorage';
+import {
+  playChimeSound,
+  isSoundEnabled,
+  setSoundEnabled,
+  requestNotificationPermission,
+  getNotificationPermission,
+  sendBrowserNotification
+} from '../lib/notificationSound';
 import { AdminWarrantyManager } from './AdminWarrantyManager';
 import { AdminCalendar } from './AdminCalendar';
 import { exportWarrantiesToCSV } from '../lib/warrantyStorage';
@@ -51,6 +60,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
   const [selectedItem, setSelectedItem] = useState<ConsultationItem | null>(null);
   const [currentNote, setCurrentNote] = useState('');
 
+  // ── 실시간 알림 시스템 상태 ──
+  const [soundOn, setSoundOn] = useState<boolean>(() => isSoundEnabled());
+  const [realtimeAlert, setRealtimeAlert] = useState<ConsultationItem | null>(null);
+  const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>(() => getNotificationPermission());
+
   // 데이터 로드
   const reloadData = () => {
     const data = getConsultations();
@@ -58,11 +72,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
     setScheduleCount(getSchedules().length);
   };
 
+  // 실시간 새 상담 접수 리스너 등록
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) return;
+
+    reloadData();
+
+    // 새 상담 접수 시 사운드 알람 + 브라우저 푸시 + 팝업 배너 표시
+    const unsubscribe = subscribeToNewConsultations((newItem) => {
       reloadData();
-    }
+      playChimeSound();
+      sendBrowserNotification(
+        '[코션스마트센터] 새 견적 상담 신청 도착!',
+        `${newItem.name} 고객님 | ${newItem.brand} ${newItem.model} | ${newItem.phone}`,
+        () => {
+          setAdminSection('consultations');
+          setSelectedItem(newItem);
+          setCurrentNote(newItem.notes || '');
+        }
+      );
+      setRealtimeAlert(newItem);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, [isAuthenticated]);
+
+  // 실시간 팝업 배너 자동 닫힘 타이머 (15초)
+  useEffect(() => {
+    if (!realtimeAlert) return;
+    const timer = setTimeout(() => {
+      setRealtimeAlert(null);
+    }, 15000);
+    return () => clearTimeout(timer);
+  }, [realtimeAlert]);
 
   // 로그인 핸들러
   const handleLogin = (e: React.FormEvent) => {
@@ -71,8 +115,57 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
       sessionStorage.setItem('caution_admin_auth', 'true');
       setIsAuthenticated(true);
       setAuthError('');
+      // 로그인 시 오디오 엔진 활성화 및 성공 알림음
+      playChimeSound();
     } else {
       setAuthError('관리자 비밀번호가 일치하지 않습니다. (기본: caution2026!)');
+    }
+  };
+
+  // 알림음 ON/OFF 토글 핸들러
+  const handleToggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    setSoundEnabled(next);
+    if (next) {
+      playChimeSound();
+    }
+  };
+
+  // 알림 테스트 핸들러 (모바일/PC 알림음 및 팝업 즉시 시뮬레이션)
+  const handleTestAlert = () => {
+    playChimeSound();
+    const testItem: ConsultationItem = {
+      id: 'test-' + Date.now(),
+      createdAt: new Date().toISOString(),
+      name: '홍길동 (테스트 신청)',
+      phone: '010-1234-5678',
+      email: 'customer@example.com',
+      brand: 'Mercedes-Benz',
+      model: 'Maybach GLS600',
+      codeName: 'X167 (마이바흐 투톤)',
+      service: '투명PPS',
+      message: '테스트용 실시간 알람입니다. 관리자 페이지를 켜놓았을 때 딩동 소리와 팝업 배너가 정상 동작하는지 확인합니다.',
+      status: 'new',
+      notes: '실시간 알람 테스트 데이터',
+      isRead: false
+    };
+    setRealtimeAlert(testItem);
+    sendBrowserNotification(
+      '[코션스마트센터] 새 견적 상담 신청 도착!',
+      '홍길동 (테스트 신청) | Mercedes-Benz Maybach GLS600 | 010-1234-5678'
+    );
+  };
+
+  // 브라우저 웹 푸시 권한 요청 핸들러
+  const handleRequestPushPermission = async () => {
+    const perm = await requestNotificationPermission();
+    setPermissionStatus(perm);
+    if (perm === 'granted') {
+      sendBrowserNotification(
+        '[코션스마트센터] 브라우저 알림 설정 완료',
+        '새로운 상담 신청이 접수되면 스마트폰 화면 상단이나 PC 알림으로 즉시 안내해 드립니다.'
+      );
     }
   };
 
@@ -288,16 +381,52 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
+            {/* ── 소리 알림 ON/OFF ── */}
+            <button
+              onClick={handleToggleSound}
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-all flex items-center gap-1.5 cursor-pointer ${
+                soundOn
+                  ? 'bg-emerald-950/60 text-emerald-300 border-emerald-600/70 hover:bg-emerald-900/60 shadow-sm'
+                  : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'
+              }`}
+              title={soundOn ? '실시간 알림음이 켜져 있습니다 (클릭 시 무음)' : '알림음이 꺼져 있습니다 (클릭 시 소리 켬)'}
+            >
+              <i className={soundOn ? 'ri-volume-up-fill text-emerald-400 text-sm' : 'ri-volume-mute-fill text-slate-400 text-sm'} />
+              <span className="hidden sm:inline">{soundOn ? '소리 ON' : '무음'}</span>
+            </button>
+
+            {/* ── 알림 테스트 버튼 ── */}
+            <button
+              onClick={handleTestAlert}
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-amber-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
+              title="새 상담 신청 도착 시 울리는 알림음과 화면 팝업을 직접 테스트합니다"
+            >
+              <i className="ri-notification-badge-fill text-amber-400 text-sm" />
+              <span className="hidden sm:inline">알림 테스트</span>
+            </button>
+
+            {/* ── 브라우저 푸시 알림 켜기 버튼 (미허용 시에만 노출) ── */}
+            {permissionStatus !== 'granted' && (
+              <button
+                onClick={handleRequestPushPermission}
+                className="px-2.5 py-1.5 bg-indigo-900/60 hover:bg-indigo-900/90 text-indigo-200 text-xs font-semibold rounded-lg border border-indigo-700/70 transition-colors flex items-center gap-1 cursor-pointer animate-pulse"
+                title="모바일 상단바나 PC 알림창으로 푸시 알림을 받기 위해 권한을 허용합니다"
+              >
+                <i className="ri-notification-3-line text-indigo-300 text-sm" />
+                <span className="hidden md:inline">푸시 알림 켜기</span>
+              </button>
+            )}
+
             {/* 상담 섹션일 때 엑셀 다운로드 */}
             {adminSection === 'consultations' && (
               <button
                 onClick={exportConsultationsToCSV}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
                 title="상담 내역을 엑셀 CSV 파일로 저장합니다"
               >
                 <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
-                <span className="hidden sm:inline">엑셀 다운로드</span>
+                <span className="hidden sm:inline">엑셀</span>
               </button>
             )}
 
@@ -305,25 +434,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
             {adminSection === 'warranties' && (
               <button
                 onClick={exportWarrantiesToCSV}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
                 title="보증서 발급 대장을 엑셀 CSV 파일로 저장합니다"
               >
                 <i className="ri-file-excel-2-line text-emerald-400 text-sm" />
-                <span className="hidden sm:inline">보증서 대장 다운로드</span>
+                <span className="hidden sm:inline">대장 엑셀</span>
               </button>
             )}
 
             <button
               onClick={onExit}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <i className="ri-home-4-line text-sm" />
-              <span className="hidden sm:inline">홈페이지로 이동</span>
+              <span className="hidden sm:inline">홈페이지</span>
             </button>
 
             <button
               onClick={handleLogout}
-              className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+              className="px-2.5 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
             >
               <i className="ri-logout-box-r-line text-sm" />
               <span className="hidden sm:inline">로그아웃</span>
@@ -331,6 +460,71 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
           </div>
         </div>
       </header>
+
+      {/* ── 실시간 새 상담 접수 알림 팝업 배너 (플로팅) ── */}
+      <AnimatePresence>
+        {realtimeAlert && (
+          <motion.div
+            initial={{ opacity: 0, y: -40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -30, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-lg bg-slate-900/95 border-2 border-red-500 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl text-white"
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 shrink-0">
+                <i className="ri-notification-3-fill text-xl animate-bounce" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black uppercase tracking-wider animate-pulse">
+                    신규 상담 접수
+                  </span>
+                  <span className="text-xs text-slate-400">방금 전</span>
+                </div>
+                <h4 className="text-base font-bold text-white truncate">
+                  {realtimeAlert.name} 고객님 ({realtimeAlert.phone})
+                </h4>
+                <p className="text-xs text-slate-300 mt-0.5 line-clamp-1">
+                  {realtimeAlert.brand} {realtimeAlert.model} {realtimeAlert.codeName ? `· ${realtimeAlert.codeName}` : ''} | <span className="text-yellow-400 font-bold">{realtimeAlert.service}</span>
+                </p>
+                {realtimeAlert.message && (
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-1 italic bg-slate-800/80 p-1.5 rounded-lg border border-slate-700">
+                    "{realtimeAlert.message}"
+                  </p>
+                )}
+                <div className="flex items-center gap-2 mt-3">
+                  <button
+                    onClick={() => {
+                      setAdminSection('consultations');
+                      setSelectedItem(realtimeAlert);
+                      setCurrentNote(realtimeAlert.notes || '');
+                      setRealtimeAlert(null);
+                    }}
+                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-md"
+                  >
+                    <i className="ri-eye-line" />
+                    <span>지금 확인하기</span>
+                  </button>
+                  <button
+                    onClick={() => setRealtimeAlert(null)}
+                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                  >
+                    닫기
+                  </button>
+                </div>
+              </div>
+              <button
+                onClick={() => setRealtimeAlert(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+                title="닫기"
+              >
+                <i className="ri-close-line text-lg" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Dashboard Body ── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">

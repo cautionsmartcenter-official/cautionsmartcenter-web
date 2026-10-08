@@ -90,6 +90,21 @@ export const clearAllConsultations = (): void => {
   }
 };
 
+// 실시간 브로드캐스트 채널 및 커스텀 이벤트 명칭
+const BROADCAST_CHANNEL_NAME = 'caution_consultation_realtime';
+const EVENT_NAME = 'caution_new_consultation_event';
+
+const getBroadcastChannel = (): BroadcastChannel | null => {
+  if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+    try {
+      return new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+};
+
 export const saveConsultation = (
   item: Omit<ConsultationItem, 'id' | 'createdAt' | 'status' | 'notes' | 'isRead'>
 ): ConsultationItem => {
@@ -110,7 +125,75 @@ export const saveConsultation = (
     console.error('Failed to save consultation to storage:', err);
   }
 
+  // 실시간 알람 전파 (동일 탭 및 다른 탭/창의 관리자 페이지로 즉시 전송)
+  if (typeof window !== 'undefined') {
+    try {
+      window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: newItem }));
+      const channel = getBroadcastChannel();
+      if (channel) {
+        channel.postMessage({ type: 'NEW_CONSULTATION', data: newItem });
+        channel.close();
+      }
+    } catch (err) {
+      console.warn('Broadcast error:', err);
+    }
+  }
+
   return newItem;
+};
+
+/**
+ * 관리자 페이지 등에서 새 상담 신청을 실시간으로 감지하는 구독 헬퍼
+ */
+export const subscribeToNewConsultations = (
+  callback: (item: ConsultationItem) => void
+): (() => void) => {
+  if (typeof window === 'undefined') return () => {};
+
+  // 1. 같은 탭 내 커스텀 이벤트 리스너
+  const handleCustomEvent = (e: Event) => {
+    const custom = e as CustomEvent<ConsultationItem>;
+    if (custom.detail) {
+      callback(custom.detail);
+    }
+  };
+  window.addEventListener(EVENT_NAME, handleCustomEvent);
+
+  // 2. 다른 탭/창 간 BroadcastChannel 리스너
+  let channel: BroadcastChannel | null = null;
+  if ('BroadcastChannel' in window) {
+    try {
+      channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+      channel.onmessage = (e) => {
+        if (e.data && e.data.type === 'NEW_CONSULTATION' && e.data.data) {
+          callback(e.data.data);
+        }
+      };
+    } catch {
+      channel = null;
+    }
+  }
+
+  // 3. 브라우저 스토리지 변경 이벤트 리스너
+  const handleStorageEvent = (e: StorageEvent) => {
+    if (e.key === STORAGE_KEY && e.newValue) {
+      try {
+        const parsed: ConsultationItem[] = JSON.parse(e.newValue);
+        if (parsed && parsed.length > 0 && parsed[0].status === 'new') {
+          callback(parsed[0]);
+        }
+      } catch {}
+    }
+  };
+  window.addEventListener('storage', handleStorageEvent);
+
+  return () => {
+    window.removeEventListener(EVENT_NAME, handleCustomEvent);
+    window.removeEventListener('storage', handleStorageEvent);
+    if (channel) {
+      channel.close();
+    }
+  };
 };
 
 export const updateConsultationStatus = (
