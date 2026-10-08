@@ -134,13 +134,13 @@ const PortfolioCard: React.FC<{
       {/* ── 2. Card Content Area ── */}
       <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-bold text-primary uppercase tracking-wider">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs sm:text-sm font-extrabold text-primary uppercase tracking-wider">
               {item.carModel}
             </span>
             <button
               onClick={() => onOpenModal(item, currentIdx)}
-              className="text-xs font-bold text-gray-400 hover:text-primary transition-colors flex items-center gap-0.5 cursor-pointer"
+              className="text-xs sm:text-sm font-bold text-gray-500 hover:text-primary transition-colors flex items-center gap-0.5 cursor-pointer"
             >
               <span>상세보기</span>
               <i className="ri-arrow-right-s-line" />
@@ -149,12 +149,12 @@ const PortfolioCard: React.FC<{
 
           <h3
             onClick={() => onOpenModal(item, currentIdx)}
-            className="text-lg sm:text-xl font-black text-gray-900 mb-2.5 hover:text-primary transition-colors leading-snug cursor-pointer"
+            className="text-xl sm:text-2xl font-black text-gray-900 mb-3 hover:text-primary transition-colors leading-snug cursor-pointer"
           >
             {item.title}
           </h3>
 
-          <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed mb-4">
+          <p className="text-sm sm:text-base text-gray-600 line-clamp-2 leading-relaxed mb-4">
             {item.summary}
           </p>
         </div>
@@ -165,7 +165,7 @@ const PortfolioCard: React.FC<{
             {item.tags.map((tag, tIdx) => (
               <span
                 key={tIdx}
-                className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-lg text-[11px] font-medium"
+                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-semibold"
               >
                 #{tag}
               </span>
@@ -187,10 +187,10 @@ const PortfolioCard: React.FC<{
                   : '투명PPS';
               onNavigateToContact(serviceTarget);
             }}
-            className="w-full flex items-center justify-between pt-3.5 border-t border-gray-100 cursor-pointer group/btn"
+            className="w-full flex items-center justify-between pt-4 border-t border-gray-100 cursor-pointer group/btn"
           >
-            <span className="text-xs font-bold text-gray-600 group-hover/btn:text-primary transition-colors flex items-center gap-1.5">
-              <i className="ri-message-3-line text-primary text-sm" />
+            <span className="text-sm font-bold text-gray-700 group-hover/btn:text-primary transition-colors flex items-center gap-1.5">
+              <i className="ri-message-3-line text-primary text-base" />
               <span>이 시공 1:1 맞춤 견적 문의</span>
             </span>
             <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover/btn:bg-primary group-hover/btn:text-white transition-all">
@@ -316,37 +316,37 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
       </section>
 
       {/* ── 2. Official Social Channels Banner ── */}
-      <section className="py-5 bg-slate-100/90 border-b border-slate-200">
+      <section className="py-6 bg-slate-100/90 border-b border-slate-200">
         <div className="mx-auto px-6 lg:px-12 max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
             {/* Instagram Card */}
             <a
               href={OFFICIAL_LINKS.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-pink-300 shadow-sm hover:shadow-md transition-all flex items-center justify-between gap-4 cursor-pointer"
+              className="group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-pink-300 shadow-sm hover:shadow-md transition-all flex items-center justify-between gap-4 cursor-pointer"
             >
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 text-white flex items-center justify-center text-xl shadow-md shadow-pink-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <div className="flex items-center gap-4">
+                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 text-white flex items-center justify-center text-2xl shadow-md shadow-pink-500/20 group-hover:scale-105 transition-transform shrink-0">
                   <i className="ri-instagram-line" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-100">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-100">
                       실시간 릴스 시공기
                     </span>
-                    <span className="text-xs font-bold text-slate-800">공식 인스타그램</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-700">공식 인스타그램</span>
                   </div>
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-pink-600 transition-colors">
+                  <h4 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-pink-600 transition-colors">
                     {OFFICIAL_LINKS.instagramHandle}
                   </h4>
-                  <p className="text-xs text-slate-500 line-clamp-1">
+                  <p className="text-xs sm:text-sm text-slate-600 font-medium line-clamp-1 mt-0.5">
                     PPS · 투톤 마이바흐 · 컬러PPS 최신 시공 영상 보러가기
                   </p>
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-gradient-to-tr group-hover:from-pink-500 group-hover:to-purple-600 group-hover:text-white text-slate-400 flex items-center justify-center transition-all shrink-0">
-                <i className="ri-arrow-right-up-line text-sm font-bold" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 group-hover:bg-gradient-to-tr group-hover:from-pink-500 group-hover:to-purple-600 group-hover:text-white text-slate-400 flex items-center justify-center transition-all shrink-0">
+                <i className="ri-arrow-right-up-line text-base font-bold" />
               </div>
             </a>
 
@@ -355,29 +355,29 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
               href={OFFICIAL_LINKS.blog}
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-300 shadow-sm hover:shadow-md transition-all flex items-center justify-between gap-4 cursor-pointer"
+              className="group p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 hover:border-emerald-300 shadow-sm hover:shadow-md transition-all flex items-center justify-between gap-4 cursor-pointer"
             >
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-[#03C75A] text-white flex items-center justify-center text-lg font-black shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <div className="flex items-center gap-4">
+                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#03C75A] text-white flex items-center justify-center text-xl font-black shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform shrink-0">
                   N
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
                       정밀 시공기 & 보험처리
                     </span>
-                    <span className="text-xs font-bold text-slate-800">네이버 블로그</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-700">네이버 블로그</span>
                   </div>
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-emerald-600 transition-colors">
+                  <h4 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-emerald-600 transition-colors">
                     {OFFICIAL_LINKS.blogName}
                   </h4>
-                  <p className="text-xs text-slate-500 line-clamp-1">
+                  <p className="text-xs sm:text-sm text-slate-600 font-medium line-clamp-1 mt-0.5">
                     판금도색, 조색 복원, 보험수리 Before & After 상세 스토리
                   </p>
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-[#03C75A] group-hover:text-white text-slate-400 flex items-center justify-center transition-all shrink-0">
-                <i className="ri-arrow-right-up-line text-sm font-bold" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 group-hover:bg-[#03C75A] group-hover:text-white text-slate-400 flex items-center justify-center transition-all shrink-0">
+                <i className="ri-arrow-right-up-line text-base font-bold" />
               </div>
             </a>
           </div>
@@ -385,19 +385,19 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
       </section>
 
       {/* ── 3. Category Filter Tabs (디테일링 제외, 정비수리 유지) ── */}
-      <section className="py-5 bg-gray-50 border-b border-gray-200/80 sticky top-16 sm:top-20 z-30 backdrop-blur-md bg-gray-50/95">
+      <section className="py-6 bg-gray-50 border-b border-gray-200/80 sticky top-16 sm:top-20 z-30 backdrop-blur-md bg-gray-50/95">
         <div className="mx-auto px-6 lg:px-12 max-w-7xl">
-          <div className="flex items-center justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1">
+          <div className="flex items-center justify-start sm:justify-center gap-2.5 sm:gap-3.5 overflow-x-auto no-scrollbar py-1">
             {CATEGORIES.map((cat) => {
               const isActive = selectedCategory === cat.id;
               return (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-5 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  className={`px-6 sm:px-7 py-3 rounded-full text-sm sm:text-base font-black whitespace-nowrap transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-primary text-white shadow-md shadow-primary/30 scale-105'
-                      : 'bg-white text-gray-700 hover:bg-gray-200 border border-gray-200'
+                      ? 'bg-primary text-white shadow-lg shadow-primary/30 scale-105'
+                      : 'bg-white text-gray-800 hover:bg-gray-100 border border-gray-300 shadow-xs'
                   }`}
                 >
                   {cat.name}
@@ -407,9 +407,9 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
           </div>
 
           {/* Interactive Hint Banner */}
-          <div className="mt-3 text-center">
-            <span className="text-[11px] text-gray-500 font-medium inline-flex items-center gap-1.5 bg-white/80 px-3 py-1 rounded-full border border-gray-200/60 shadow-xs">
-              <i className="ri-cursor-line text-primary" />
+          <div className="mt-4 text-center">
+            <span className="text-xs sm:text-sm text-gray-700 font-semibold inline-flex items-center gap-2 bg-white px-4 sm:px-5 py-2 rounded-full border border-gray-200 shadow-xs">
+              <i className="ri-cursor-line text-primary text-sm sm:text-base" />
               <span>카드의 <strong>사진을 클릭</strong>하시면 다음 사진으로 넘어갑니다 (좌우 화살표로도 이동 가능)</span>
             </span>
           </div>
