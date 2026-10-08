@@ -438,23 +438,23 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
       <ReaddyYouTubeSection />
 
       {/* ── 6. Bottom Consultation Banner ── */}
-      <section className="py-20 bg-[#111827] text-white text-center">
+      <section className="py-20 bg-white border-t border-gray-200 text-center">
         <div className="mx-auto px-6 lg:px-12 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-4 tracking-tight">
               내 차량에 딱 맞는 시공 견적이 궁금하신가요?
             </h2>
-            <p className="text-sm sm:text-base text-gray-300 mb-8 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto">
               PPS부터 컬러PPS 투톤, 판금도색 사고수리, 정밀 메카닉 정비까지 최고 수준의 마스터가 1:1 맞춤 견적을 안내해 드립니다.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3.5">
               <button
                 onClick={() => onNavigateToContact()}
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary hover:bg-primary-dark text-white text-sm sm:text-base font-bold rounded-full transition-all shadow-lg hover:shadow-xl active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-primary hover:bg-primary-dark text-white text-sm sm:text-base font-bold rounded-full transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer"
               >
                 <span>포트폴리오 맞춤 견적 상담하기</span>
                 <i className="ri-arrow-right-line text-lg" />
@@ -463,16 +463,16 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
                 href={OFFICIAL_LINKS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 hover:bg-white hover:text-dark text-white text-sm sm:text-base font-bold rounded-full border border-white/20 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm sm:text-base font-bold rounded-full border border-gray-200 transition-all cursor-pointer"
               >
-                <i className="ri-instagram-line text-pink-400" />
+                <i className="ri-instagram-line text-pink-600" />
                 <span>인스타그램 전체 시공기</span>
               </a>
               <a
                 href={OFFICIAL_LINKS.blog}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-white/10 hover:bg-white hover:text-dark text-white text-sm sm:text-base font-bold rounded-full border border-white/20 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm sm:text-base font-bold rounded-full border border-gray-200 transition-all cursor-pointer"
               >
                 <span className="w-4 h-4 rounded bg-[#03C75A] text-white font-black text-[10px] flex items-center justify-center">N</span>
                 <span>네이버 블로그 복원기</span>

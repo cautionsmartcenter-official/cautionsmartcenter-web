@@ -22,7 +22,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
   const featuredVideos: VideoItem[] = [
     {
       id: '2QwoCYNrx4I',
-      title: '"독일 본토보다 뛰어납니다!" 까다로운 독일 본사 대표가 한국 코션에 와서 감탄한 이유 🇩🇪',
+      title: '"독일 본토보다 뛰어납니다!" 까다로운 독일 본사 대표가 한국 코션에 와서 감탄한 이유',
       category: '독일 본사 공식 인증',
       badge: '글로벌 기술 인증',
       desc: '독일 CARDIP® 본사 대표가 직접 코션스마트센터를 방문하여 도장 시설과 무결점 시공 기술력을 검증하고 아시아 최고를 인정한 공식 영상',
@@ -30,7 +30,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
     },
     {
       id: '7LKa7GJrOGg',
-      title: '3억 원대 마이바흐 GLS600에 "상단 칼라하리골드" 칠했더니 미친 핏감 실화?! 👑✨',
+      title: '3억 원대 마이바흐 GLS600에 "상단 칼라하리골드" 칠했더니 미친 핏감 실화?!',
       category: '마이바흐 시그니처 투톤',
       badge: '대표 시공 사례',
       desc: '마이바흐 정품 출고 라인을 1mm 오차 없이 정밀 계측하고, 칼자국 없이 도장면 위에 완성한 칼라하리 골드 분무 도포 투톤 시공 실황',
@@ -76,7 +76,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
     },
     {
       id: 'TpzjACHFQU0',
-      title: '3억짜리 애스턴마틴 DBX에 일반 랩핑하면 땅을 치고 후회하는 이유 😱 #shorts',
+      title: '3억짜리 애스턴마틴 DBX에 일반 랩핑하면 땅을 치고 후회하는 이유 #shorts',
       category: '애스턴마틴 DBX',
       badge: '슈퍼 SUV 보호',
       desc: '곡면과 엣지가 많은 슈퍼 SUV에 칼자국과 필름 들뜸 없이 완벽 밀착되는 스프레이 PPS의 차이',
@@ -108,26 +108,26 @@ export const ReaddyYouTubeSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-24 lg:py-32 bg-neutral-950 text-white relative overflow-hidden border-t border-white/10" id="youtube-section">
-      {/* Background Ambient Glow */}
-      <div className="absolute top-1/3 left-1/4 -translate-x-1/2 w-96 h-96 bg-red-600/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
+    <section className="py-20 lg:py-28 bg-[#F8F9FB] text-gray-900 relative overflow-hidden border-t border-b border-gray-200/80" id="youtube-section">
+      {/* Background Subtle Sheen */}
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 w-96 h-96 bg-red-500/[0.03] rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-500/[0.03] rounded-full blur-[140px] pointer-events-none" />
 
       <div className="mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/15 border border-red-500/30 mb-4">
-              <Youtube className="w-4 h-4 text-red-500" />
-              <span className="text-xs font-mono font-bold text-red-400 tracking-wider uppercase">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 border border-red-200 mb-4">
+              <Youtube className="w-4 h-4 text-red-600" />
+              <span className="text-xs font-mono font-bold text-red-600 tracking-wider uppercase">
                 OFFICIAL YOUTUBE MEDIA
               </span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-sans uppercase tracking-tight text-white leading-tight">
-              영상으로 증명하는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-amber-400">압도적 기술력</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-sans uppercase tracking-tight text-gray-900 leading-tight">
+              영상으로 증명하는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-amber-600">압도적 기술력</span>
             </h2>
-            <p className="text-gray-400 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed">
-              독일 본사 대표가 직접 방문해 극찬한 <strong className="text-white font-cardip font-black">CARDIP®</strong> 시공력부터 
+            <p className="text-gray-600 text-sm sm:text-base mt-3 max-w-2xl leading-relaxed">
+              독일 본사 대표가 직접 방문해 극찬한 <strong className="text-gray-900 font-cardip font-black">CARDIP®</strong> 시공력부터 
               3억 마이바흐 투톤, PPS vs PPF 3종 실차 비교까지 백 마디 말보다 확실한 영상으로 직접 확인하세요.
             </p>
           </div>
@@ -137,7 +137,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
               href={youtubeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold rounded-full transition-all shadow-lg shadow-red-600/30 group whitespace-nowrap cursor-pointer shrink-0"
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold rounded-full transition-all shadow-md shadow-red-600/25 group whitespace-nowrap cursor-pointer shrink-0"
             >
               <Youtube className="w-4 h-4" />
               <span>유튜브 채널 바로가기</span>
@@ -147,7 +147,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
         </div>
 
         {/* Tab Controls */}
-        <div className="flex items-center gap-2.5 mb-8 border-b border-white/10 pb-4">
+        <div className="flex items-center gap-2.5 mb-8 border-b border-gray-200 pb-4">
           <button
             type="button"
             onClick={() => {
@@ -156,11 +156,11 @@ export const ReaddyYouTubeSection: React.FC = () => {
             }}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'featured'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                ? 'bg-gray-900 text-white shadow-md'
+                : 'bg-white text-gray-700 border border-gray-200 hover:text-gray-900 hover:bg-gray-50'
             }`}
           >
-            <Film className="w-4 h-4 text-red-600" />
+            <Film className={`w-4 h-4 ${activeTab === 'featured' ? 'text-white' : 'text-red-600'}`} />
             <span>공식 추천 영상 ({featuredVideos.length})</span>
           </button>
           <button
@@ -171,11 +171,11 @@ export const ReaddyYouTubeSection: React.FC = () => {
             }}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'shorts'
-                ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
-                : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
+                : 'bg-white text-gray-700 border border-gray-200 hover:text-gray-900 hover:bg-gray-50'
             }`}
           >
-            <Flame className="w-4 h-4 text-amber-400" />
+            <Flame className={`w-4 h-4 ${activeTab === 'shorts' ? 'text-white' : 'text-amber-500'}`} />
             <span>1분 핵심 쇼츠 ({shortsVideos.length})</span>
           </button>
         </div>
@@ -195,7 +195,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.08 }}
-                className="group relative rounded-2xl sm:rounded-3xl bg-neutral-900/90 border border-white/10 hover:border-red-500/40 overflow-hidden shadow-xl hover:shadow-2xl transition-all flex flex-col"
+                className="group relative rounded-2xl sm:rounded-3xl bg-white border border-gray-200 hover:border-red-500/50 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col"
               >
                 {/* Video / Thumbnail Container */}
                 <div className={`relative w-full overflow-hidden bg-black ${
@@ -236,11 +236,11 @@ export const ReaddyYouTubeSection: React.FC = () => {
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-black/30 to-black/20" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
                       {/* Top Badges */}
                       <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
-                        <span className="px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold text-white shadow-md">
+                        <span className="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold text-white shadow-md">
                           {video.badge}
                         </span>
                         
@@ -250,7 +250,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
                             e.stopPropagation();
                             setModalVideo(video);
                           }}
-                          className="pointer-events-auto p-1.5 rounded-full bg-black/70 hover:bg-red-600 text-gray-300 hover:text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer"
+                          className="pointer-events-auto p-1.5 rounded-full bg-black/70 hover:bg-red-600 text-gray-200 hover:text-white backdrop-blur-md border border-white/20 transition-all cursor-pointer"
                           title="큰 화면으로 보기"
                         >
                           <Maximize2 className="w-3.5 h-3.5" />
@@ -270,7 +270,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
 
                       {/* Hover Play Guide */}
                       <div className="absolute bottom-3 left-3 right-3 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="inline-block px-3 py-1 rounded-full bg-black/85 backdrop-blur-md text-[11px] font-bold text-gray-200 border border-white/15">
+                        <span className="inline-block px-3 py-1 rounded-full bg-black/85 backdrop-blur-md text-[11px] font-bold text-gray-100 border border-white/15">
                           클릭하여 바로 재생 ▶
                         </span>
                       </div>
@@ -281,24 +281,24 @@ export const ReaddyYouTubeSection: React.FC = () => {
                 {/* Text Information */}
                 <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <span className="text-xs font-mono font-bold text-amber-400 block mb-1.5">
+                    <span className="text-xs font-mono font-bold text-red-600 block mb-1.5">
                       {video.category}
                     </span>
-                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-red-400 transition-colors line-clamp-2 leading-snug mb-2">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug mb-2">
                       {video.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-2">
                       {video.desc}
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-gray-400">
+                  <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
                     <button
                       type="button"
                       onClick={() => setPlayingVideoId(video.id)}
-                      className="inline-flex items-center gap-1.5 text-white hover:text-red-400 font-bold transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-gray-900 hover:text-red-600 font-bold transition-colors cursor-pointer"
                     >
-                      <Play className="w-3.5 h-3.5 fill-red-500 text-red-500" />
+                      <Play className="w-3.5 h-3.5 fill-red-600 text-red-600" />
                       <span>{isPlayingInline ? '재생 중' : '사이트에서 재생'}</span>
                     </button>
 
@@ -306,7 +306,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
                       href={`https://www.youtube.com/watch?v=${video.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
+                      className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 transition-colors"
                       title="YouTube 앱/웹에서 시청"
                     >
                       <span>YouTube에서 보기</span>
@@ -320,17 +320,17 @@ export const ReaddyYouTubeSection: React.FC = () => {
         </div>
 
         {/* Channel Banner Callout */}
-        <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-red-950/40 via-neutral-900 to-neutral-900 border border-red-500/20 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="rounded-2xl sm:rounded-3xl bg-white border border-gray-200 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
           <div className="flex items-center gap-4 text-center sm:text-left">
             <div className="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center text-white shrink-0 shadow-md shadow-red-600/30">
               <Youtube className="w-7 h-7" />
             </div>
             <div>
               <div className="flex items-center gap-2 justify-center sm:justify-start mb-0.5">
-                <span className="text-xs font-mono font-bold text-red-400">@cautionsmartcenter_official</span>
-                <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 text-[10px] font-bold">공식 채널</span>
+                <span className="text-xs font-mono font-bold text-red-600">@cautionsmartcenter_official</span>
+                <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-bold">공식 채널</span>
               </div>
-              <p className="text-xs sm:text-sm text-gray-300">
+              <p className="text-xs sm:text-sm text-gray-600">
                 구독과 알림 설정을 하시면 매주 업데이트되는 슈퍼카 시공 현장과 시공 팁을 가장 먼저 만나보실 수 있습니다.
               </p>
             </div>
@@ -340,9 +340,9 @@ export const ReaddyYouTubeSection: React.FC = () => {
             href={youtubeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto px-6 py-3.5 bg-white hover:bg-gray-100 text-black text-xs sm:text-sm font-black rounded-full transition-all text-center whitespace-nowrap shadow-md cursor-pointer flex items-center justify-center gap-2 shrink-0"
+            className="w-full sm:w-auto px-6 py-3.5 bg-gray-900 hover:bg-black text-white text-xs sm:text-sm font-black rounded-full transition-all text-center whitespace-nowrap shadow-md cursor-pointer flex items-center justify-center gap-2 shrink-0"
           >
-            <Sparkles className="w-4 h-4 text-red-600" />
+            <Sparkles className="w-4 h-4 text-amber-400" />
             <span>유튜브 채널 구독하기</span>
           </a>
         </div>
@@ -355,7 +355,7 @@ export const ReaddyYouTubeSection: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 lg:p-10"
+            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 lg:p-10"
             onClick={() => setModalVideo(null)}
           >
             <motion.div
