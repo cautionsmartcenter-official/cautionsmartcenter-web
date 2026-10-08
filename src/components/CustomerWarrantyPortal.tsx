@@ -176,10 +176,11 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
             animate={{ opacity: 1, y: 0 }}
             className="w-full bg-white border border-gray-200 rounded-3xl p-6 sm:p-12 shadow-sm text-center"
           >
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight mb-3">
-              코션스마트센터 정품 전자보증서
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight mb-3 leading-tight">
+              <span className="block sm:inline">코션스마트센터</span>{' '}
+              <span className="block sm:inline">정품 전자보증서</span>
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto mb-8 leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto mb-8 leading-relaxed [word-break:keep-all]">
               본인 인증(로그인)을 통해 고객님의 정품 시공 보증서를 안전하게 조회하고 보관하실 수 있습니다.
             </p>
 
@@ -188,21 +189,24 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
               {/* Kakao 1-sec login */}
               <button
                 onClick={() => handleOpenLogin('kakao')}
-                className="w-full py-4 px-6 rounded-2xl bg-[#FEE500] hover:bg-[#FDD835] active:scale-[0.98] text-[#191919] font-bold text-sm sm:text-base flex items-center justify-center gap-3 shadow-sm transition-all cursor-pointer"
+                className="w-full py-3.5 sm:py-4 px-5 rounded-2xl bg-[#FEE500] hover:bg-[#FDD835] active:scale-[0.98] text-[#191919] font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-sm transition-all cursor-pointer"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3C6.477 3 2 6.477 2 10.772c0 2.766 1.84 5.19 4.606 6.556-.201.751-.727 2.715-.833 3.136-.131.52.19.513.4.374.167-.11 2.656-1.802 3.731-2.534.697.101 1.417.155 2.096.155 5.523 0 10-3.477 10-7.687S17.523 3 12 3z"/>
                 </svg>
-                <span>카카오 1초 로그인으로 내 보증서 확인하기</span>
+                <span className="leading-snug text-center sm:text-left">
+                  <span className="block sm:inline">카카오 1초 로그인으로</span>{' '}
+                  <span className="block sm:inline">내 보증서 확인하기</span>
+                </span>
               </button>
 
               {/* Naver login */}
               <button
                 onClick={() => handleOpenLogin('naver')}
-                className="w-full py-3.5 px-6 rounded-2xl bg-[#03C75A] hover:bg-[#02b350] active:scale-[0.98] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-3 shadow-sm transition-all cursor-pointer"
+                className="w-full py-3.5 px-6 rounded-2xl bg-[#03C75A] hover:bg-[#02b350] active:scale-[0.98] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-sm transition-all cursor-pointer"
               >
-                <span className="font-black text-base">N</span>
-                <span>네이버 로그인으로 조회하기</span>
+                <span className="font-black text-base shrink-0">N</span>
+                <span className="whitespace-nowrap">네이버 로그인으로 조회하기</span>
               </button>
             </div>
 
