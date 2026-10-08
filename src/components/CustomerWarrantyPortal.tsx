@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ShieldCheck,
-  Lock,
-  FileText,
-  Car,
-  CheckCircle2,
   ArrowLeft,
   LogOut,
-  PlusCircle,
+  Plus,
+  Check,
   AlertCircle
 } from 'lucide-react';
 import {
@@ -78,7 +74,6 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
       user = loginWithNaver(inputName, clean);
     }
 
-    // 만약 URL에 특정 보증번호(initialWarrantyNo)가 있었다면 해당 보증서 등록 시도
     if (initialWarrantyNo) {
       linkWarrantyToCustomer(user, '', initialWarrantyNo);
     }
@@ -124,7 +119,7 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
     }
   };
 
-  // ── 보증서 상세 뷰어 열림 상태 ──
+  // 보증서 상세 뷰어 열림 상태
   if (selectedWarranty) {
     return (
       <WarrantyViewer
@@ -135,86 +130,75 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex flex-col justify-between selection:bg-red-500 selection:text-white">
-      {/* ── Top Header Bar ── */}
-      <header className="w-full border-b border-white/10 bg-neutral-950/80 backdrop-blur-md px-6 lg:px-12 py-4 sticky top-0 z-30 flex items-center justify-between">
+    <div className="min-h-screen bg-white text-gray-900 flex flex-col justify-between">
+      {/* ── Top Header Bar (White Clean Theme) ── */}
+      <header className="w-full border-b border-gray-200 bg-white px-6 lg:px-12 py-4 sticky top-0 z-30 flex items-center justify-between">
         <button
           onClick={onBackToHome}
-          className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black transition-colors cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4 text-red-500" />
+          <ArrowLeft className="w-4 h-4 text-red-600" />
           <span>홈페이지로 돌아가기</span>
         </button>
 
         <div className="flex items-center gap-3">
           <img
-            src="/images/logos/caution_logo_white.png?v=4"
-            alt="CAUTION"
-            className="h-6 w-auto object-contain"
+            src="/images/logos/logo_black_text.png"
+            alt="CAUTION SMART CENTER"
+            className="h-6 sm:h-7 w-auto object-contain"
           />
-          <span className="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">
+          <span className="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">
             정품 전자보증서
           </span>
         </div>
 
         {customer ? (
           <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-300 hidden sm:inline">
-              <strong className="text-white font-bold">{customer.name}</strong> 님
+            <span className="text-xs text-gray-700 hidden sm:inline">
+              <strong className="font-bold text-gray-900">{customer.name}</strong> 님
             </span>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-semibold border border-white/10 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold border border-gray-200 transition-colors cursor-pointer"
             >
-              <LogOut className="w-3.5 h-3.5 text-gray-400" />
+              <LogOut className="w-3.5 h-3.5 text-gray-500" />
               <span>로그아웃</span>
             </button>
           </div>
         ) : (
-          <div className="text-xs text-gray-400">
-            <span className="text-red-400 font-semibold">🔒 본인 인증 전용</span>
+          <div className="text-xs text-gray-500 font-medium">
+            본인 인증 전용
           </div>
         )}
       </header>
 
       {/* ── Main Content Area ── */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-14 flex flex-col justify-center">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-16 flex flex-col justify-center">
         {!customer ? (
           /* ──────────────────────────────────────────────────────────
-             1. 비로그인 상태 (본인 인증 유도 & 개인정보/시공가격 보호 안내)
+             1. 비로그인 상태 (흰색 바탕 깔끔한 본인 인증 안내)
              ────────────────────────────────────────────────────────── */
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full bg-neutral-900/90 border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden"
+            className="w-full bg-white border border-gray-200 rounded-3xl p-6 sm:p-12 shadow-sm text-center"
           >
-            {/* Background Glow */}
-            <div className="absolute top-0 right-1/4 w-72 h-72 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
-
-            {/* Shield Icon */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-600/15 border border-red-500/30 text-red-500 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(225,29,72,0.25)]">
-              <ShieldCheck className="w-9 h-9 sm:w-11 sm:h-11" />
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-black text-center text-white tracking-tight mb-3">
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight mb-3">
               코션스마트센터 정품 전자보증서
             </h1>
-            <p className="text-sm sm:text-base text-gray-400 text-center max-w-xl mx-auto mb-8 leading-relaxed">
-              본인 인증(로그인)을 통해 고객님의 소중한 정품 시공 보증서를 안전하게 조회하고 보관하실 수 있습니다.
+            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto mb-8 leading-relaxed">
+              본인 인증(로그인)을 통해 고객님의 정품 시공 보증서를 안전하게 조회하고 보관하실 수 있습니다.
             </p>
 
-            {/* Privacy & Price Protection Notice Banner */}
-            <div className="bg-red-950/30 border border-red-500/30 rounded-2xl p-4 sm:p-5 mb-8 text-left flex items-start gap-3.5">
-              <Lock className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-sm font-bold text-red-300 mb-1">
-                  개인정보 및 시공 가격 보호 안내
-                </h4>
-                <p className="text-xs sm:text-[13px] text-gray-300 leading-relaxed">
-                  정품 보증서에는 차주님의 <strong>성함, 연락처 및 상세 시공 가격</strong>이 기재되어 있습니다. 
-                  타인이 차량번호만으로 무단 조회하는 것을 철저히 차단하고자, <strong>본인 인증을 완료하신 고객님께만 안전하게 보증서가 제공</strong>됩니다.
-                </p>
-              </div>
+            {/* Privacy & Price Protection Notice Box */}
+            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 mb-8 text-left max-w-2xl mx-auto">
+              <h4 className="text-sm font-bold text-gray-900 mb-1.5">
+                개인정보 및 시공 가격 보호 안내
+              </h4>
+              <p className="text-xs sm:text-[13px] text-gray-600 leading-relaxed">
+                정품 보증서에는 차주님의 성함, 연락처 및 상세 시공 가격이 기재되어 있습니다. 
+                타인의 임의 조회를 방지하고자, 본인 인증을 완료하신 고객님께만 보증서가 제공됩니다.
+              </p>
             </div>
 
             {/* Social 1-Click Login Action Buttons */}
@@ -222,52 +206,52 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
               {/* Kakao 1-sec login */}
               <button
                 onClick={() => handleOpenLogin('kakao')}
-                className="w-full py-4 px-6 rounded-2xl bg-[#FEE500] hover:bg-[#FDD835] active:scale-[0.98] text-[#191919] font-bold text-base flex items-center justify-center gap-3 shadow-lg shadow-yellow-500/10 transition-all cursor-pointer"
+                className="w-full py-4 px-6 rounded-2xl bg-[#FEE500] hover:bg-[#FDD835] active:scale-[0.98] text-[#191919] font-bold text-sm sm:text-base flex items-center justify-center gap-3 shadow-sm transition-all cursor-pointer"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3C6.477 3 2 6.477 2 10.772c0 2.766 1.84 5.19 4.606 6.556-.201.751-.727 2.715-.833 3.136-.131.52.19.513.4.374.167-.11 2.656-1.802 3.731-2.534.697.101 1.417.155 2.096.155 5.523 0 10-3.477 10-7.687S17.523 3 12 3z"/>
                 </svg>
-                <span>카카오 1초 로그인하고 내 보증서 확인하기</span>
+                <span>카카오 1초 로그인으로 내 보증서 확인하기</span>
               </button>
 
               {/* Naver login */}
               <button
                 onClick={() => handleOpenLogin('naver')}
-                className="w-full py-3.5 px-6 rounded-2xl bg-[#03C75A] hover:bg-[#02b350] active:scale-[0.98] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-3 shadow-lg shadow-green-500/10 transition-all cursor-pointer"
+                className="w-full py-3.5 px-6 rounded-2xl bg-[#03C75A] hover:bg-[#02b350] active:scale-[0.98] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-3 shadow-sm transition-all cursor-pointer"
               >
                 <span className="font-black text-base">N</span>
                 <span>네이버 로그인으로 조회하기</span>
               </button>
             </div>
 
-            {/* Features (Warranty protection without unconfirmed VIP text) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-8 pt-8 border-t border-white/10 text-left">
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-200 mb-1">
-                  <CheckCircle2 className="w-4 h-4 text-red-500" />
+            {/* Features (Clean cards without unnecessary emojis) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-10 pt-8 border-t border-gray-100 text-left">
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex items-center gap-2 text-xs font-bold text-gray-900 mb-1">
+                  <Check className="w-4 h-4 text-red-600" />
                   <span>철저한 보안 보호</span>
                 </div>
-                <p className="text-[11px] text-gray-400">
-                  타인의 임의 조회를 완벽 차단하여 시공 내역 및 가격을 안전하게 보호합니다.
+                <p className="text-[11px] text-gray-600 leading-relaxed">
+                  타인의 임의 조회를 차단하여 시공 내역 및 가격 정보를 안전하게 보호합니다.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-200 mb-1">
-                  <CheckCircle2 className="w-4 h-4 text-red-500" />
-                  <span>정품 전자보증서 평생 보관</span>
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex items-center gap-2 text-xs font-bold text-gray-900 mb-1">
+                  <Check className="w-4 h-4 text-red-600" />
+                  <span>정품 전자보증서 보관</span>
                 </div>
-                <p className="text-[11px] text-gray-400">
-                  독일 정품 CARDIP PPS 보증서를 스마트폰에서 언제든 분실 걱정 없이 확인합니다.
+                <p className="text-[11px] text-gray-600 leading-relaxed">
+                  독일 정품 CARDIP PPS 보증서를 스마트폰에서 언제든 분실 없이 확인합니다.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-200 mb-1">
-                  <CheckCircle2 className="w-4 h-4 text-red-500" />
-                  <span>사고 보험 처리 공식 증빙</span>
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex items-center gap-2 text-xs font-bold text-gray-900 mb-1">
+                  <Check className="w-4 h-4 text-red-600" />
+                  <span>사고 보험 처리 증빙</span>
                 </div>
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[11px] text-gray-600 leading-relaxed">
                   접촉 사고 발생 시 보험사 제출용 정품 시공 증빙 자료로 즉시 활용 가능합니다.
                 </p>
               </div>
@@ -283,21 +267,21 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
             className="w-full space-y-6"
           >
             {/* Welcome User Card */}
-            <div className="bg-neutral-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" />
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                    <Check className="w-3 h-3" />
                     본인 인증 완료
                   </span>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-gray-500">
                     연결 계정: {customer.provider === 'kakao' ? '카카오' : '네이버'}
                   </span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
-                  <strong className="text-red-500">{customer.name}</strong> 고객님의 정품 보증서 보관함
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <strong className="text-red-600">{customer.name}</strong> 고객님의 정품 보증서 보관함
                 </h2>
-                <p className="text-xs sm:text-sm text-gray-400 mt-1">
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">
                   등록된 시공 보증서 {myWarranties.length}건이 안전하게 보관되어 있습니다.
                 </p>
               </div>
@@ -307,10 +291,10 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                   setIsRegisterOpen(!isRegisterOpen);
                   setRegFeedback(null);
                 }}
-                className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                className="px-5 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold text-xs sm:text-sm border border-gray-200 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
               >
-                <PlusCircle className="w-4 h-4 text-red-500" />
-                <span>+ 내 차량 보증서 추가 등록</span>
+                <Plus className="w-4 h-4 text-red-600" />
+                <span>내 차량 보증서 추가 등록</span>
               </button>
             </div>
 
@@ -325,29 +309,28 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                 >
                   <form
                     onSubmit={handleRegisterWarranty}
-                    className="bg-neutral-900 border border-red-500/30 rounded-3xl p-6 sm:p-7 space-y-4"
+                    className="bg-gray-50 border border-gray-300 rounded-3xl p-6 sm:p-7 space-y-4"
                   >
                     <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                        <Car className="w-4 h-4 text-red-500" />
-                        <span>내 차량 보증서 연결 (보안 확인)</span>
+                      <h4 className="text-sm font-bold text-gray-900">
+                        내 차량 보증서 연결 (보안 확인)
                       </h4>
                       <button
                         type="button"
                         onClick={() => setIsRegisterOpen(false)}
-                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
+                        className="text-xs text-gray-500 hover:text-black cursor-pointer"
                       >
-                        닫기 ✕
+                        닫기
                       </button>
                     </div>
 
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-600">
                       시공 매장에서 발급된 차량번호와 등록된 연락처 정보를 입력하시면 고객님 계정에 영구 등록됩니다.
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                           차량번호
                         </label>
                         <input
@@ -355,12 +338,12 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                           value={regPlate}
                           onChange={(e) => setRegPlate(e.target.value)}
                           placeholder="예: 123가 4567"
-                          className="w-full px-4 py-2.5 bg-neutral-950 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-red-500"
+                          className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-red-600"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1.5">
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                           시공 시 등록한 연락처 (또는 보증서 번호)
                         </label>
                         <input
@@ -368,7 +351,7 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                           value={regVerify}
                           onChange={(e) => setRegVerify(e.target.value)}
                           placeholder="휴대폰 번호 또는 보증번호(CSC-...)"
-                          className="w-full px-4 py-2.5 bg-neutral-950 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-red-500"
+                          className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-red-600"
                         />
                       </div>
                     </div>
@@ -377,8 +360,8 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                       <div
                         className={`text-xs p-3 rounded-xl border ${
                           regFeedback.success
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                            : 'bg-red-500/10 border-red-500/30 text-red-400'
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                            : 'bg-red-50 border-red-200 text-red-600'
                         }`}
                       >
                         {regFeedback.message}
@@ -388,7 +371,7 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                     <div className="flex justify-end">
                       <button
                         type="submit"
-                        className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-lg shadow-red-600/30"
+                        className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-sm"
                       >
                         보증서 확인 및 등록
                       </button>
@@ -400,17 +383,16 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
 
             {/* Warranty Cards List */}
             {myWarranties.length === 0 ? (
-              <div className="bg-neutral-900/60 border border-white/10 rounded-3xl p-10 text-center">
-                <FileText className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                <h3 className="text-base font-bold text-gray-200 mb-1">
+              <div className="bg-white border border-gray-200 rounded-3xl p-10 text-center shadow-sm">
+                <h3 className="text-base font-bold text-gray-800 mb-1">
                   등록된 정품 보증서가 없습니다
                 </h3>
-                <p className="text-xs text-gray-400 max-w-sm mx-auto mb-6">
-                  시공 시 등록하신 휴대폰 번호와 일치하는 보증서가 아직 없거나 연결되지 않았습니다. 상단의 <strong>[+ 내 차량 보증서 추가 등록]</strong> 버튼으로 차량번호를 입력해 주세요.
+                <p className="text-xs text-gray-600 max-w-sm mx-auto mb-6">
+                  시공 시 등록하신 휴대폰 번호와 일치하는 보증서가 아직 없거나 연결되지 않았습니다. 상단의 <strong>[내 차량 보증서 추가 등록]</strong> 버튼으로 차량번호를 입력해 주세요.
                 </p>
                 <button
                   onClick={() => setIsRegisterOpen(true)}
-                  className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-md"
+                  className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm"
                 >
                   내 차량 보증서 등록하기
                 </button>
@@ -426,41 +408,40 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                   return (
                     <motion.div
                       key={item.id}
-                      whileHover={{ y: -3 }}
-                      className="bg-neutral-900 border border-white/10 hover:border-red-500/50 rounded-3xl p-6 transition-all shadow-xl flex flex-col justify-between"
+                      whileHover={{ y: -2 }}
+                      className="bg-white border border-gray-200 hover:border-red-600 rounded-3xl p-6 transition-all shadow-sm flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-500/30">
+                          <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-800 border border-gray-200">
                             {item.warrantyNo}
                           </span>
-                          <span className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
                             보증 유효 ({item.warrantyPeriodYears}년)
                           </span>
                         </div>
 
                         <div className="mb-4">
-                          <h3 className="text-lg font-black text-white flex items-center gap-2">
+                          <h3 className="text-lg font-black text-gray-900 flex items-center gap-2">
                             <span>{item.carPlate}</span>
-                            <span className="text-xs font-normal text-gray-400">({item.carModel})</span>
+                            <span className="text-xs font-normal text-gray-500">({item.carModel})</span>
                           </h3>
-                          <p className="text-xs text-gray-300 mt-1">
-                            <strong className="text-white">시공내역:</strong> {ppsTypes}
+                          <p className="text-xs text-gray-700 mt-1">
+                            <strong className="text-gray-900">시공내역:</strong> {ppsTypes}
                           </p>
-                          <p className="text-xs text-gray-400 mt-0.5">
+                          <p className="text-xs text-gray-500 mt-0.5">
                             시공일자: {item.issueDate}
                           </p>
                         </div>
                       </div>
 
-                      <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
-                        <span className="text-xs text-gray-400">
+                      <div className="pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
+                        <span className="text-xs text-gray-500">
                           발급점: {item.issuedBy}
                         </span>
                         <button
                           onClick={() => setSelectedWarranty(item)}
-                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-md shadow-red-600/20 flex items-center gap-1.5"
+                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
                         >
                           <span>보증서 열람하기</span>
                           <span>→</span>
@@ -476,9 +457,9 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
       </main>
 
       {/* ── Footer Info ── */}
-      <footer className="w-full border-t border-white/5 py-6 px-6 text-center text-xs text-gray-500">
+      <footer className="w-full border-t border-gray-200 py-6 px-6 text-center text-xs text-gray-500 bg-white">
         <p>© 2026 CAUTION SMART CENTER. 독일 정품 CARDIP 공식 품질 보증 관리 시스템.</p>
-        <p className="mt-1 text-[11px] text-gray-600">
+        <p className="mt-1 text-[11px] text-gray-500">
           보증서 발급 및 본인 확인 문의: 031-705-1888 (평일 09:00 - 18:00)
         </p>
       </footer>
@@ -490,22 +471,22 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-sm bg-neutral-900 border border-white/15 rounded-3xl p-6 sm:p-7 shadow-2xl relative"
+              className="w-full max-w-sm bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-2xl relative"
             >
               <button
                 onClick={() => setIsLoginModalOpen(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 cursor-pointer text-sm"
               >
-                ✕
+                닫기
               </button>
 
-              <div className="text-center mb-5">
+              <div className="text-center mb-6">
                 <div
                   className={`w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 ${
                     loginProvider === 'kakao' ? 'bg-[#FEE500] text-[#191919]' : 'bg-[#03C75A] text-white'
@@ -519,17 +500,17 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                     <span className="font-black text-xl">N</span>
                   )}
                 </div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-gray-900">
                   {loginProvider === 'kakao' ? '카카오 간편 본인 인증' : '네이버 간편 본인 인증'}
                 </h3>
-                <p className="text-xs text-gray-400 mt-1">
-                  시공 시 등록하셨던 성함과 연락처로 보증서와 안전하게 연동됩니다.
+                <p className="text-xs text-gray-500 mt-1">
+                  시공 시 등록하셨던 성함과 연락처를 입력해 주세요.
                 </p>
               </div>
 
               <form onSubmit={handleCompleteLogin} className="space-y-3.5">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
                     고객 성함
                   </label>
                   <input
@@ -537,13 +518,13 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                     value={inputName}
                     onChange={(e) => setInputName(e.target.value)}
                     placeholder="예: 홍길동"
-                    className="w-full px-4 py-2.5 bg-neutral-950 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-red-500"
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-red-600 focus:bg-white"
                     autoFocus
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
                     휴대폰 번호
                   </label>
                   <input
@@ -551,12 +532,12 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
                     value={inputPhone}
                     onChange={(e) => setInputPhone(e.target.value)}
                     placeholder="예: 010-1234-5678"
-                    className="w-full px-4 py-2.5 bg-neutral-950 border border-white/15 rounded-xl text-sm text-white focus:outline-none focus:border-red-500"
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-red-600 focus:bg-white"
                   />
                 </div>
 
                 {loginError && (
-                  <div className="text-xs p-2.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 flex items-center gap-1.5">
+                  <div className="text-xs p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{loginError}</span>
                   </div>
@@ -564,7 +545,7 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
 
                 <button
                   type="submit"
-                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all cursor-pointer mt-2 shadow-lg ${
+                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all cursor-pointer mt-2 shadow-sm ${
                     loginProvider === 'kakao'
                       ? 'bg-[#FEE500] hover:bg-[#FDD835] text-[#191919]'
                       : 'bg-[#03C75A] hover:bg-[#02b350] text-white'

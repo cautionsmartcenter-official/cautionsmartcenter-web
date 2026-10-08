@@ -8,6 +8,7 @@ export interface CustomerUser {
   provider: 'kakao' | 'naver' | 'google';
   savedWarrantyNos: string[];
   createdAt: string;
+  lastLoginAt: string;
 }
 
 const CUSTOMER_SESSION_KEY = 'caution_customer_session';
@@ -38,14 +39,14 @@ export const setCurrentCustomer = (user: CustomerUser | null): void => {
   }
 };
 
-// 사용자 DB에 고객 저장
+// 사용자 DB에 고객 저장 (기록 유지)
 const saveCustomerToDB = (user: CustomerUser) => {
   try {
     const raw = localStorage.getItem(CUSTOMER_USERS_KEY);
     const users: CustomerUser[] = raw ? JSON.parse(raw) : [];
     const index = users.findIndex((u) => u.id === user.id || (u.phone && u.phone === user.phone));
     if (index >= 0) {
-      users[index] = { ...users[index], ...user };
+      users[index] = { ...users[index], ...user, lastLoginAt: new Date().toISOString() };
     } else {
       users.push(user);
     }
@@ -55,20 +56,25 @@ const saveCustomerToDB = (user: CustomerUser) => {
   }
 };
 
+// 전체 가입/인증 고객 명단 조회 (관리자용)
+export const getAllCustomerUsers = (): CustomerUser[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(CUSTOMER_USERS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
 // 카카오 1초 간편 로그인
 export const loginWithKakao = (name: string, phone: string, email?: string): CustomerUser => {
   const cleanPhone = phone.replace(/[^0-9]/g, '');
   const id = `kakao_${cleanPhone || Date.now()}`;
-  
+  const now = new Date().toISOString();
+
   // 기존 저장된 보증서 번호 확인
-  const existingUsers: CustomerUser[] = (() => {
-    try {
-      const raw = localStorage.getItem(CUSTOMER_USERS_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  })();
+  const existingUsers = getAllCustomerUsers();
   const existing = existingUsers.find((u) => u.phone === cleanPhone);
 
   const newUser: CustomerUser = {
@@ -78,7 +84,8 @@ export const loginWithKakao = (name: string, phone: string, email?: string): Cus
     email: email || `${cleanPhone}@kakao.com`,
     provider: 'kakao',
     savedWarrantyNos: existing ? existing.savedWarrantyNos : [],
-    createdAt: existing ? existing.createdAt : new Date().toISOString()
+    createdAt: existing ? existing.createdAt : now,
+    lastLoginAt: now
   };
 
   setCurrentCustomer(newUser);
@@ -89,6 +96,10 @@ export const loginWithKakao = (name: string, phone: string, email?: string): Cus
 export const loginWithNaver = (name: string, phone: string, email?: string): CustomerUser => {
   const cleanPhone = phone.replace(/[^0-9]/g, '');
   const id = `naver_${cleanPhone || Date.now()}`;
+  const now = new Date().toISOString();
+
+  const existingUsers = getAllCustomerUsers();
+  const existing = existingUsers.find((u) => u.phone === cleanPhone);
 
   const newUser: CustomerUser = {
     id,
@@ -96,8 +107,9 @@ export const loginWithNaver = (name: string, phone: string, email?: string): Cus
     phone: cleanPhone,
     email: email || `${cleanPhone}@naver.com`,
     provider: 'naver',
-    savedWarrantyNos: [],
-    createdAt: new Date().toISOString()
+    savedWarrantyNos: existing ? existing.savedWarrantyNos : [],
+    createdAt: existing ? existing.createdAt : now,
+    lastLoginAt: now
   };
 
   setCurrentCustomer(newUser);
@@ -135,7 +147,7 @@ export const linkWarrantyToCustomer = (
   const verified = matching.find((w) => {
     const phone = (w.customerPhone || '').replace(/[^0-9]/g, '');
     const warrantyNo = (w.warrantyNo || '').replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
-    
+
     // 고객 휴대폰 전체 일치
     if (phone && phone === cleanVerify) return true;
     // 고객 휴대폰 뒷 4자리 일치
@@ -162,7 +174,7 @@ export const linkWarrantyToCustomer = (
 
   return {
     success: true,
-    message: `${verified.carPlate} (${verified.carModel}) 정품 보증서가 고객님 계정에 안전하게 등록되었습니다!`,
+    message: `${verified.carPlate} (${verified.carModel}) 정품 보증서가 고객님 계정에 안전하게 등록되었습니다.`,
     warranty: verified
   };
 };
