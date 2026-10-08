@@ -7,8 +7,8 @@ export interface BranchItem {
   detailAddress?: string;
   phone: string;
   image: string;
-  services: string[]; // 공급 품목 (PPS)
-  rawMaterial: string; // 독일 CARDIP® 정품 PPS 소재
+  services: string[];
+  rawMaterial: string;
   description: string;
   badges: string[];
   statusNotice?: string; // e.g. '※ 공식 가맹 및 파트너 계약 진행 중'

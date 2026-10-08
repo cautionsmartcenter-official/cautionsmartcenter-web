@@ -59,10 +59,10 @@ export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavi
           >
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <div className="inline-block px-4 py-2 bg-primary rounded-full shadow-sm">
-                <span className="text-xs font-semibold text-white tracking-wider">CURVEROBOT & PPS</span>
+                <span className="text-xs font-semibold text-white tracking-wider">CURVEROBOT</span>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-200 rounded-full">
-                <span className="text-[11px] font-bold text-gray-800">🇩🇪 독일 <span className="font-cardip font-black text-black">CARDIP®</span> 한국 공식 디스트리뷰터</span>
+                <span className="text-[11px] font-bold text-gray-800">독일 <span className="font-cardip font-black text-black">CARDIP®</span> 한국 공식 디스트리뷰터</span>
               </div>
             </div>
 
