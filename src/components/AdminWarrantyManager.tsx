@@ -83,7 +83,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
   const [cloudStatus, setCloudStatus] = useState<CloudStatus | null>(null);
   const [cloudStatusError, setCloudStatusError] = useState<string>('');
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
-  const [isSendingAlimtalk, setIsSendingAlimtalk] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [issuedAlimtalk, setIssuedAlimtalk] = useState<{
     state: 'idle' | 'sending' | 'sent' | 'failed' | 'local';
@@ -219,7 +218,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     sendAlimtalk: boolean,
     sendEmail = false
   ): Promise<{ ok: boolean; local: boolean; message: string; emailOk?: boolean }> => {
-    if (sendAlimtalk) setIsSendingAlimtalk(true);
     if (sendEmail) setIsSendingEmail(true);
     try {
       const res = await publishWarranty(item, sendAlimtalk, sendEmail);
@@ -262,7 +260,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         message: e instanceof Error ? e.message : String(e)
       };
     } finally {
-      if (sendAlimtalk) setIsSendingAlimtalk(false);
       if (sendEmail) setIsSendingEmail(false);
     }
   };
@@ -292,22 +289,6 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       alert(`이메일 발송 오류:\n\n${e?.message || String(e)}\n\n아래의 [기본 메일 앱으로 열기 (mailto:)]를 이용해 주세요.`);
     } finally {
       setIsSendingEmail(false);
-    }
-  };
-
-  // 전송 센터에서 [알림톡 자동 발송] 버튼
-  const handleSendServerAlimtalk = async (item: WarrantyItem) => {
-    if (
-      item.alimtalkStatus === 'sent' &&
-      !window.confirm(`${item.customerName} 고객님께 이미 알림톡을 보냈습니다. 한 번 더 보낼까요? (건당 비용 발생)`)
-    ) {
-      return;
-    }
-    const r = await handlePublishAndSend(item, true, false);
-    if (r.ok) {
-      showToast(`🎉 ${item.customerName} 고객님(${item.customerPhone})께 카카오 알림톡을 보냈습니다!`);
-    } else {
-      alert(`알림톡 발송 실패 안내:\n\n${r.message}\n\n급하시면 위의 [보증서 파일 다운로드 & 카톡 바로 연결]로 수동 전송해 주세요.`);
     }
   };
 
@@ -1426,64 +1407,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   </div>
                 </div>
 
-                {/* ────────────────── 카카오 공식 알림톡 자동 발송 (서버) ────────────────── */}
-                <div className="pt-3 border-t border-slate-200 space-y-2">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-bold text-slate-700 flex items-center gap-1.5">
-                      <i className="ri-robot-2-line text-red-600" />
-                      <span>카카오 공식 알림톡 자동 발송 (건당 약 7~15원)</span>
-                    </span>
-                    <button
-                      onClick={() => {
-                        setSettingsTab('alimtalk');
-                        setIsKakaoSettingsOpen(true);
-                      }}
-                      className="font-bold text-red-600 hover:underline cursor-pointer"
-                    >
-                      연동 상태 보기
-                    </button>
-                  </div>
 
-                  {sendingKakaoWarranty.alimtalkStatus && (
-                    <div
-                      className={`text-[11px] px-3 py-2 rounded-xl border ${
-                        sendingKakaoWarranty.alimtalkStatus === 'sent'
-                          ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                          : 'bg-red-50 border-red-200 text-red-800'
-                      }`}
-                    >
-                      {sendingKakaoWarranty.alimtalkStatus === 'sent' ? '✅ 알림톡 발송됨' : '⚠️ 지난 발송 실패'}
-                      {sendingKakaoWarranty.alimtalkAt &&
-                        ` · ${new Date(sendingKakaoWarranty.alimtalkAt).toLocaleString('ko-KR')}`}
-                      {sendingKakaoWarranty.alimtalkStatus === 'failed' && sendingKakaoWarranty.alimtalkMessage && (
-                        <span className="block mt-0.5 opacity-80">{sendingKakaoWarranty.alimtalkMessage}</span>
-                      )}
-                    </div>
-                  )}
-
-                  <button
-                    onClick={() => handleSendServerAlimtalk(sendingKakaoWarranty)}
-                    disabled={isSendingAlimtalk}
-                    className="w-full py-3 bg-slate-900 hover:bg-slate-800 disabled:opacity-60 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
-                  >
-                    {isSendingAlimtalk ? (
-                      <>
-                        <i className="ri-loader-4-line animate-spin" />
-                        <span>알림톡 보내는 중...</span>
-                      </>
-                    ) : (
-                      <>
-                        <i className="ri-send-plane-fill text-yellow-400" />
-                        <span>
-                          {sendingKakaoWarranty.customerPhone} 번호로 알림톡 보내기 ([보증서 보기] 버튼 포함)
-                        </span>
-                      </>
-                    )}
-                  </button>
-                  <p className="text-[10px] text-slate-400 leading-relaxed">
-                    * 인터넷에 배포된 사이트에서만 동작합니다. 고객은 채널 친구가 아니어도 받으며, 버튼을 누르면 본인 보증서 화면이 열립니다.
-                  </p>
-                </div>
               </div>
             </motion.div>
           </div>
