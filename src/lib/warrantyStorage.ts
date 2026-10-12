@@ -49,6 +49,16 @@ export const generateWarrantyNo = (): string => {
   return `CSC-${year}-${month}${day}-${randomSuffix}`;
 };
 
+/**
+ * 가격 문자열 또는 숫자를 3자리 단위 콤마 형식(예: 10,000,000)으로 변환합니다.
+ */
+export const formatPriceWithCommas = (val?: string | number): string => {
+  if (val === undefined || val === null) return '';
+  const numOnly = String(val).replace(/[^0-9]/g, '');
+  if (!numOnly) return '';
+  return Number(numOnly).toLocaleString('ko-KR');
+};
+
 // 보증서 목록 조회 (이전 더미 데이터 자동 정리)
 export const getWarranties = (): WarrantyItem[] => {
   try {
@@ -347,7 +357,7 @@ export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean
 
     if (item.price) {
       ctxFront.textAlign = 'right';
-      drawFrontText(`${item.price} 원`, 70.0, 77.4, 14, true, true);
+      drawFrontText(`${formatPriceWithCommas(item.price)} 원`, 70.0, 77.4, 14, true, true);
       ctxFront.textAlign = 'left';
     }
 

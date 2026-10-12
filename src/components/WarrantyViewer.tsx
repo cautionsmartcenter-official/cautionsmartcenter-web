@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { type WarrantyItem, getWarrantyViewUrl, downloadWarrantyImage, copyTextToClipboard } from '../lib/warrantyStorage';
+import { type WarrantyItem, getWarrantyViewUrl, downloadWarrantyImage, copyTextToClipboard, formatPriceWithCommas } from '../lib/warrantyStorage';
 import { sendKakaoWarranty } from '../lib/kakao';
 
 interface WarrantyViewerProps {
@@ -401,7 +401,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
               fontSize: 'clamp(11px, 2.2vw, 16px)'
             }}
           >
-            {warranty.price ? `${warranty.price} 원` : '-'}
+            {warranty.price ? `${formatPriceWithCommas(warranty.price)} 원` : '-'}
           </div>
 
           {/* 하단 모바일 이동/인쇄 퀵 바 (인쇄 시 숨김) */}
@@ -584,7 +584,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
                 <div className="flex justify-between py-1">
                   <span className="text-gray-600 font-medium">시공 금액</span>
                   <span className="font-bold text-gray-900">
-                    {warranty.price} 원 <span className="text-xs font-normal text-gray-500">(VAT 별도)</span>
+                    {formatPriceWithCommas(warranty.price)} 원 <span className="text-xs font-normal text-gray-500">(VAT 별도)</span>
                   </span>
                 </div>
               )}

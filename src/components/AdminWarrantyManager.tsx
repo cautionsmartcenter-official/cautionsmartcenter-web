@@ -12,7 +12,8 @@ import {
   createWarrantyShareMessage,
   getWarrantyViewUrl,
   downloadWarrantyImage,
-  copyTextToClipboard
+  copyTextToClipboard,
+  formatPriceWithCommas
 } from '../lib/warrantyStorage';
 import {
   getKakaoKey,
@@ -283,7 +284,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       clearPpsDetail: item.clearPpsDetail || '',
       hasColorPps: item.hasColorPps,
       colorPpsDetail: item.colorPpsDetail || '',
-      price: item.price,
+      price: formatPriceWithCommas(item.price),
       issueDate: item.issueDate,
       warrantyPeriodYears: item.warrantyPeriodYears || 6,
       warrantyNo: item.warrantyNo,
@@ -319,8 +320,13 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       return;
     }
 
+    const dataToSave = {
+      ...formData,
+      price: formatPriceWithCommas(formData.price)
+    };
+
     if (editingId) {
-      const updated = updateWarranty(editingId, formData);
+      const updated = updateWarranty(editingId, dataToSave);
       if (updated) {
         reloadData();
         setIsFormOpen(false);
@@ -333,7 +339,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         }
       }
     } else {
-      const created = saveWarranty(formData);
+      const created = saveWarranty(dataToSave);
       reloadData();
       setIsFormOpen(false);
       setIssuedSuccessWarranty(created);
@@ -733,7 +739,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
                     {/* 시공가격 */}
                     <td className="py-3.5 px-4 font-mono font-bold text-slate-900 whitespace-nowrap">
-                      {item.price ? `${item.price} 원` : '-'}
+                      {item.price ? `${formatPriceWithCommas(item.price)} 원` : '-'}
                     </td>
 
                     {/* 상태 */}
@@ -1067,8 +1073,9 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                       <div className="flex-1 flex items-center gap-2">
                         <input
                           type="text"
+                          inputMode="numeric"
                           value={formData.price}
-                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          onChange={(e) => setFormData({ ...formData, price: formatPriceWithCommas(e.target.value) })}
                           placeholder="예: 5,500,000"
                           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:outline-none focus:border-red-500 text-right"
                         />
