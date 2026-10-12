@@ -19,7 +19,15 @@ export interface WarrantyForMessage {
 const env = (name: string) => (process.env[name] || '').trim();
 
 export function getSiteUrl(): string {
-  return env('SITE_URL').replace(/\/+$/, '');
+  const envUrl = env('SITE_URL');
+  if (envUrl) return envUrl.replace(/\/+$/, '');
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return 'https://cautionsmartcenter-web.vercel.app';
 }
 
 export function alimtalkConfigStatus() {

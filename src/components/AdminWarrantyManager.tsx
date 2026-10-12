@@ -11,7 +11,6 @@ import {
   generateWarrantyNo,
   createWarrantyShareMessage,
   getWarrantyViewUrl,
-  downloadWarrantyImage,
   downloadWarrantyPdf,
   copyTextToClipboard,
   formatPriceWithCommas
@@ -20,7 +19,6 @@ import {
   getKakaoKey,
   setKakaoKey,
   isKakaoReady,
-  sendKakaoWarranty,
   initKakao
 } from '../lib/kakao';
 import {
@@ -468,75 +466,21 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     }
   };
 
-  // 카카오톡 전송 실행 (SDK 또는 모바일 공유 또는 클립보드)
-  const handleExecuteSendKakao = async (item: WarrantyItem) => {
-    const res = await sendKakaoWarranty(item);
-    showToast(res.message);
-  };
-
-  // 0. 보증서 1면(상세)+2면(약관) 합본 PDF 즉시 다운로드 & 안내문구 자동 복사 & 카톡 연계
+  // 보증서 1면(상세)+2면(약관) 합본 PDF 즉시 다운로드 & 안내문구 자동 복사
   const handleDownloadPdf = async (item: WarrantyItem) => {
     setIsDownloading(true);
 
-    // 1) 고객 전달용 안내 문구 클립보드 자동 복사
     const message = createWarrantyShareMessage(item);
-    const copied = await copyTextToClipboard(message);
+    await copyTextToClipboard(message);
 
-    // 2) 고화질 2페이지 단일 PDF 다운로드 실행
     const success = await downloadWarrantyPdf(item);
     setIsDownloading(false);
 
     if (success) {
-      if (copied) {
-        showToast(`🎉 보증서 PDF(1·2페이지 합본) 다운로드 & 안내문구 자동 복사 완료! 채널 채팅창이 열립니다.`);
-      } else {
-        showToast(`🎉 보증서 PDF(1·2페이지 합본) 다운로드 완료! 채널 채팅창이 열립니다.`);
-      }
-
-      // 3) 다운로드 완료 후 카카오 채널 1:1 채팅 관리자 센터 자동 오픈!
-      setTimeout(() => {
-        window.open('https://business.kakao.com/_FxlNhX/chats', '_blank');
-      }, 500);
+      showToast('🎉 보증서 1·2페이지 합본 정품 PDF가 다운로드되었습니다.');
     } else {
       showToast('PDF 파일 생성 중 오류가 발생했습니다.');
     }
-  };
-
-  // 0-1. 고화질 PNG 이미지 2장(상세 + 약관) 개별 다운로드
-  const handleDownloadImages = async (item: WarrantyItem) => {
-    setIsDownloading(true);
-    const message = createWarrantyShareMessage(item);
-    await copyTextToClipboard(message);
-    const success = await downloadWarrantyImage(item);
-    setIsDownloading(false);
-
-    if (success) {
-      showToast(`🎉 보증서 이미지 2장(상세+약관) 다운로드 & 안내문구 복사 완료!`);
-    } else {
-      showToast('이미지 파일 생성 중 오류가 발생했습니다.');
-    }
-  };
-
-  // 1. 카카오톡 채널 관리자 1:1 채팅으로 발송 (비용 0원)
-  const handleSendChannelChat = async (item: WarrantyItem) => {
-    const message = createWarrantyShareMessage(item);
-    const copied = await copyTextToClipboard(message);
-    if (copied) {
-      showToast('✅ 보증서 안내문구가 복사되었습니다! 채널 채팅방에 붙여넣기(Ctrl+V)하세요.');
-    } else {
-      showToast('채널 채팅창으로 이동합니다.');
-    }
-    window.open('https://business.kakao.com/_FxlNhX/chats', '_blank');
-  };
-
-  // 2. 고객용 카카오 채널 1:1 채팅방 열기 (모바일 앱 연동용)
-  const handleOpenClientChannelChat = async (item: WarrantyItem) => {
-    const message = createWarrantyShareMessage(item);
-    const copied = await copyTextToClipboard(message);
-    if (copied) {
-      showToast('✅ 보증서 문구가 복사되었습니다! 카톡 대화창에 붙여넣기하세요.');
-    }
-    window.open('https://pf.kakao.com/_FxlNhX/chat', '_blank');
   };
 
   // 보증서 열람 링크 복사
@@ -1340,108 +1284,67 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   </div>
                 </div>
 
-                {/* ────────────────── 주요 발송 버튼들 ────────────────── */}
-                <div className="space-y-2.5 pt-1">
-                  {/* 메인 버튼 1: 보증서 1·2페이지 합본 PDF 다운로드 & 카톡 전송 바로 연계 */}
+                {/* ────────────────── 심플하고 명확한 주요 발송/다운로드 ────────────────── */}
+                <div className="space-y-3 pt-1">
+                  {/* 1. 보증서 1·2페이지 합본 PDF 다운로드 */}
                   <button
                     onClick={() => handleDownloadPdf(sendingKakaoWarranty)}
                     disabled={isDownloading}
-                    className="w-full py-4 px-4 bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 hover:from-blue-800 hover:to-slate-950 text-white font-black rounded-2xl shadow-xl shadow-blue-900/25 hover:scale-[1.01] transition-all cursor-pointer border border-blue-500/40 flex items-center justify-between gap-3 text-left"
+                    className="w-full py-4 px-4 bg-gradient-to-r from-red-600 via-rose-700 to-slate-900 hover:from-red-700 hover:to-slate-950 text-white font-black rounded-2xl shadow-xl shadow-red-900/20 hover:scale-[1.01] transition-all cursor-pointer border border-red-500/40 flex items-center justify-between gap-3 text-left"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-yellow-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md">
+                      <div className="w-11 h-11 rounded-xl bg-white text-red-600 flex items-center justify-center shrink-0 shadow-md">
                         {isDownloading ? (
-                          <i className="ri-loader-4-line animate-spin text-xl text-slate-950" />
+                          <i className="ri-loader-4-line animate-spin text-2xl text-red-600" />
                         ) : (
-                          <i className="ri-file-pdf-fill text-xl text-slate-950" />
+                          <i className="ri-file-pdf-fill text-2xl text-red-600" />
                         )}
                       </div>
                       <div className="min-w-0">
                         <h4 className="text-sm sm:text-base font-black text-white tracking-tight flex items-center gap-2">
-                          <span>보증서 PDF(상세+약관) 다운로드 &amp; 카톡 바로 연결</span>
+                          <span>보증서 1·2페이지 통합 PDF 다운로드</span>
                         </h4>
-                        <p className="text-[11px] sm:text-xs text-blue-200 font-normal truncate mt-0.5">
-                          앞면(상세) + 뒷면(약관) 총 2페이지가 1개의 PDF 파일로 자동 저장 + 문구 복사!
+                        <p className="text-[11px] sm:text-xs text-rose-200 font-normal truncate mt-0.5">
+                          1면(상세) + 2면(약관) 총 2페이지가 1개의 공식 PDF 파일로 즉시 저장됩니다.
                         </p>
                       </div>
                     </div>
-                    <div className="w-14 h-14 bg-yellow-400 text-slate-950 rounded-full font-black text-[11px] flex flex-col items-center justify-center leading-tight shadow-md shrink-0 text-center">
-                      <span>총 2페이지</span>
-                      <span className="text-[9px] font-bold text-slate-700">PDF 파일</span>
+                    <div className="w-14 h-14 bg-white/10 border border-white/20 text-white rounded-xl font-black text-[11px] flex flex-col items-center justify-center leading-tight shadow-sm shrink-0 text-center">
+                      <span>총 2쪽</span>
+                      <span className="text-[9px] font-bold text-yellow-300">PDF 다운</span>
                     </div>
                   </button>
 
-                  {/* 메인 버튼 2: 우리 카카오 채널 1:1 채팅으로 보내기 (비용 0원) */}
-                  <button
-                    onClick={() => handleSendChannelChat(sendingKakaoWarranty)}
-                    className="w-full py-3.5 px-4 bg-gradient-to-r from-[#FEE500] to-amber-400 hover:from-[#FDD835] hover:to-amber-500 text-[#3c1e1e] font-black rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md hover:scale-[1.01] transition-all cursor-pointer border border-yellow-300"
-                  >
-                    <i className="ri-kakao-talk-fill text-xl text-[#3c1e1e]" />
-                    <span>우리 카카오 채널 1:1 채팅창 열기 + 문구 자동 복사</span>
-                    <span className="text-[10px] bg-[#3c1e1e] text-[#FEE500] px-2 py-0.5 rounded-full font-bold">
-                      비용 0원
-                    </span>
-                  </button>
-
-                  {/* 메인 버튼 3: 보증서 원본 보기 & PDF 인쇄/저장 */}
-                  <button
-                    onClick={() => {
-                      setViewingWarranty(sendingKakaoWarranty);
-                      setSendingKakaoWarranty(null);
-                    }}
-                    className="w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow transition-all cursor-pointer border border-slate-700"
-                  >
-                    <i className="ri-printer-line text-lg text-emerald-400" />
-                    <span>보증서 원본 전체 열람 & A4 인쇄</span>
-                  </button>
-
-                  {/* 메인 버튼 4: 스마트폰 무료 문자(SMS) 즉시 전송 */}
-                  <a
-                    href={`sms:${sendingKakaoWarranty.customerPhone}?body=${encodeURIComponent(
-                      createWarrantyShareMessage(sendingKakaoWarranty)
-                    )}`}
-                    onClick={async () => {
-                      await copyTextToClipboard(createWarrantyShareMessage(sendingKakaoWarranty));
-                    }}
-                    className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow transition-all cursor-pointer text-center"
-                  >
-                    <i className="ri-message-2-line text-lg" />
-                    <span>스마트폰 무료 문자(SMS) 즉시 전송 (문구 자동 삽입)</span>
-                    <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">
-                      통신사 무료문자 활용
-                    </span>
-                  </a>
-
-                  {/* 메인 버튼 5: 고객 이메일 보증서 발송 (cautionsmartcenter@gmail.com) */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50/80 border border-blue-200 rounded-2xl p-3.5 space-y-2.5">
+                  {/* 2. 고객 이메일 보증서 발송 (cautionsmartcenter@gmail.com) */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50/80 border border-blue-200 rounded-2xl p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <i className="ri-mail-send-fill text-blue-600 text-base" />
-                        <span className="text-xs font-bold text-slate-900">
-                          고객 이메일 보증서 발송
+                        <i className="ri-mail-send-fill text-blue-600 text-lg" />
+                        <span className="text-xs sm:text-sm font-bold text-slate-900">
+                          고객 이메일 발송
                         </span>
-                        <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-mono font-bold">
+                        <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-mono font-bold">
                           cautionsmartcenter@gmail.com
                         </span>
                       </div>
                       {sendingKakaoWarranty.emailStatus === 'sent' && (
-                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
-                          <i className="ri-checkbox-circle-fill text-xs" />
+                        <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                          <i className="ri-checkbox-circle-fill text-sm" />
                           <span>발송 완료</span>
                         </span>
                       )}
                     </div>
 
-                    <div className="text-[11px] text-slate-600 flex items-center justify-between">
+                    <div className="text-xs text-slate-600 flex items-center justify-between">
                       <span>
                         수신 이메일:{' '}
-                        <strong className="text-slate-900 font-mono">
+                        <strong className="text-slate-900 font-mono text-xs">
                           {sendingKakaoWarranty.customerEmail || '미입력'}
                         </strong>
                       </span>
                       {!sendingKakaoWarranty.customerEmail && (
-                        <span className="text-amber-600 font-semibold text-[10px]">
-                          *정보 수정에서 이메일을 입력하세요
+                        <span className="text-amber-600 font-semibold text-[11px]">
+                          *이메일을 먼저 등록해 주세요
                         </span>
                       )}
                     </div>
@@ -1450,8 +1353,8 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                       <button
                         onClick={() => handleSendEmail(sendingKakaoWarranty)}
                         disabled={isSendingEmail || !sendingKakaoWarranty.customerEmail}
-                        className="py-2.5 px-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition-all cursor-pointer"
-                        title="cautionsmartcenter@gmail.com 계정으로 고객에게 보증서 HTML 메일을 즉시 전송합니다"
+                        className="py-3 px-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition-all cursor-pointer"
+                        title="cautionsmartcenter@gmail.com 계정으로 고객에게 보증서 메일을 즉시 전송합니다"
                       >
                         {isSendingEmail ? (
                           <i className="ri-loader-4-line animate-spin text-sm" />
@@ -1466,10 +1369,10 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                           href={`mailto:${sendingKakaoWarranty.customerEmail}?subject=${encodeURIComponent(
                             `[코션스마트센터] ${sendingKakaoWarranty.customerName} 고객님 차량(${sendingKakaoWarranty.carPlate}) 정품 보증서 발급 안내`
                           )}&body=${encodeURIComponent(createWarrantyShareMessage(sendingKakaoWarranty))}`}
-                          className="py-2.5 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors text-center"
+                          className="py-3 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors text-center"
                         >
                           <i className="ri-mail-open-line text-blue-600 text-sm" />
-                          <span>기본 메일 앱 열기 (mailto:)</span>
+                          <span>기본 메일 앱으로 열기</span>
                         </a>
                       ) : (
                         <button
@@ -1478,7 +1381,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                             setSendingKakaoWarranty(null);
                             handleOpenEditModal(target);
                           }}
-                          className="py-2.5 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 text-center cursor-pointer"
+                          className="py-3 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 text-center cursor-pointer"
                         >
                           <i className="ri-edit-line text-sm text-blue-600" />
                           <span>이메일 주소 등록하기</span>
@@ -1487,62 +1390,38 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     </div>
                   </div>
 
-                  {/* 보조 옵션 4개 그리드 */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-                    {/* 안내 문구 복사 */}
+                  {/* 3. 보증서 실물 열람 & 필수 복사 옵션 (심플화) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                    <button
+                      onClick={() => {
+                        setViewingWarranty(sendingKakaoWarranty);
+                        setSendingKakaoWarranty(null);
+                      }}
+                      className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition-all cursor-pointer border border-slate-700"
+                    >
+                      <i className="ri-file-text-line text-emerald-400 text-sm" />
+                      <span>보증서 전체 열람 &amp; 인쇄</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleCopyOnlyLink(sendingKakaoWarranty)}
+                      className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-300"
+                    >
+                      <i className="ri-links-line text-blue-600 text-sm" />
+                      <span>보증서 링크 복사</span>
+                    </button>
+
                     <button
                       onClick={async () => {
                         const copied = await copyTextToClipboard(createWarrantyShareMessage(sendingKakaoWarranty));
                         if (copied) {
-                          showToast('✅ 안내문구가 복사되었습니다. 원하는 채팅창에 붙여넣기(Ctrl+V)하세요.');
-                        } else {
-                          showToast('복사에 실패했습니다. 내용을 직접 드래그해 복사하세요.');
+                          showToast('✅ 시공 안내문구가 복사되었습니다.');
                         }
                       }}
-                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
+                      className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-300"
                     >
-                      <i className="ri-file-copy-line text-slate-700 text-base" />
-                      <span>안내문구 복사</span>
-                    </button>
-
-                    {/* PNG 이미지 2장 개별 다운로드 */}
-                    <button
-                      onClick={() => handleDownloadImages(sendingKakaoWarranty)}
-                      disabled={isDownloading}
-                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
-                      title="1면(상세)과 2면(약관)을 PNG 이미지 파일 2장으로 각각 저장"
-                    >
-                      <i className="ri-image-line text-slate-700 text-base" />
-                      <span>이미지 2장(PNG)</span>
-                    </button>
-
-                    {/* 보증서 단일 링크 복사 */}
-                    <button
-                      onClick={() => handleCopyOnlyLink(sendingKakaoWarranty)}
-                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
-                    >
-                      <i className="ri-links-line text-blue-600 text-base" />
-                      <span>보증서 링크만</span>
-                    </button>
-
-                    {/* 고객용 카톡 채널 열기 */}
-                    <button
-                      onClick={() => handleOpenClientChannelChat(sendingKakaoWarranty)}
-                      className="py-2.5 px-2 bg-yellow-50 hover:bg-yellow-100 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-yellow-200"
-                      title="모바일 카카오톡 앱으로 코션 채널 1:1 대화창 열기"
-                    >
-                      <i className="ri-chat-smile-2-line text-yellow-700 text-base" />
-                      <span>모바일 채널방</span>
-                    </button>
-
-                    {/* 개인 카카오톡 공유 (선택) */}
-                    <button
-                      onClick={() => handleExecuteSendKakao(sendingKakaoWarranty)}
-                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
-                      title="개인 카카오톡 계정으로 친구에게 공유"
-                    >
-                      <i className="ri-share-forward-line text-slate-600 text-base" />
-                      <span>개인카톡 공유</span>
+                      <i className="ri-file-copy-line text-slate-700 text-sm" />
+                      <span>안내문구 전체 복사</span>
                     </button>
                   </div>
                 </div>

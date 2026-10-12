@@ -15,6 +15,54 @@ export const PublicWarrantyPage: React.FC<PublicWarrantyPageProps> = ({ token })
 
   useEffect(() => {
     document.title = '정품 보증서 | 코션스마트센터';
+
+    // 1. URL search or hash에 d= 데이터가 있으면 즉시 복호화하여 1초 만에 표시
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+      const encoded = searchParams.get('d') || hashParams.get('d');
+      if (encoded) {
+        // Base64URL 디코딩 (한글 및 특수문자 완벽 복원)
+        const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+        const binaryStr = atob(base64);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) {
+          bytes[i] = binaryStr.charCodeAt(i);
+        }
+        const jsonStr = new TextDecoder('utf-8').decode(bytes);
+        const p = JSON.parse(jsonStr);
+
+        if (p && p.no && p.name) {
+          const item: WarrantyItem = {
+            id: token || p.no,
+            warrantyNo: p.no,
+            createdAt: p.date || new Date().toISOString(),
+            customerName: p.name,
+            customerPhone: p.phone || '',
+            customerEmail: p.email || '',
+            carModel: p.model || '',
+            carPlate: p.plate || '',
+            carColor: p.color || '',
+            vin: p.vin || '',
+            hasClearPps: Boolean(p.c),
+            clearPpsDetail: p.cd || '',
+            hasColorPps: Boolean(p.k),
+            colorPpsDetail: p.kd || '',
+            price: p.p || '',
+            issueDate: p.date || '',
+            warrantyPeriodYears: Number(p.years) || 6,
+            issuedBy: p.by || '(주) 코션스마트센터',
+            status: 'active'
+          };
+          setWarranty(item);
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('[PublicWarrantyPage] URL 데이터 파싱 오류:', e);
+    }
+
+    // 2. 서버 Firestore 조회 폴백
     fetchPublicWarranty(token)
       .then((w) => setWarranty(w))
       .catch((e) => setError(e instanceof Error ? e.message : '보증서를 불러오지 못했습니다.'));

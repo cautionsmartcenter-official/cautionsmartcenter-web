@@ -1,8 +1,5 @@
 // 관리자 전용 API: 보증서 서버 등록(publish) / 알림톡 발송 / 삭제 / 연동 상태 확인
 // POST /api/warranty   헤더: x-admin-key: <ADMIN_PASSWORD>
-//   { action: 'status' }
-//   { action: 'publish', warranty: {...}, send?: boolean }
-//   { action: 'delete', token: string }
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'node:crypto';
 import { FieldValue } from 'firebase-admin/firestore';
@@ -11,7 +8,7 @@ import { getDb, isFirebaseConfigured, WARRANTY_COLLECTION } from './_lib/firebas
 import { alimtalkConfigStatus, getSiteUrl, sendWarrantyAlimtalk } from './_lib/solapi.js';
 import { isEmailConfigured, sendWarrantyEmail, SENDER_EMAIL } from './_lib/email.js';
 
-const TOKEN_RE = /^[A-Za-z0-9_-]{20,64}$/;
+const TOKEN_RE = /^[A-Za-z0-9_-]{4,64}$/;
 const str = (v: unknown, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
 function sanitizeWarranty(input: any) {
@@ -35,6 +32,35 @@ function sanitizeWarranty(input: any) {
     issuedBy: str(input?.issuedBy, 60) || '(주) 코션스마트센터',
     status: ['active', 'expired', 'cancelled'].includes(input?.status) ? input.status : 'active'
   };
+}
+
+function buildWarrantyViewUrl(w: any, token?: string): string {
+  const base = getSiteUrl();
+  const safeToken = token && TOKEN_RE.test(token)
+    ? token
+    : (w.warrantyNo ? String(w.warrantyNo).replace(/[^A-Za-z0-9_-]/g, '') : 'warranty');
+
+  const payload = {
+    no: w.warrantyNo || '',
+    name: w.customerName || '',
+    phone: w.customerPhone || '',
+    email: w.customerEmail || '',
+    plate: w.carPlate || '',
+    model: w.carModel || '',
+    color: w.carColor || '',
+    vin: w.vin || '',
+    date: w.issueDate || '',
+    years: w.warrantyPeriodYears || 6,
+    c: w.hasClearPps ? 1 : 0,
+    cd: w.clearPpsDetail || '',
+    k: w.hasColorPps ? 1 : 0,
+    kd: w.colorPpsDetail || '',
+    p: w.price || '',
+    by: w.issuedBy || '(주) 코션스마트센터'
+  };
+  const jsonStr = JSON.stringify(payload);
+  const b64 = Buffer.from(jsonStr, 'utf8').toString('base64url');
+  return `${base}/w/${safeToken}?d=${b64}`;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -82,21 +108,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ error: '유효한 고객 이메일 주소가 없습니다.' });
       }
       const token = str(body.warranty?.viewToken, 64);
-      const siteUrl = getSiteUrl();
-      const viewUrl = siteUrl && token ? `${siteUrl}/w/${token}` : '';
+      const viewUrl = buildWarrantyViewUrl(w, token);
       const emailResult = await sendWarrantyEmail(w, viewUrl);
 
       if (token && isFirebaseConfigured()) {
-        await getDb().collection(WARRANTY_COLLECTION).doc(token).set(
-          {
-            emailStatus: emailResult.success ? 'sent' : 'failed',
-            emailMessage: emailResult.message,
-            emailAt: FieldValue.serverTimestamp()
-          },
-          { merge: true }
-        );
+        try {
+          await getDb().collection(WARRANTY_COLLECTION).doc(token).set(
+            {
+              emailStatus: emailResult.success ? 'sent' : 'failed',
+              emailMessage: emailResult.message,
+              emailAt: FieldValue.serverTimestamp()
+            },
+            { merge: true }
+          );
+        } catch (e) {
+          console.warn('[send_email] Firestore 기록 실패(계속 진행):', e);
+        }
       }
-      return res.status(200).json({ ok: emailResult.success, email: emailResult });
+      return res.status(200).json({ ok: emailResult.success, email: emailResult, viewUrl });
     }
 
     // ── 서버 등록 + (선택) 알림톡 & 이메일 발송 ──
@@ -109,12 +138,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const givenToken = str(body.warranty?.viewToken, 64);
       const token = TOKEN_RE.test(givenToken) ? givenToken : crypto.randomBytes(18).toString('base64url');
 
-      const db = getDb();
-      const ref = db.collection(WARRANTY_COLLECTION).doc(token);
-      await ref.set({ ...w, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+      if (isFirebaseConfigured()) {
+        try {
+          const db = getDb();
+          const ref = db.collection(WARRANTY_COLLECTION).doc(token);
+          await ref.set({ ...w, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+        } catch (e) {
+          console.warn('[publish] Firestore 저장 실패(계속 진행):', e);
+        }
+      }
 
-      const siteUrl = getSiteUrl();
-      const viewUrl = siteUrl ? `${siteUrl}/w/${token}` : '';
+      const viewUrl = buildWarrantyViewUrl(w, token);
 
       let alimtalk: { success: boolean; message: string } | null = null;
       let email: { success: boolean; message: string } | null = null;
@@ -122,27 +156,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // 알림톡 발송
       if (body.send === true) {
         alimtalk = await sendWarrantyAlimtalk(w, token);
-        await ref.set(
-          {
-            alimtalkStatus: alimtalk.success ? 'sent' : 'failed',
-            alimtalkMessage: alimtalk.message,
-            alimtalkAt: FieldValue.serverTimestamp()
-          },
-          { merge: true }
-        );
+        if (isFirebaseConfigured()) {
+          try {
+            await getDb().collection(WARRANTY_COLLECTION).doc(token).set(
+              {
+                alimtalkStatus: alimtalk.success ? 'sent' : 'failed',
+                alimtalkMessage: alimtalk.message,
+                alimtalkAt: FieldValue.serverTimestamp()
+              },
+              { merge: true }
+            );
+          } catch {}
+        }
       }
 
       // 이메일 발송 (이메일이 있고 발송 요청된 경우 또는 자동 발송 설정)
       if (body.sendEmail === true && w.customerEmail && w.customerEmail.includes('@')) {
         email = await sendWarrantyEmail(w, viewUrl);
-        await ref.set(
-          {
-            emailStatus: email.success ? 'sent' : 'failed',
-            emailMessage: email.message,
-            emailAt: FieldValue.serverTimestamp()
-          },
-          { merge: true }
-        );
+        if (isFirebaseConfigured()) {
+          try {
+            await getDb().collection(WARRANTY_COLLECTION).doc(token).set(
+              {
+                emailStatus: email.success ? 'sent' : 'failed',
+                emailMessage: email.message,
+                emailAt: FieldValue.serverTimestamp()
+              },
+              { merge: true }
+            );
+          } catch {}
+        }
       }
 
       return res.status(200).json({ ok: true, token, viewUrl, alimtalk, email });
@@ -152,7 +194,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (action === 'delete') {
       const token = str(body.token, 64);
       if (!TOKEN_RE.test(token)) return res.status(400).json({ error: '잘못된 토큰입니다.' });
-      await getDb().collection(WARRANTY_COLLECTION).doc(token).delete();
+      if (isFirebaseConfigured()) {
+        try {
+          await getDb().collection(WARRANTY_COLLECTION).doc(token).delete();
+        } catch {}
+      }
       return res.status(200).json({ ok: true });
     }
 

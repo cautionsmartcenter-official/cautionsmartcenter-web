@@ -116,7 +116,7 @@ export default function App() {
   }, []);
 
   /* ── 0. 고객용 보증서 공개 화면 (알림톡 [보증서 보기] 링크: /w/<토큰>) ── */
-  const publicMatch = window.location.pathname.match(/^\/w\/([A-Za-z0-9_-]{16,64})\/?$/);
+  const publicMatch = window.location.pathname.match(/^\/w\/([A-Za-z0-9_-]{4,64})\/?$/);
   if (publicMatch) {
     return <PublicWarrantyPage token={publicMatch[1]} />;
   }
