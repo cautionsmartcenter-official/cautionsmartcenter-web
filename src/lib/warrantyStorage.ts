@@ -429,7 +429,17 @@ export const downloadWarrantyPdf = async (item: WarrantyItem): Promise<boolean> 
 
     const cleanName = (item.customerName || '고객').replace(/[^a-zA-Z0-9가-힣]/g, '');
     const cleanPlate = (item.carPlate || '차량').replace(/[^a-zA-Z0-9가-힣]/g, '');
-    pdf.save(`코션스마트센터_정품보증서_${cleanName}_${cleanPlate}.pdf`);
+    const fileName = `코션스마트센터_정품보증서_${cleanName}_${cleanPlate}.pdf`;
+
+    const blob = pdf.output('blob');
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
 
     return true;
   } catch (err) {

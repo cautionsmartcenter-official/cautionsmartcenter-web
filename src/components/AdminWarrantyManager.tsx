@@ -1247,26 +1247,33 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
                 {/* ────────────────── 주요 발송 버튼들 ────────────────── */}
                 <div className="space-y-2.5 pt-1">
-                  {/* 메인 버튼 1 (추천): 보증서 1·2페이지 합본 PDF 다운로드 & 카톡 전송 바로 연계 */}
+                  {/* 메인 버튼 1: 보증서 1·2페이지 합본 PDF 다운로드 & 카톡 전송 바로 연계 */}
                   <button
                     onClick={() => handleDownloadPdf(sendingKakaoWarranty)}
                     disabled={isDownloading}
-                    className="w-full py-4 px-4 bg-gradient-to-r from-red-600 via-rose-700 to-slate-900 hover:from-red-700 hover:to-slate-950 text-white font-black rounded-2xl text-sm sm:text-base flex flex-col items-center justify-center gap-0.5 shadow-xl shadow-red-900/25 hover:scale-[1.01] transition-all cursor-pointer border border-red-500/40"
+                    className="w-full py-4 px-4 bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 hover:from-blue-800 hover:to-slate-950 text-white font-black rounded-2xl shadow-xl shadow-blue-900/25 hover:scale-[1.01] transition-all cursor-pointer border border-blue-500/40 flex items-center justify-between gap-3 text-left"
                   >
-                    <div className="flex items-center gap-2">
-                      {isDownloading ? (
-                        <i className="ri-loader-4-line animate-spin text-2xl text-yellow-300" />
-                      ) : (
-                        <i className="ri-file-pdf-fill text-2xl text-yellow-300" />
-                      )}
-                      <span>{isDownloading ? '보증서 PDF 생성 & 카톡 연결 중...' : '보증서 PDF(1면 상세 + 2면 약관 합본) 다운로드 & 카톡 연결'}</span>
-                      <span className="text-[10px] bg-yellow-400 text-slate-900 px-2 py-0.5 rounded-full font-bold">
-                        PDF 1개 파일
-                      </span>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-xl bg-yellow-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md">
+                        {isDownloading ? (
+                          <i className="ri-loader-4-line animate-spin text-xl text-slate-950" />
+                        ) : (
+                          <i className="ri-file-pdf-fill text-xl text-slate-950" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-sm sm:text-base font-black text-white tracking-tight flex items-center gap-2">
+                          <span>보증서 PDF(상세+약관) 다운로드 &amp; 카톡 바로 연결</span>
+                        </h4>
+                        <p className="text-[11px] sm:text-xs text-blue-200 font-normal truncate mt-0.5">
+                          앞면(상세) + 뒷면(약관) 총 2페이지가 1개의 PDF 파일로 자동 저장 + 문구 복사!
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-[11px] text-red-200 font-normal">
-                      1면(상세) + 2면(약관) 총 2페이지가 1개 파일로 저장 + 안내문구 자동 복사 + 채널 채팅창 오픈!
-                    </span>
+                    <div className="w-14 h-14 bg-yellow-400 text-slate-950 rounded-full font-black text-[11px] flex flex-col items-center justify-center leading-tight shadow-md shrink-0 text-center">
+                      <span>총 2페이지</span>
+                      <span className="text-[9px] font-bold text-slate-700">PDF 파일</span>
+                    </div>
                   </button>
 
                   {/* 메인 버튼 2: 우리 카카오 채널 1:1 채팅으로 보내기 (비용 0원) */}
