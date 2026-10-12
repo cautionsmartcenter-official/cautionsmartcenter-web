@@ -5,6 +5,7 @@ import type { WarrantyItem } from './warrantyStorage';
 
 const ADMIN_KEY_STORAGE = 'caution_admin_key';
 const AUTO_ALIMTALK_STORAGE = 'caution_auto_alimtalk';
+const AUTO_EMAIL_STORAGE = 'caution_auto_email';
 
 export const setAdminKey = (key: string) => sessionStorage.setItem(ADMIN_KEY_STORAGE, key);
 export const getAdminKey = () => sessionStorage.getItem(ADMIN_KEY_STORAGE) || '';
@@ -14,6 +15,11 @@ export const clearAdminKey = () => sessionStorage.removeItem(ADMIN_KEY_STORAGE);
 export const isAutoAlimtalkEnabled = () => localStorage.getItem(AUTO_ALIMTALK_STORAGE) !== 'off';
 export const setAutoAlimtalkEnabled = (on: boolean) =>
   localStorage.setItem(AUTO_ALIMTALK_STORAGE, on ? 'on' : 'off');
+
+// 보증서 발급 시 이메일 자동 발송 여부 (기본 ON)
+export const isAutoEmailEnabled = () => localStorage.getItem(AUTO_EMAIL_STORAGE) !== 'off';
+export const setAutoEmailEnabled = (on: boolean) =>
+  localStorage.setItem(AUTO_EMAIL_STORAGE, on ? 'on' : 'off');
 
 export class ServerUnavailableError extends Error {}
 
@@ -48,6 +54,7 @@ export interface CloudStatus {
   siteUrl: string;
   firestore: { configured: boolean; ok: boolean; error: string };
   alimtalk: Record<string, boolean>;
+  email?: { configured: boolean; sender: string };
 }
 
 /** 관리자 비밀번호를 서버에 확인 (배포 환경). 서버가 없으면 ServerUnavailableError */
@@ -73,11 +80,23 @@ export interface PublishResult {
   token: string;
   viewUrl: string;
   alimtalk: { success: boolean; message: string } | null;
+  email: { success: boolean; message: string } | null;
 }
 
-/** 보증서를 서버에 등록(또는 갱신)하고, send=true면 카카오 알림톡까지 발송 */
-export async function publishWarranty(item: WarrantyItem, send: boolean): Promise<PublishResult> {
-  return adminCall({ action: 'publish', warranty: item, send });
+/** 보증서를 서버에 등록(또는 갱신)하고, 알림톡/이메일 발송 */
+export async function publishWarranty(
+  item: WarrantyItem,
+  sendAlimtalk: boolean,
+  sendEmail = true
+): Promise<PublishResult> {
+  return adminCall({ action: 'publish', warranty: item, send: sendAlimtalk, sendEmail });
+}
+
+/** 고객에게 보증서 이메일 단독 발송 */
+export async function sendWarrantyEmailOnly(
+  item: WarrantyItem
+): Promise<{ ok: boolean; email: { success: boolean; message: string } }> {
+  return adminCall({ action: 'send_email', warranty: item });
 }
 
 export async function deleteCloudWarranty(token: string): Promise<void> {

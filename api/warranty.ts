@@ -9,6 +9,7 @@ import { FieldValue } from 'firebase-admin/firestore';
 import { isAdminRequest } from './_lib/auth.js';
 import { getDb, isFirebaseConfigured, WARRANTY_COLLECTION } from './_lib/firebase.js';
 import { alimtalkConfigStatus, getSiteUrl, sendWarrantyAlimtalk } from './_lib/solapi.js';
+import { isEmailConfigured, sendWarrantyEmail, SENDER_EMAIL } from './_lib/email.js';
 
 const TOKEN_RE = /^[A-Za-z0-9_-]{20,64}$/;
 const str = (v: unknown, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
@@ -18,6 +19,8 @@ function sanitizeWarranty(input: any) {
     warrantyNo: str(input?.warrantyNo, 60),
     customerName: str(input?.customerName, 60),
     customerPhone: str(input?.customerPhone, 30),
+    customerEmail: str(input?.customerEmail, 100),
+    customerAddress: str(input?.customerAddress, 200),
     carModel: str(input?.carModel, 100),
     carPlate: str(input?.carPlate, 30),
     carColor: str(input?.carColor, 60),
@@ -67,11 +70,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ok: true,
         siteUrl: getSiteUrl(),
         firestore: { configured: isFirebaseConfigured(), ok: firestoreOk, error: firestoreError },
-        alimtalk: alimtalkConfigStatus()
+        alimtalk: alimtalkConfigStatus(),
+        email: {
+          configured: isEmailConfigured(),
+          sender: SENDER_EMAIL
+        }
       });
     }
 
-    // ── 서버 등록 + (선택) 알림톡 발송 ──
+    // ── 단독 이메일 발송 액션 ──
+    if (action === 'send_email') {
+      const w = sanitizeWarranty(body.warranty);
+      if (!w.customerEmail || !w.customerEmail.includes('@')) {
+        return res.status(400).json({ error: '유효한 고객 이메일 주소가 없습니다.' });
+      }
+      const token = str(body.warranty?.viewToken, 64);
+      const siteUrl = getSiteUrl();
+      const viewUrl = siteUrl && token ? `${siteUrl}/w/${token}` : '';
+      const emailResult = await sendWarrantyEmail(w, viewUrl);
+
+      if (token && isFirebaseConfigured()) {
+        await getDb().collection(WARRANTY_COLLECTION).doc(token).set(
+          {
+            emailStatus: emailResult.success ? 'sent' : 'failed',
+            emailMessage: emailResult.message,
+            emailAt: FieldValue.serverTimestamp()
+          },
+          { merge: true }
+        );
+      }
+      return res.status(200).json({ ok: emailResult.success, email: emailResult });
+    }
+
+    // ── 서버 등록 + (선택) 알림톡 & 이메일 발송 ──
     if (action === 'publish') {
       const w = sanitizeWarranty(body.warranty);
       if (!w.warrantyNo || !w.customerName || !w.customerPhone || !w.carPlate) {
@@ -89,6 +120,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const viewUrl = siteUrl ? `${siteUrl}/w/${token}` : '';
 
       let alimtalk: { success: boolean; message: string } | null = null;
+      let email: { success: boolean; message: string } | null = null;
+
+      // 알림톡 발송
       if (body.send === true) {
         alimtalk = await sendWarrantyAlimtalk(w, token);
         await ref.set(
@@ -101,7 +135,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         );
       }
 
-      return res.status(200).json({ ok: true, token, viewUrl, alimtalk });
+      // 이메일 발송 (이메일이 있고 발송 요청된 경우 또는 자동 발송 설정)
+      if (body.sendEmail === true && w.customerEmail && w.customerEmail.includes('@')) {
+        email = await sendWarrantyEmail(w, viewUrl);
+        await ref.set(
+          {
+            emailStatus: email.success ? 'sent' : 'failed',
+            emailMessage: email.message,
+            emailAt: FieldValue.serverTimestamp()
+          },
+          { merge: true }
+        );
+      }
+
+      return res.status(200).json({ ok: true, token, viewUrl, alimtalk, email });
     }
 
     // ── 서버에서 삭제 ──

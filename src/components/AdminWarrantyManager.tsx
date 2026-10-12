@@ -29,6 +29,9 @@ import {
   getCloudStatus,
   isAutoAlimtalkEnabled,
   setAutoAlimtalkEnabled,
+  isAutoEmailEnabled,
+  setAutoEmailEnabled,
+  sendWarrantyEmailOnly,
   ServerUnavailableError,
   type CloudStatus
 } from '../lib/warrantyCloud';
@@ -72,17 +75,23 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
   // 카카오 전송 모달 및 설정 모달
   const [sendingKakaoWarranty, setSendingKakaoWarranty] = useState<WarrantyItem | null>(null);
   const [isKakaoSettingsOpen, setIsKakaoSettingsOpen] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<'alimtalk' | 'kakao_js'>('alimtalk');
+  const [settingsTab, setSettingsTab] = useState<'alimtalk' | 'email' | 'kakao_js'>('alimtalk');
   const [kakaoKeyInput, setKakaoKeyInput] = useState('');
   const [isKakaoConfigured, setIsKakaoConfigured] = useState(false);
 
   // 카카오 공식 알림톡 (서버 자동 발송) 상태
   const [autoAlimtalk, setAutoAlimtalk] = useState<boolean>(() => isAutoAlimtalkEnabled());
+  const [autoEmail, setAutoEmail] = useState<boolean>(() => isAutoEmailEnabled());
   const [cloudStatus, setCloudStatus] = useState<CloudStatus | null>(null);
   const [cloudStatusError, setCloudStatusError] = useState<string>('');
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
   const [isSendingAlimtalk, setIsSendingAlimtalk] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [issuedAlimtalk, setIssuedAlimtalk] = useState<{
+    state: 'idle' | 'sending' | 'sent' | 'failed' | 'local';
+    message: string;
+  }>({ state: 'idle', message: '' });
+  const [issuedEmail, setIssuedEmail] = useState<{
     state: 'idle' | 'sending' | 'sent' | 'failed' | 'local';
     message: string;
   }>({ state: 'idle', message: '' });
@@ -104,6 +113,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
+    customerEmail: '',
     customerAddress: '',
     carModel: '',
     carPlate: '',
@@ -205,30 +215,48 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     }
   };
 
-  // 보증서를 서버에 등록하고, send=true면 고객 번호로 카카오 알림톡 발송
+  // 보증서를 서버에 등록하고, send=true면 카카오 알림톡/이메일 발송
   const handlePublishAndSend = async (
     item: WarrantyItem,
-    send: boolean
-  ): Promise<{ ok: boolean; local: boolean; message: string }> => {
-    if (send) setIsSendingAlimtalk(true);
+    sendAlimtalk: boolean,
+    sendEmail = false
+  ): Promise<{ ok: boolean; local: boolean; message: string; emailOk?: boolean }> => {
+    if (sendAlimtalk) setIsSendingAlimtalk(true);
+    if (sendEmail) setIsSendingEmail(true);
     try {
-      const res = await publishWarranty(item, send);
+      const res = await publishWarranty(item, sendAlimtalk, sendEmail);
       const patch: Partial<WarrantyItem> = { viewToken: res.token };
-      if (send && res.alimtalk) {
+
+      if (sendAlimtalk && res.alimtalk) {
         patch.alimtalkStatus = res.alimtalk.success ? 'sent' : 'failed';
         patch.alimtalkMessage = res.alimtalk.message;
         patch.alimtalkAt = new Date().toISOString();
       }
+
+      if (sendEmail && res.email) {
+        patch.emailStatus = res.email.success ? 'sent' : 'failed';
+        patch.emailMessage = res.email.message;
+        patch.emailAt = new Date().toISOString();
+      }
+
       const updated = updateWarranty(item.id, patch);
       reloadData();
       if (updated) {
         setSendingKakaoWarranty((prev) => (prev && prev.id === item.id ? updated : prev));
       }
-      if (!send) return { ok: true, local: false, message: '서버 저장 완료' };
-      if (res.alimtalk?.success) {
-        return { ok: true, local: false, message: '카카오 알림톡 발송 완료' };
-      }
-      return { ok: false, local: false, message: res.alimtalk?.message || '알림톡 발송 실패' };
+
+      if (!sendAlimtalk && !sendEmail) return { ok: true, local: false, message: '서버 저장 완료' };
+
+      const messages: string[] = [];
+      if (res.alimtalk?.success) messages.push('카카오 알림톡 발송 완료');
+      if (res.email?.success) messages.push('이메일 발송 완료');
+
+      return {
+        ok: true,
+        local: false,
+        message: messages.join(', ') || '발송 처리 완료',
+        emailOk: res.email?.success
+      };
     } catch (e) {
       return {
         ok: false,
@@ -236,7 +264,36 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         message: e instanceof Error ? e.message : String(e)
       };
     } finally {
-      if (send) setIsSendingAlimtalk(false);
+      if (sendAlimtalk) setIsSendingAlimtalk(false);
+      if (sendEmail) setIsSendingEmail(false);
+    }
+  };
+
+  // 단독 이메일 전송 (cautionsmartcenter@gmail.com)
+  const handleSendEmail = async (item: WarrantyItem) => {
+    if (!item.customerEmail) {
+      alert('고객 이메일이 등록되어 있지 않습니다. 보증서 수정에서 이메일을 먼저 입력해 주세요.');
+      return;
+    }
+    setIsSendingEmail(true);
+    try {
+      const res = await sendWarrantyEmailOnly(item);
+      const patch: Partial<WarrantyItem> = {
+        emailStatus: res.email?.success ? 'sent' : 'failed',
+        emailMessage: res.email?.message,
+        emailAt: new Date().toISOString()
+      };
+      updateWarranty(item.id, patch);
+      reloadData();
+      if (res.ok) {
+        showToast(`🎉 ${item.customerName} 고객님(${item.customerEmail})께 보증서 이메일을 발송했습니다!`);
+      } else {
+        alert(`이메일 발송 안내:\n\n${res.email?.message || '발송 실패'}\n\n아래의 [기본 메일 앱으로 열기 (mailto:)]를 누르시면 관리자 메일 프로그램으로 바로 보내실 수 있습니다.`);
+      }
+    } catch (e: any) {
+      alert(`이메일 발송 오류:\n\n${e?.message || String(e)}\n\n아래의 [기본 메일 앱으로 열기 (mailto:)]를 이용해 주세요.`);
+    } finally {
+      setIsSendingEmail(false);
     }
   };
 
@@ -248,7 +305,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     ) {
       return;
     }
-    const r = await handlePublishAndSend(item, true);
+    const r = await handlePublishAndSend(item, true, false);
     if (r.ok) {
       showToast(`🎉 ${item.customerName} 고객님(${item.customerPhone})께 카카오 알림톡을 보냈습니다!`);
     } else {
@@ -262,6 +319,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     setFormData({
       customerName: '',
       customerPhone: '',
+      customerEmail: '',
       customerAddress: '',
       carModel: '',
       carPlate: '',
@@ -288,6 +346,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     setFormData({
       customerName: item.customerName,
       customerPhone: item.customerPhone,
+      customerEmail: item.customerEmail || '',
       customerAddress: item.customerAddress || '',
       carModel: item.carModel,
       carPlate: item.carPlate,
@@ -357,17 +416,31 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       setIsFormOpen(false);
       setIssuedSuccessWarranty(created);
 
-      // 발급과 동시에 카카오 알림톡 자동 발송 (설정에서 끌 수 있음)
-      if (autoAlimtalk) {
-        setIssuedAlimtalk({ state: 'sending', message: '' });
-        handlePublishAndSend(created, true).then((r) => {
-          setIssuedAlimtalk({
-            state: r.ok ? 'sent' : r.local ? 'local' : 'failed',
-            message: r.message
-          });
+      // 발급과 동시에 카카오 알림톡/이메일 자동 발송 (설정에서 끌 수 있음)
+      const shouldSendAlimtalk = autoAlimtalk;
+      const shouldSendEmail = autoEmail && Boolean(created.customerEmail);
+
+      if (shouldSendAlimtalk || shouldSendEmail) {
+        if (shouldSendAlimtalk) setIssuedAlimtalk({ state: 'sending', message: '' });
+        if (shouldSendEmail) setIssuedEmail({ state: 'sending', message: '' });
+
+        handlePublishAndSend(created, shouldSendAlimtalk, shouldSendEmail).then((r) => {
+          if (shouldSendAlimtalk) {
+            setIssuedAlimtalk({
+              state: r.ok ? 'sent' : r.local ? 'local' : 'failed',
+              message: r.message
+            });
+          }
+          if (shouldSendEmail) {
+            setIssuedEmail({
+              state: r.emailOk ? 'sent' : r.local ? 'local' : 'failed',
+              message: r.emailOk ? '이메일 발송 완료' : '이메일 발송 실패'
+            });
+          }
         });
       } else {
         setIssuedAlimtalk({ state: 'idle', message: '' });
+        setIssuedEmail({ state: 'idle', message: '' });
       }
     }
   };
@@ -731,6 +804,15 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     <td className="py-3.5 px-4 whitespace-nowrap">
                       <div className="font-bold text-slate-900">{item.customerName}</div>
                       <div className="text-[11px] font-mono text-slate-500">{item.customerPhone}</div>
+                      {item.customerEmail && (
+                        <div className="text-[10px] text-blue-600 truncate max-w-[150px] flex items-center gap-1 mt-0.5" title={item.customerEmail}>
+                          <i className="ri-mail-line text-[10px]" />
+                          <span>{item.customerEmail}</span>
+                          {item.emailStatus === 'sent' && (
+                            <span className="text-[9px] bg-blue-100 text-blue-700 px-1 rounded font-bold">발송됨</span>
+                          )}
+                        </div>
+                      )}
                     </td>
 
                     {/* 차량 정보 */}
@@ -963,7 +1045,20 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                       />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div>
+                      <label className="text-xs font-medium text-slate-600 block mb-1">
+                        고객 이메일 <span className="text-blue-600 text-[11px] font-bold">(선택 - 입력 시 보증서 메일 발송)</span>
+                      </label>
+                      <input
+                        type="email"
+                        value={formData.customerEmail}
+                        onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
+                        placeholder="예: customer@naver.com"
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500"
+                      />
+                    </div>
+
+                    <div>
                       <label className="text-xs font-medium text-slate-600 block mb-1">
                         주소 <span className="text-slate-400 text-[11px]">(선택 사항)</span>
                       </label>
@@ -1317,6 +1412,81 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     </span>
                   </a>
 
+                  {/* 메인 버튼 5: 고객 이메일 보증서 발송 (cautionsmartcenter@gmail.com) */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50/80 border border-blue-200 rounded-2xl p-3.5 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <i className="ri-mail-send-fill text-blue-600 text-base" />
+                        <span className="text-xs font-bold text-slate-900">
+                          고객 이메일 보증서 발송
+                        </span>
+                        <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-mono font-bold">
+                          cautionsmartcenter@gmail.com
+                        </span>
+                      </div>
+                      {sendingKakaoWarranty.emailStatus === 'sent' && (
+                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                          <i className="ri-checkbox-circle-fill text-xs" />
+                          <span>발송 완료</span>
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="text-[11px] text-slate-600 flex items-center justify-between">
+                      <span>
+                        수신 이메일:{' '}
+                        <strong className="text-slate-900 font-mono">
+                          {sendingKakaoWarranty.customerEmail || '미입력'}
+                        </strong>
+                      </span>
+                      {!sendingKakaoWarranty.customerEmail && (
+                        <span className="text-amber-600 font-semibold text-[10px]">
+                          *정보 수정에서 이메일을 입력하세요
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
+                      <button
+                        onClick={() => handleSendEmail(sendingKakaoWarranty)}
+                        disabled={isSendingEmail || !sendingKakaoWarranty.customerEmail}
+                        className="py-2.5 px-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition-all cursor-pointer"
+                        title="cautionsmartcenter@gmail.com 계정으로 고객에게 보증서 HTML 메일을 즉시 전송합니다"
+                      >
+                        {isSendingEmail ? (
+                          <i className="ri-loader-4-line animate-spin text-sm" />
+                        ) : (
+                          <i className="ri-send-plane-fill text-sm" />
+                        )}
+                        <span>Gmail 자동 발송</span>
+                      </button>
+
+                      {sendingKakaoWarranty.customerEmail ? (
+                        <a
+                          href={`mailto:${sendingKakaoWarranty.customerEmail}?subject=${encodeURIComponent(
+                            `[코션스마트센터] ${sendingKakaoWarranty.customerName} 고객님 차량(${sendingKakaoWarranty.carPlate}) 정품 보증서 발급 안내`
+                          )}&body=${encodeURIComponent(createWarrantyShareMessage(sendingKakaoWarranty))}`}
+                          className="py-2.5 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-colors text-center"
+                        >
+                          <i className="ri-mail-open-line text-blue-600 text-sm" />
+                          <span>기본 메일 앱 열기 (mailto:)</span>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            const target = sendingKakaoWarranty;
+                            setSendingKakaoWarranty(null);
+                            handleOpenEditModal(target);
+                          }}
+                          className="py-2.5 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 text-center cursor-pointer"
+                        >
+                          <i className="ri-edit-line text-sm text-blue-600" />
+                          <span>이메일 주소 등록하기</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
                   {/* 보조 옵션 4개 그리드 */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                     {/* 안내 문구 복사 */}
@@ -1490,6 +1660,21 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </button>
                 <button
                   type="button"
+                  onClick={() => setSettingsTab('email')}
+                  className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
+                    settingsTab === 'email'
+                      ? 'border-red-600 text-red-600'
+                      : 'border-transparent text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  <i className="ri-mail-send-fill text-sm text-blue-600" />
+                  <span>2. 이메일 발송 (Gmail)</span>
+                  <span
+                    className={`w-2 h-2 rounded-full ${cloudStatus?.email?.configured ? 'bg-emerald-500' : 'bg-amber-400'}`}
+                  />
+                </button>
+                <button
+                  type="button"
                   onClick={() => setSettingsTab('kakao_js')}
                   className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
                     settingsTab === 'kakao_js'
@@ -1498,7 +1683,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   }`}
                 >
                   <i className="ri-kakao-talk-fill text-sm text-yellow-600" />
-                  <span>2. 카카오 JavaScript 키 (공유용)</span>
+                  <span>3. 카카오 JavaScript 키 (공유용)</span>
                   <span
                     className={`w-2 h-2 rounded-full ${isKakaoConfigured ? 'bg-blue-500' : 'bg-slate-300'}`}
                   />
@@ -1642,7 +1827,132 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </div>
               )}
 
-              {/* ── 탭 2: 카카오 JavaScript 키 설정 ── */}
+              {/* ── 탭 2: 이메일 발송 설정 (cautionsmartcenter@gmail.com) ── */}
+              {settingsTab === 'email' && (
+                <div className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-xs text-blue-950 leading-relaxed flex items-start gap-3">
+                    <i className="ri-mail-check-fill text-blue-600 text-xl flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block font-bold text-sm mb-1 text-blue-900">
+                        발신 이메일: cautionsmartcenter@gmail.com
+                      </strong>
+                      보증서 등록 시 고객 이메일을 입력하면, <strong>코션스마트센터 공식 발신함</strong>에서 고객 메일함으로
+                      시공 상세내역 안내문과 함께 [보증서 확인하기] 및 [PDF 다운로드] 링크가 담긴 이메일이 자동 발송됩니다.
+                    </div>
+                  </div>
+
+                  {/* 자동 발송 스위치 */}
+                  <label className="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer">
+                    <span className="text-xs">
+                      <strong className="block text-slate-900">보증서 발급 시 고객 이메일로 자동 발송</strong>
+                      <span className="text-slate-500 text-[11px]">고객 이메일이 입력되어 있을 때만 자동으로 발송됩니다.</span>
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={autoEmail}
+                      onChange={(e) => {
+                        setAutoEmail(e.target.checked);
+                        setAutoEmailEnabled(e.target.checked);
+                        showToast(e.target.checked ? '이메일 자동 발송을 켰습니다.' : '이메일 자동 발송을 껐습니다.');
+                      }}
+                      className="w-5 h-5 accent-blue-600"
+                    />
+                  </label>
+
+                  {/* 서버 Gmail 연동 상태 */}
+                  <div className="p-4 bg-white border border-slate-200 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <i className="ri-google-fill text-red-500" />
+                        <span>서버 Gmail SMTP 연동 상태</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleCheckCloudStatus}
+                        disabled={isCheckingStatus}
+                        className="text-[11px] text-blue-600 hover:text-blue-800 font-semibold cursor-pointer disabled:opacity-50 flex items-center gap-1"
+                      >
+                        <i className={`ri-refresh-line ${isCheckingStatus ? 'animate-spin' : ''}`} />
+                        <span>새로고침</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-1.5 text-xs">
+                      <div className="flex items-center justify-between py-1 border-b border-slate-100">
+                        <span className="text-slate-600">발신 계정</span>
+                        <span className="font-mono font-semibold text-slate-800">cautionsmartcenter@gmail.com</span>
+                      </div>
+                      <div className="flex items-center justify-between py-1 border-b border-slate-100">
+                        <span className="text-slate-600">서버 앱 비밀번호(Vercel)</span>
+                        <span
+                          className={`font-semibold flex items-center gap-1 ${
+                            cloudStatus?.email?.configured ? 'text-emerald-600' : 'text-amber-600'
+                          }`}
+                        >
+                          <i
+                            className={
+                              cloudStatus?.email?.configured
+                                ? 'ri-checkbox-circle-fill'
+                                : 'ri-time-fill'
+                            }
+                          />
+                          {cloudStatus?.email?.configured ? '연동 완료 (백그라운드 자동 발송 가능)' : 'Vercel 환경변수 설정 필요'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Vercel 연동 가이드 */}
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-700 space-y-2">
+                    <strong className="block font-bold text-slate-900 flex items-center gap-1.5">
+                      <i className="ri-key-2-line text-blue-600" />
+                      <span>Google 계정 앱 비밀번호 등록 방법 (3단계)</span>
+                    </strong>
+                    <ol className="list-decimal list-inside space-y-1.5 text-[11px] text-slate-600 leading-relaxed">
+                      <li>
+                        <strong>cautionsmartcenter@gmail.com</strong> 계정으로 Google 로그인 후{' '}
+                        <a
+                          href="https://myaccount.google.com/security"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-600 underline"
+                        >
+                          [Google 계정 관리 &gt; 보안]
+                        </a>
+                        으로 이동합니다.
+                      </li>
+                      <li>
+                        <strong>[2단계 인증]</strong> 메뉴 안의 <strong>[앱 비밀번호]</strong>를 클릭하고, 앱 이름을
+                        "CautionWeb"으로 지정 후 생성되는 <strong>16자리 영문 코드</strong>를 복사합니다.
+                      </li>
+                      <li>
+                        <strong>Vercel 대시보드</strong> &gt; [Settings] &gt; [Environment Variables]에서
+                        <code className="mx-1 px-1.5 py-0.5 bg-slate-200 rounded text-slate-800 font-mono font-bold">
+                          GMAIL_APP_PASSWORD
+                        </code>
+                        에 복사한 16자리를 넣고 저장 후 재배포하시면 끝납니다.
+                      </li>
+                    </ol>
+                    <div className="mt-2 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
+                      💡 <strong>바로 발송 팁:</strong> Vercel 환경변수 설정 전이라도 각 보증서 목록의 [전송] 버튼 &gt;
+                      [기본 메일 앱으로 열기] 버튼을 누르면 고객 이메일과 보증서 안내문이 관리자 메일 프로그램에 바로 입력되어 즉시
+                      보내실 수 있습니다.
+                    </div>
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setIsKakaoSettingsOpen(false)}
+                      className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
+                    >
+                      닫기
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ── 탭 3: 카카오 JavaScript 키 설정 ── */}
               {settingsTab === 'kakao_js' && (
                 <form onSubmit={handleSaveKakaoKey} className="p-6 space-y-4">
                   <div>
@@ -1740,6 +2050,40 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </div>
               )}
 
+              {/* 이메일 자동 발송 결과 */}
+              {issuedEmail.state !== 'idle' && (
+                <div
+                  className={`mb-4 px-3.5 py-2.5 rounded-2xl border text-xs text-left flex items-start gap-2 ${
+                    issuedEmail.state === 'sent'
+                      ? 'bg-blue-50 border-blue-200 text-blue-900'
+                      : issuedEmail.state === 'sending'
+                      ? 'bg-slate-50 border-slate-200 text-slate-700'
+                      : 'bg-amber-50 border-amber-200 text-amber-900'
+                  }`}
+                >
+                  <i
+                    className={`text-base flex-shrink-0 ${
+                      issuedEmail.state === 'sending'
+                        ? 'ri-loader-4-line animate-spin text-blue-600'
+                        : issuedEmail.state === 'sent'
+                        ? 'ri-mail-check-fill text-blue-600'
+                        : 'ri-error-warning-line text-amber-600'
+                    }`}
+                  />
+                  <div>
+                    <strong className="block">
+                      {issuedEmail.state === 'sending' && '고객 이메일로 보증서 발송 중...'}
+                      {issuedEmail.state === 'sent' && `${issuedSuccessWarranty.customerEmail} 주소로 보증서 메일 발송 완료!`}
+                      {issuedEmail.state === 'failed' && '이메일 자동 발송 실패 (설정에서 Gmail 앱 비밀번호를 등록하세요)'}
+                      {issuedEmail.state === 'local' && '이메일 자동 발송은 배포 후 동작합니다'}
+                    </strong>
+                    {issuedEmail.state === 'failed' && (
+                      <span className="block mt-0.5 opacity-80 break-all">{issuedEmail.message}</span>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="bg-slate-50 rounded-2xl p-4 text-xs space-y-1.5 text-left border border-slate-200 mb-6 font-sans">
                 <div className="flex justify-between">
                   <span className="text-slate-500">보증번호</span>
@@ -1749,6 +2093,12 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   <span className="text-slate-500">고객명</span>
                   <span className="font-bold text-slate-900">{issuedSuccessWarranty.customerName} 고객님</span>
                 </div>
+                {issuedSuccessWarranty.customerEmail && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">고객 이메일</span>
+                    <span className="font-mono text-blue-600 font-bold">{issuedSuccessWarranty.customerEmail}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-slate-500">차량번호</span>
                   <span className="font-black text-slate-900">{issuedSuccessWarranty.carPlate} ({issuedSuccessWarranty.carModel})</span>

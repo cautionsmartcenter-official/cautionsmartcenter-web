@@ -6,6 +6,7 @@ export interface WarrantyItem {
   // 고객 정보
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
   customerAddress?: string;
 
   // 차량 정보
@@ -30,11 +31,14 @@ export interface WarrantyItem {
   status: 'active' | 'expired' | 'cancelled';
   notes?: string;
 
-  // 서버(고객 열람용) 동기화 및 카카오 알림톡 발송 기록
+  // 서버(고객 열람용) 동기화 및 카카오 알림톡/이메일 발송 기록
   viewToken?: string; // 고객 열람 링크용 무작위 토큰 (/w/<토큰>)
   alimtalkStatus?: 'sent' | 'failed';
   alimtalkMessage?: string;
   alimtalkAt?: string; // ISO string
+  emailStatus?: 'sent' | 'failed';
+  emailMessage?: string;
+  emailAt?: string; // ISO string
 }
 
 const STORAGE_KEY = 'caution_warranty_db';

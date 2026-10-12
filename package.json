@@ -16,12 +16,14 @@
     "framer-motion": "^12.41.0",
     "jspdf": "^4.2.1",
     "lucide-react": "^0.456.0",
+    "nodemailer": "^10.1.0",
     "pngjs": "^7.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.186.0"
   },
   "devDependencies": {
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vercel/node": "^5.10.2",
