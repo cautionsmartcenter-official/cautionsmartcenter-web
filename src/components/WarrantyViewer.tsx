@@ -108,7 +108,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       await downloadWarrantyImage(warranty);
       setShareFeedback('보증서 2장(1면 상세 + 2면 약관)이 저장되었습니다. 사진첩(다운로드 폴더)에서 확인하세요.');
     } catch {
-      setShareFeedback('이미지 저장에 실패했습니다. 화면을 길게 눌러 저장하거나 캡처해 주세요.');
+      setShareFeedback('이미지 저장에 실패했습니다. 상단의 [PDF 저장] 또는 브라우저 다운로드를 이용해 주세요.');
     }
     setTimeout(() => setShareFeedback(null), 4000);
   };

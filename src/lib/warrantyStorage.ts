@@ -205,6 +205,8 @@ export const createWarrantyShareMessage = (item: WarrantyItem): string => {
     item.hasColorPps ? `컬러PPS(${item.colorPpsDetail || '전체'})` : ''
   ].filter(Boolean).join(', ') || '독일 정품 CARDIP PPS';
 
+  const viewUrl = getWarrantyViewUrl(item.warrantyNo);
+
   return `[코션스마트센터] PPS 시공 보증서 발급 안내
 
 안녕하세요, ${item.customerName} 고객님.
@@ -218,8 +220,11 @@ export const createWarrantyShareMessage = (item: WarrantyItem): string => {
 ■ 보증기간 : 시공일(${item.issueDate})로부터 ${item.warrantyPeriodYears}년
 ■ 보증번호 : ${item.warrantyNo}
 
-📎 함께 보내드린 정품 보증서 이미지를 꼭 저장해 두세요.
-(이미지를 길게 눌러 [저장]하시면 사진첩에 보관됩니다. 사고·보험 처리 시 제출용으로 사용하실 수 있습니다.)
+📎 함께 보내드린 정품 보증서(PDF)를 꼭 [다운로드]하여 보관해 주세요.
+(PDF 파일은 화면을 길게 눌러서 저장되지 않으므로, 첨부파일의 [다운로드] 또는 [저장] 버튼을 눌러 보관해 두시면 사고·보험 처리 시 공식 제출용으로 사용하실 수 있습니다.)
+
+🔗 모바일 전자보증서 바로 확인:
+${viewUrl}
 
 *본 보증서는 독일 CARDIP 공식 수입원인 (주)코션스마트센터에서 발급한 정품 보증서입니다.
 *문의전화: 031-705-1888`;
