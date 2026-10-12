@@ -22,12 +22,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   onClose,
   publicMode = false
 }) => {
-  const [activePage, setActivePage] = useState<'front' | 'back' | 'mobile'>(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      return 'mobile';
-    }
-    return 'front';
-  });
+  const [activePage, setActivePage] = useState<'front' | 'back' | 'mobile'>('mobile');
   const [copied, setCopied] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const [showTermsDetail, setShowTermsDetail] = useState(false);
