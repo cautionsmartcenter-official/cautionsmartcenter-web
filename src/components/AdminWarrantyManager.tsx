@@ -12,6 +12,7 @@ import {
   createWarrantyShareMessage,
   getWarrantyViewUrl,
   downloadWarrantyImage,
+  downloadWarrantyPdf,
   copyTextToClipboard,
   formatPriceWithCommas
 } from '../lib/warrantyStorage';
@@ -158,6 +159,18 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       if (onClearPrefill) onClearPrefill();
     }
   }, [initialPrefill]);
+
+  // 전송 모달(sendingKakaoWarranty)이 열릴 때 고객 안내 문구 자동 클립보드 복사
+  useEffect(() => {
+    if (sendingKakaoWarranty) {
+      const msg = createWarrantyShareMessage(sendingKakaoWarranty);
+      copyTextToClipboard(msg).then((copied) => {
+        if (copied) {
+          showToast(`📋 ${sendingKakaoWarranty.customerName} 고객님 보증서 안내문구가 자동 복사되었습니다! (채팅창에서 바로 붙여넣기 가능)`);
+        }
+      });
+    }
+  }, [sendingKakaoWarranty?.id]);
 
   // 카카오 키 저장 핸들러
   const handleSaveKakaoKey = (e: React.FormEvent) => {
@@ -388,23 +401,23 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     showToast(res.message);
   };
 
-  // 0. 보증서 고화질 이미지 파일 즉시 다운로드 & 카카오톡 자동 연계
-  const handleDownloadFile = async (item: WarrantyItem) => {
+  // 0. 보증서 1면(상세)+2면(약관) 합본 PDF 즉시 다운로드 & 안내문구 자동 복사 & 카톡 연계
+  const handleDownloadPdf = async (item: WarrantyItem) => {
     setIsDownloading(true);
 
-    // 1) 고객 전달용 안내 문구 클립보드 자동 복사 (호환성 100% 보장)
+    // 1) 고객 전달용 안내 문구 클립보드 자동 복사
     const message = createWarrantyShareMessage(item);
     const copied = await copyTextToClipboard(message);
 
-    // 2) 고화질 보증서 파일 다운로드 실행
-    const success = await downloadWarrantyImage(item);
+    // 2) 고화질 2페이지 단일 PDF 다운로드 실행
+    const success = await downloadWarrantyPdf(item);
     setIsDownloading(false);
 
     if (success) {
       if (copied) {
-        showToast(`🎉 보증서 2장(1면 상세 + 2면 약관) 다운로드 & 안내문구 복사 완료! 카톡 채팅창이 열립니다.`);
+        showToast(`🎉 보증서 PDF(1·2페이지 합본) 다운로드 & 안내문구 자동 복사 완료! 채널 채팅창이 열립니다.`);
       } else {
-        showToast(`🎉 보증서 2장(1면 상세 + 2면 약관) 다운로드 완료! 카톡 채팅창이 열립니다.`);
+        showToast(`🎉 보증서 PDF(1·2페이지 합본) 다운로드 완료! 채널 채팅창이 열립니다.`);
       }
 
       // 3) 다운로드 완료 후 카카오 채널 1:1 채팅 관리자 센터 자동 오픈!
@@ -412,7 +425,22 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         window.open('https://business.kakao.com/_FxlNhX/chats', '_blank');
       }, 500);
     } else {
-      showToast('파일 생성 중 오류가 발생했습니다.');
+      showToast('PDF 파일 생성 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 0-1. 고화질 PNG 이미지 2장(상세 + 약관) 개별 다운로드
+  const handleDownloadImages = async (item: WarrantyItem) => {
+    setIsDownloading(true);
+    const message = createWarrantyShareMessage(item);
+    await copyTextToClipboard(message);
+    const success = await downloadWarrantyImage(item);
+    setIsDownloading(false);
+
+    if (success) {
+      showToast(`🎉 보증서 이미지 2장(상세+약관) 다운로드 & 안내문구 복사 완료!`);
+    } else {
+      showToast('이미지 파일 생성 중 오류가 발생했습니다.');
     }
   };
 
@@ -1219,25 +1247,25 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
                 {/* ────────────────── 주요 발송 버튼들 ────────────────── */}
                 <div className="space-y-2.5 pt-1">
-                  {/* 메인 버튼 1 (추천): 보증서 다운로드 & 카톡 전송 바로 연계 */}
+                  {/* 메인 버튼 1 (추천): 보증서 1·2페이지 합본 PDF 다운로드 & 카톡 전송 바로 연계 */}
                   <button
-                    onClick={() => handleDownloadFile(sendingKakaoWarranty)}
+                    onClick={() => handleDownloadPdf(sendingKakaoWarranty)}
                     disabled={isDownloading}
-                    className="w-full py-4 px-4 bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 hover:from-blue-800 hover:to-slate-950 text-white font-black rounded-2xl text-sm sm:text-base flex flex-col items-center justify-center gap-0.5 shadow-xl shadow-blue-900/25 hover:scale-[1.01] transition-all cursor-pointer border border-blue-500/40"
+                    className="w-full py-4 px-4 bg-gradient-to-r from-red-600 via-rose-700 to-slate-900 hover:from-red-700 hover:to-slate-950 text-white font-black rounded-2xl text-sm sm:text-base flex flex-col items-center justify-center gap-0.5 shadow-xl shadow-red-900/25 hover:scale-[1.01] transition-all cursor-pointer border border-red-500/40"
                   >
                     <div className="flex items-center gap-2">
                       {isDownloading ? (
                         <i className="ri-loader-4-line animate-spin text-2xl text-yellow-300" />
                       ) : (
-                        <i className="ri-file-download-fill text-2xl text-yellow-300" />
+                        <i className="ri-file-pdf-fill text-2xl text-yellow-300" />
                       )}
-                      <span>{isDownloading ? '보증서 2장 생성 & 카톡 연결 중...' : '보증서 2장(상세+약관) 다운로드 & 카톡 바로 연결'}</span>
+                      <span>{isDownloading ? '보증서 PDF 생성 & 카톡 연결 중...' : '보증서 PDF(1면 상세 + 2면 약관 합본) 다운로드 & 카톡 연결'}</span>
                       <span className="text-[10px] bg-yellow-400 text-slate-900 px-2 py-0.5 rounded-full font-bold">
-                        총 2페이지
+                        PDF 1개 파일
                       </span>
                     </div>
-                    <span className="text-[11px] text-blue-200 font-normal">
-                      앞면(상세) + 뒷면(약관) 2장 자동 저장 + 문구 복사 + 카카오 채널 채팅창 오픈!
+                    <span className="text-[11px] text-red-200 font-normal">
+                      1면(상세) + 2면(약관) 총 2페이지가 1개 파일로 저장 + 안내문구 자동 복사 + 채널 채팅창 오픈!
                     </span>
                   </button>
 
@@ -1262,7 +1290,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     className="w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow transition-all cursor-pointer border border-slate-700"
                   >
                     <i className="ri-printer-line text-lg text-emerald-400" />
-                    <span>보증서 원본 전체 열람 & PDF 인쇄/저장</span>
+                    <span>보증서 원본 전체 열람 & A4 인쇄</span>
                   </button>
 
                   {/* 메인 버튼 4: 스마트폰 무료 문자(SMS) 즉시 전송 */}
@@ -1270,10 +1298,13 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     href={`sms:${sendingKakaoWarranty.customerPhone}?body=${encodeURIComponent(
                       createWarrantyShareMessage(sendingKakaoWarranty)
                     )}`}
+                    onClick={async () => {
+                      await copyTextToClipboard(createWarrantyShareMessage(sendingKakaoWarranty));
+                    }}
                     className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow transition-all cursor-pointer text-center"
                   >
                     <i className="ri-message-2-line text-lg" />
-                    <span>스마트폰 무료 문자(SMS) 즉시 전송</span>
+                    <span>스마트폰 무료 문자(SMS) 즉시 전송 (문구 자동 삽입)</span>
                     <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">
                       통신사 무료문자 활용
                     </span>
@@ -1283,15 +1314,29 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                     {/* 안내 문구 복사 */}
                     <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(createWarrantyShareMessage(sendingKakaoWarranty)).then(() => {
-                          showToast('✅ 안내문구가 복사되었습니다. 원하는 채팅창에 붙여넣기하세요.');
-                        });
+                      onClick={async () => {
+                        const copied = await copyTextToClipboard(createWarrantyShareMessage(sendingKakaoWarranty));
+                        if (copied) {
+                          showToast('✅ 안내문구가 복사되었습니다. 원하는 채팅창에 붙여넣기(Ctrl+V)하세요.');
+                        } else {
+                          showToast('복사에 실패했습니다. 내용을 직접 드래그해 복사하세요.');
+                        }
                       }}
                       className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
                     >
                       <i className="ri-file-copy-line text-slate-700 text-base" />
                       <span>안내문구 복사</span>
+                    </button>
+
+                    {/* PNG 이미지 2장 개별 다운로드 */}
+                    <button
+                      onClick={() => handleDownloadImages(sendingKakaoWarranty)}
+                      disabled={isDownloading}
+                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
+                      title="1면(상세)과 2면(약관)을 PNG 이미지 파일 2장으로 각각 저장"
+                    >
+                      <i className="ri-image-line text-slate-700 text-base" />
+                      <span>이미지 2장(PNG)</span>
                     </button>
 
                     {/* 보증서 단일 링크 복사 */}

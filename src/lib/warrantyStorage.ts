@@ -290,26 +290,30 @@ const downloadCanvas = (canvas: HTMLCanvasElement, filename: string): Promise<bo
   });
 };
 
-// 카카오톡 전송용 고해상도(2x) 정품 보증서 2페이지(1면 상세 + 2면 약관) 자동 생성 및 다운로드 함수
-export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean> => {
-  if (typeof window === 'undefined') return false;
+// ─────────────────────────────────────────────
+// 보증서 캔버스 생성 및 PDF / 이미지 다운로드 함수
+// ─────────────────────────────────────────────
+
+/**
+ * 보증서 1면(상세) 및 2면(약관)의 고화질 캔버스를 렌더링하여 반환
+ */
+export const renderWarrantyCanvases = async (
+  item: WarrantyItem
+): Promise<{ canvasFront: HTMLCanvasElement; canvasBack: HTMLCanvasElement } | null> => {
+  if (typeof window === 'undefined') return null;
 
   try {
     const scale = 2; // 레티나 2배율 고해상도 (1446 x 2048)
     const width = 723 * scale;
     const height = 1024 * scale;
-    const cleanName = (item.customerName || '고객').replace(/[^a-zA-Z0-9가-힣]/g, '');
-    const cleanPlate = (item.carPlate || '차량').replace(/[^a-zA-Z0-9가-힣]/g, '');
 
-    // ─────────────────────────────────────────────
-    // 1. 앞면(보증상세) 생성 및 다운로드
-    // ─────────────────────────────────────────────
+    // 1. 앞면 (상세)
     const frontImg = await loadImage('/images/warranty/warranty_front.png');
     const canvasFront = document.createElement('canvas');
     canvasFront.width = width;
     canvasFront.height = height;
     const ctxFront = canvasFront.getContext('2d');
-    if (!ctxFront) return false;
+    if (!ctxFront) return null;
 
     // 원본 서식 그리기
     ctxFront.drawImage(frontImg, 0, 0, width, height);
@@ -361,21 +365,13 @@ export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean
       ctxFront.textAlign = 'left';
     }
 
-    // 1페이지 다운로드
-    await downloadCanvas(canvasFront, `코션스마트센터_정품보증서_1면_상세_${cleanName}_${cleanPlate}.png`);
-
-    // 브라우저 팝업/다운로드 블로킹 방지를 위해 300ms 텀
-    await new Promise((r) => setTimeout(r, 300));
-
-    // ─────────────────────────────────────────────
-    // 2. 뒷면(보증약관) 생성 및 다운로드
-    // ─────────────────────────────────────────────
+    // 2. 뒷면 (약관)
     const backImg = await loadImage('/images/warranty/warranty_back.png');
     const canvasBack = document.createElement('canvas');
     canvasBack.width = width;
     canvasBack.height = height;
     const ctxBack = canvasBack.getContext('2d');
-    if (!ctxBack) return true; // 1면은 성공했으므로 true 반환
+    if (!ctxBack) return null;
 
     // 원본 서식 그리기
     ctxBack.drawImage(backImg, 0, 0, width, height);
@@ -383,14 +379,12 @@ export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean
     // 보증기간이 6년(기본)과 다를 때 오버레이 처리
     if (item.warrantyPeriodYears && item.warrantyPeriodYears !== 6) {
       ctxBack.fillStyle = '#ffffff';
-      // 흰색 마스킹
       const maskX = (38.6 / 100) * width;
       const maskY = (29.1 / 100) * height;
       const maskW = (2.5 / 100) * width;
       const maskH = (1.8 / 100) * height;
       ctxBack.fillRect(maskX, maskY, maskW, maskH);
 
-      // 새 보증기간 텍스트
       ctxBack.fillStyle = '#111827';
       ctxBack.textBaseline = 'middle';
       ctxBack.textAlign = 'center';
@@ -398,12 +392,75 @@ export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean
       ctxBack.fillText(String(item.warrantyPeriodYears), maskX + maskW / 2, maskY + maskH / 2);
     }
 
-    // 2페이지 다운로드
-    await downloadCanvas(canvasBack, `코션스마트센터_정품보증서_2면_약관_${cleanName}_${cleanPlate}.png`);
+    return { canvasFront, canvasBack };
+  } catch (err) {
+    console.error('Failed to render warranty canvases:', err);
+    return null;
+  }
+};
+
+/**
+ * 정품 보증서 1면(상세) + 2면(약관)을 하나의 완성된 PDF(총 2페이지) 파일로 생성하여 다운로드
+ */
+export const downloadWarrantyPdf = async (item: WarrantyItem): Promise<boolean> => {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const canvases = await renderWarrantyCanvases(item);
+    if (!canvases) return false;
+
+    const { jsPDF } = await import('jspdf');
+    // A4 규격 세로(210 x 297 mm)
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true
+    });
+
+    // 1페이지 (앞면 상세)
+    const frontDataUrl = canvases.canvasFront.toDataURL('image/jpeg', 0.95);
+    pdf.addImage(frontDataUrl, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+
+    // 2페이지 (뒷면 약관)
+    pdf.addPage('a4', 'portrait');
+    const backDataUrl = canvases.canvasBack.toDataURL('image/jpeg', 0.95);
+    pdf.addImage(backDataUrl, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+
+    const cleanName = (item.customerName || '고객').replace(/[^a-zA-Z0-9가-힣]/g, '');
+    const cleanPlate = (item.carPlate || '차량').replace(/[^a-zA-Z0-9가-힣]/g, '');
+    pdf.save(`코션스마트센터_정품보증서_${cleanName}_${cleanPlate}.pdf`);
 
     return true;
   } catch (err) {
-    console.error('Failed to generate warranty images:', err);
+    console.error('Failed to generate warranty PDF:', err);
+    return false;
+  }
+};
+
+// 고해상도 PNG 이미지 2장(1면 상세 + 2면 약관) 개별 다운로드 함수
+export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean> => {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const canvases = await renderWarrantyCanvases(item);
+    if (!canvases) return false;
+
+    const cleanName = (item.customerName || '고객').replace(/[^a-zA-Z0-9가-힣]/g, '');
+    const cleanPlate = (item.carPlate || '차량').replace(/[^a-zA-Z0-9가-힣]/g, '');
+
+    // 1페이지 다운로드
+    await downloadCanvas(canvases.canvasFront, `코션스마트센터_정품보증서_1면_상세_${cleanName}_${cleanPlate}.png`);
+
+    // 브라우저 팝업/다운로드 블로킹 방지를 위해 300ms 텀
+    await new Promise((r) => setTimeout(r, 300));
+
+    // 2페이지 다운로드
+    await downloadCanvas(canvases.canvasBack, `코션스마트센터_정품보증서_2면_약관_${cleanName}_${cleanPlate}.png`);
+
+    return true;
+  } catch (err) {
+    console.error('Failed to download warranty images:', err);
     return false;
   }
 };

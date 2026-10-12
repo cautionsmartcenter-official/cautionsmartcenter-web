@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { type WarrantyItem, getWarrantyViewUrl, downloadWarrantyImage, copyTextToClipboard, formatPriceWithCommas } from '../lib/warrantyStorage';
+import {
+  type WarrantyItem,
+  getWarrantyViewUrl,
+  downloadWarrantyImage,
+  downloadWarrantyPdf,
+  copyTextToClipboard,
+  formatPriceWithCommas
+} from '../lib/warrantyStorage';
 import { sendKakaoWarranty } from '../lib/kakao';
 
 interface WarrantyViewerProps {
@@ -75,7 +82,27 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
     window.print();
   };
 
-  // 보증서 이미지(PNG)로 저장 (고객용)
+  const [isSavingPdf, setIsSavingPdf] = useState(false);
+
+  // 보증서 1면(상세)+2면(약관) 통합 2페이지 PDF로 저장
+  const handleSavePdf = async () => {
+    setIsSavingPdf(true);
+    try {
+      const ok = await downloadWarrantyPdf(warranty);
+      if (ok) {
+        setShareFeedback('🎉 정품 보증서 2페이지 합본 PDF가 다운로드 폴더에 저장되었습니다.');
+      } else {
+        setShareFeedback('PDF 저장에 실패했습니다. A4 인쇄 버튼을 이용해 주세요.');
+      }
+    } catch {
+      setShareFeedback('PDF 생성 중 오류가 발생했습니다.');
+    } finally {
+      setIsSavingPdf(false);
+      setTimeout(() => setShareFeedback(null), 4000);
+    }
+  };
+
+  // 보증서 이미지(PNG 2장)로 저장 (고객용)
   const handleSaveImage = async () => {
     try {
       await downloadWarrantyImage(warranty);
@@ -140,16 +167,22 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
         {/* 액션 버튼들 */}
         <div className="flex items-center gap-2">
-          {publicMode ? (
-            <button
-              onClick={handleSaveImage}
-              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
-              title="보증서를 이미지 파일로 저장"
-            >
-              <i className="ri-download-2-line text-sm" />
-              <span>이미지로 저장</span>
-            </button>
-          ) : (
+          {/* 1면+2면 통합 PDF 다운로드 버튼 */}
+          <button
+            onClick={handleSavePdf}
+            disabled={isSavingPdf}
+            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+            title="정품 보증서 1면과 2면을 1개의 완성된 PDF 파일로 다운로드"
+          >
+            {isSavingPdf ? (
+              <i className="ri-loader-4-line animate-spin text-sm" />
+            ) : (
+              <i className="ri-file-pdf-fill text-sm text-yellow-300" />
+            )}
+            <span>PDF 저장</span>
+          </button>
+
+          {!publicMode && (
             <button
               onClick={handleKakaoShare}
               className="px-3 py-1.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
@@ -590,40 +623,42 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
               )}
             </div>
 
-            {/* ── 보증서 이미지 2장 저장 & 원본 열람 & PDF 다운로드 버튼 ── */}
+            {/* ── 보증서 PDF(2페이지 합본) 저장 & 이미지 저장 & A4 인쇄 버튼 ── */}
             <div className="space-y-2 pt-1">
               <button
                 type="button"
-                onClick={handleSaveImage}
-                className="w-full py-3.5 bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
-                title="정품 보증서 2장(1면 상세 + 2면 약관)을 사진첩/다운로드 폴더에 저장합니다"
+                onClick={handleSavePdf}
+                disabled={isSavingPdf}
+                className="w-full py-3.5 bg-gradient-to-r from-red-600 via-rose-700 to-slate-900 hover:from-red-700 hover:to-slate-950 text-white rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+                title="정품 보증서 1면(상세) + 2면(약관)을 하나의 완성된 PDF 파일로 다운로드합니다"
               >
-                <i className="ri-image-line text-lg text-yellow-300" />
-                <span>보증서 이미지(총 2페이지) 다운로드</span>
+                {isSavingPdf ? (
+                  <i className="ri-loader-4-line animate-spin text-lg text-yellow-300" />
+                ) : (
+                  <i className="ri-file-pdf-fill text-lg text-yellow-300" />
+                )}
+                <span>정품 보증서 PDF(총 2페이지 합본) 다운로드</span>
               </button>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    setActivePage('front');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-700"
-                  title="정품 보증서 원본(앞면·뒷면) 전체 양식을 엽니다"
+                  onClick={handleSaveImage}
+                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-700"
+                  title="정품 보증서 2장을 PNG 이미지 파일로 저장합니다"
                 >
-                  <i className="ri-file-text-line text-base" />
-                  <span>보증서 원본 보기</span>
+                  <i className="ri-image-line text-sm text-yellow-300" />
+                  <span>이미지 2장(PNG) 저장</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handlePrint}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-800"
-                  title="스마트폰이나 PC에 PDF 파일로 저장하거나 인쇄합니다"
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-800"
+                  title="스마트폰이나 PC에서 A4 양식으로 직접 인쇄합니다"
                 >
-                  <i className="ri-printer-line text-base text-red-500" />
-                  <span>PDF 인쇄 / 저장</span>
+                  <i className="ri-printer-line text-sm text-red-500" />
+                  <span>A4 직접 인쇄</span>
                 </button>
               </div>
             </div>
