@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   type WarrantyItem,
@@ -6,7 +6,8 @@ import {
   downloadWarrantyImage,
   downloadWarrantyPdf,
   copyTextToClipboard,
-  formatPriceWithCommas
+  formatPriceWithCommas,
+  renderWarrantyCanvases
 } from '../lib/warrantyStorage';
 import { sendKakaoWarranty } from '../lib/kakao';
 
@@ -22,10 +23,36 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   onClose,
   publicMode = false
 }) => {
-  const [activePage, setActivePage] = useState<'front' | 'back' | 'mobile'>('mobile');
+  const [activePage, setActivePage] = useState<'front' | 'back' | 'mobile'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 640 && publicMode) {
+      return 'mobile';
+    }
+    return 'front';
+  });
   const [copied, setCopied] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const [showTermsDetail, setShowTermsDetail] = useState(false);
+
+  // 완성본 캔버스 이미지 (양식에 글씨가 100% 한 치의 오차 없이 박힌 일체형 이미지)
+  const [renderedFrontUrl, setRenderedFrontUrl] = useState<string | null>(null);
+  const [renderedBackUrl, setRenderedBackUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    renderWarrantyCanvases(warranty)
+      .then((canvases) => {
+        if (!isMounted || !canvases) return;
+        setRenderedFrontUrl(canvases.canvasFront.toDataURL('image/png'));
+        setRenderedBackUrl(canvases.canvasBack.toDataURL('image/png'));
+      })
+      .catch((err) => {
+        console.error('Failed to render warranty canvas:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [warranty]);
 
   // 만료일 계산
   const issueDateObj = new Date(warranty.issueDate);
@@ -34,19 +61,6 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   const expiryDateStr = isNaN(expiryDateObj.getTime())
     ? ''
     : `${expiryDateObj.getFullYear()}-${String(expiryDateObj.getMonth() + 1).padStart(2, '0')}-${String(expiryDateObj.getDate()).padStart(2, '0')}`;
-
-  // 전화번호 포맷팅 (010-0000-0000)
-  const formatPhone = (phone?: string) => {
-    if (!phone) return '-';
-    const clean = phone.replace(/[^0-9]/g, '');
-    if (clean.length === 11) {
-      return clean.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    }
-    if (clean.length === 10) {
-      return clean.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-    }
-    return phone;
-  };
 
   // 링크 복사
   const handleCopyLink = async () => {
@@ -232,272 +246,94 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-         1. 원본 양식 인쇄 뷰 (Front Page)
-      ───────────────────────────────────────────────────────────── */}
-      {/* ─────────────────────────────────────────────────────────────
-         1. 원본 양식 인쇄 뷰 (Front Page) - 정밀 좌표 교정
+         1. 원본 양식 뷰 (Front Page) - 글씨가 100% 박힌 고화질 완성본 이미지
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'front' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-lg overflow-hidden mx-auto transition-all ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto transition-all ${
             activePage === 'front' ? 'block' : 'hidden print:block'
           }`}
           style={{
             width: '100%',
             maxWidth: '723px',
+            aspectRatio: '723 / 1024',
             pageBreakAfter: 'always'
           }}
         >
-          {/* 원본 배경 이미지 - 비율 왜곡/크롭 없이 100% 온전하게 렌더링 */}
-          <img
-            src="/images/warranty/warranty_front.png"
-            alt="Caution Smart Center Certificate of Warranty Front"
-            className="w-full h-auto block select-none pointer-events-none"
-            style={{ display: 'block', width: '100%', height: 'auto' }}
-          />
-
-          {/* ── 1. 고객정보 오버레이 ── */}
-          {/* 고객명 */}
-          <div
-            className="absolute font-bold text-gray-900 font-sans tracking-wide leading-none"
-            style={{
-              top: '43.4%',
-              left: '20.0%',
-              width: '26%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(11px, 2.0vw, 15px)'
-            }}
-          >
-            {warranty.customerName}
-          </div>
-
-          {/* 연락처 */}
-          <div
-            className="absolute font-bold text-gray-900 font-mono tracking-wider leading-none"
-            style={{
-              top: '46.6%',
-              left: '20.0%',
-              width: '26%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(10px, 1.8vw, 14px)'
-            }}
-          >
-            {formatPhone(warranty.customerPhone)}
-          </div>
-
-          {/* 주소 */}
-          <div
-            className="absolute font-medium text-gray-800 font-sans truncate text-left leading-none"
-            style={{
-              top: '50.2%',
-              left: '20.0%',
-              width: '26%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(9px, 1.4vw, 12px)'
-            }}
-            title={warranty.customerAddress}
-          >
-            {warranty.customerAddress || '-'}
-          </div>
-
-          {/* ── 2. 보증서 정보 오버레이 ── */}
-          {/* WARRANTY NO */}
-          <div
-            className="absolute font-bold text-gray-900 font-mono tracking-wider leading-none"
-            style={{
-              top: '43.8%',
-              left: '67.0%',
-              width: '27%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(10px, 1.7vw, 13.5px)'
-            }}
-          >
-            {warranty.warrantyNo}
-          </div>
-
-          {/* DATE OF ISSUE (시공일자) */}
-          <div
-            className="absolute font-bold text-gray-900 font-mono tracking-wider leading-none"
-            style={{
-              top: '46.8%',
-              left: '67.0%',
-              width: '27%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(10px, 1.7vw, 13.5px)'
-            }}
-          >
-            {warranty.issueDate}
-          </div>
-
-          {/* ── 3. 차량정보 오버레이 ── */}
-          {/* 차종 */}
-          <div
-            className="absolute font-bold text-gray-900 font-sans truncate leading-none"
-            style={{
-              top: '60.4%',
-              left: '20.5%',
-              width: '25%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(10px, 1.8vw, 14px)'
-            }}
-            title={warranty.carModel}
-          >
-            {warranty.carModel}
-          </div>
-
-          {/* 색상 */}
-          <div
-            className="absolute font-bold text-gray-900 font-sans truncate leading-none"
-            style={{
-              top: '63.4%',
-              left: '20.5%',
-              width: '25%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(10px, 1.8vw, 14px)'
-            }}
-          >
-            {warranty.carColor || '-'}
-          </div>
-
-          {/* 차량번호 */}
-          <div
-            className="absolute font-bold text-gray-900 font-sans tracking-wider leading-none"
-            style={{
-              top: '60.4%',
-              left: '62.0%',
-              width: '32%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(11px, 2.0vw, 15px)'
-            }}
-          >
-            {warranty.carPlate}
-          </div>
-
-          {/* 차대번호 (VIN) */}
-          <div
-            className="absolute font-bold text-gray-900 font-mono tracking-widest truncate leading-none"
-            style={{
-              top: '63.4%',
-              left: '62.0%',
-              width: '32%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(9px, 1.4vw, 12px)'
-            }}
-            title={warranty.vin}
-          >
-            {warranty.vin?.trim() ? warranty.vin.trim() : '-'}
-          </div>
-
-          {/* ── 4. 제품 및 시공가격 오버레이 ── */}
-          {/* 투명PPS ( ) 내부 상세 - 괄호(334~431px, 중심 52.9%) 정중앙 배치 */}
-          <div
-            className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center leading-none"
-            style={{
-              top: '72.3%',
-              left: '52.9%',
-              width: '13.0%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: 'clamp(9px, 1.4vw, 12px)'
-            }}
-          >
-            {warranty.hasClearPps ? warranty.clearPpsDetail || '전체' : '-'}
-          </div>
-
-          {/* 컬러PPS ( ) 내부 상세 - 괄호(524~617px, 중심 78.9%) 정중앙 배치 */}
-          <div
-            className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center truncate leading-none"
-            style={{
-              top: '72.3%',
-              left: '78.9%',
-              width: '13.0%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: 'clamp(9px, 1.3vw, 11.5px)'
-            }}
-            title={warranty.colorPpsDetail}
-          >
-            {warranty.hasColorPps ? warranty.colorPpsDetail || '전체' : '-'}
-          </div>
-
-          {/* 시공가격 */}
-          <div
-            className="absolute font-black text-gray-900 font-mono tracking-wider text-right pr-4 leading-none"
-            style={{
-              top: '77.4%',
-              left: '21.0%',
-              width: '49.0%',
-              transform: 'translateY(-50%)',
-              fontSize: 'clamp(11px, 2.2vw, 16px)'
-            }}
-          >
-            {warranty.price ? `${formatPriceWithCommas(warranty.price)} 원` : '-'}
-          </div>
+          {renderedFrontUrl ? (
+            <img
+              src={renderedFrontUrl}
+              alt="독일 CARDIP 정품 품질 보증서 앞면"
+              className="w-full h-full object-contain block select-none pointer-events-auto"
+              style={{ display: 'block', width: '100%', height: '100%' }}
+              title="이미지를 길게 누르면 사진첩에 저장할 수 있습니다."
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-slate-200 gap-3 p-8">
+              <i className="ri-loader-4-line animate-spin text-4xl text-red-500" />
+              <p className="text-sm font-bold">정품 보증서 양식에 텍스트를 인쇄하는 중...</p>
+              <p className="text-xs text-slate-400">한 치의 오차도 없이 양식에 완벽히 박아넣고 있습니다.</p>
+            </div>
+          )}
 
           {/* 하단 모바일 이동/인쇄 퀵 바 (인쇄 시 숨김) */}
-          <div className="absolute bottom-2 inset-x-2 print:hidden bg-slate-900/90 backdrop-blur-sm rounded-xl p-2 flex items-center justify-center gap-2 z-10 sm:hidden">
+          <div className="absolute bottom-3 inset-x-3 print:hidden bg-slate-900/90 backdrop-blur-md rounded-xl p-2 flex items-center justify-center gap-2 z-10 shadow-lg border border-slate-700/60 sm:hidden">
             <button
               onClick={() => setActivePage('mobile')}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer border border-slate-700"
+              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer shadow"
             >
-              <i className="ri-smartphone-line text-red-500" />
+              <i className="ri-smartphone-line" />
               <span>모바일 카드</span>
             </button>
             <button
               onClick={() => setActivePage('back')}
-              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer"
+              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer border border-slate-700"
             >
               <span>뒷면(약관) &gt;</span>
             </button>
             <button
-              onClick={handlePrint}
+              onClick={handleSavePdf}
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer border border-slate-700"
             >
-              <i className="ri-download-2-line text-red-500" />
-              <span>PDF저장</span>
+              <i className="ri-file-pdf-fill text-yellow-300" />
+              <span>PDF 다운</span>
             </button>
           </div>
         </div>
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-         2. 원본 양식 인쇄 뷰 (Back Page)
+         2. 원본 양식 뷰 (Back Page) - 글씨가 100% 박힌 고화질 약관 이미지
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'back' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-lg overflow-hidden mx-auto mt-4 print:mt-0 transition-all ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mt-4 print:mt-0 transition-all ${
             activePage === 'back' ? 'block' : 'hidden print:block'
           }`}
           style={{
             width: '100%',
             maxWidth: '723px',
+            aspectRatio: '723 / 1024',
             pageBreakBefore: 'always'
           }}
         >
-          {/* 뒷면 배경 이미지 */}
-          <img
-            src="/images/warranty/warranty_back.png"
-            alt="Caution Smart Center Certificate of Warranty Back"
-            className="w-full h-auto block select-none pointer-events-none"
-            style={{ display: 'block', width: '100%', height: 'auto' }}
-          />
-
-          {/* 보증기간이 6년(기본)과 다를 때만 덮어쓰기 오버레이 */}
-          {warranty.warrantyPeriodYears && warranty.warrantyPeriodYears !== 6 && (
-            <div
-              className="absolute font-bold text-gray-900 font-mono tracking-wider flex items-center justify-center bg-white"
-              style={{
-                top: '29.1%',
-                left: '38.6%',
-                width: '2.5%',
-                height: '1.8%',
-                fontSize: 'clamp(10px, 1.6vw, 13px)'
-              }}
-            >
-              {warranty.warrantyPeriodYears}
+          {renderedBackUrl ? (
+            <img
+              src={renderedBackUrl}
+              alt="독일 CARDIP 정품 품질 보증서 뒷면 약관"
+              className="w-full h-full object-contain block select-none pointer-events-auto"
+              style={{ display: 'block', width: '100%', height: '100%' }}
+              title="이미지를 길게 누르면 사진첩에 저장할 수 있습니다."
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-slate-200 gap-3 p-8">
+              <i className="ri-loader-4-line animate-spin text-4xl text-red-500" />
+              <p className="text-sm font-bold">약관 페이지를 불러오는 중...</p>
             </div>
           )}
 
           {/* 하단 모바일 이동/인쇄 퀵 바 (인쇄 시 숨김) */}
-          <div className="absolute bottom-2 inset-x-2 print:hidden bg-slate-900/90 backdrop-blur-sm rounded-xl p-2 flex items-center justify-center gap-2 z-10 sm:hidden">
+          <div className="absolute bottom-3 inset-x-3 print:hidden bg-slate-900/90 backdrop-blur-md rounded-xl p-2 flex items-center justify-center gap-2 z-10 shadow-lg border border-slate-700/60 sm:hidden">
             <button
               onClick={() => setActivePage('front')}
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer border border-slate-700"
@@ -506,17 +342,17 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             </button>
             <button
               onClick={() => setActivePage('mobile')}
-              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer"
+              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer shadow"
             >
               <i className="ri-smartphone-line" />
               <span>모바일 카드</span>
             </button>
             <button
-              onClick={handlePrint}
+              onClick={handleSavePdf}
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-lg flex items-center gap-1 cursor-pointer border border-slate-700"
             >
-              <i className="ri-download-2-line text-red-500" />
-              <span>PDF저장</span>
+              <i className="ri-file-pdf-fill text-yellow-300" />
+              <span>PDF 다운</span>
             </button>
           </div>
         </div>
