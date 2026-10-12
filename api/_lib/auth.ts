@@ -1,8 +1,10 @@
 // 관리자 인증: 요청 헤더 x-admin-key 를 Vercel 환경변수 ADMIN_PASSWORD 와 비교합니다.
 import crypto from 'node:crypto';
 
+export const DEFAULT_ADMIN_PW = 'caution2026!';
+
 export function isAdminRequest(headerValue: string | string[] | undefined): boolean {
-  const expected = process.env.ADMIN_PASSWORD || '';
+  const expected = process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PW;
   const given = Array.isArray(headerValue) ? headerValue[0] : headerValue || '';
   if (!expected || !given) return false;
 

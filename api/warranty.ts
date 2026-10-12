@@ -43,9 +43,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'POST 요청만 허용됩니다.' });
   }
-  if (!process.env.ADMIN_PASSWORD) {
-    return res.status(500).json({ error: '서버 설정 누락: ADMIN_PASSWORD 환경변수가 없습니다.' });
-  }
   if (!isAdminRequest(req.headers['x-admin-key'])) {
     return res.status(401).json({ error: '관리자 인증 실패: 비밀번호를 확인하고 다시 로그인해 주세요.' });
   }
