@@ -75,7 +75,7 @@ export const ContactPage: React.FC = () => {
               <span>✉️ 이메일 제휴 문의</span>
             </a>
             <a
-              href="http://pf.kakao.com/_FxINhX"
+              href="https://pf.kakao.com/_FxlNhX"
               target="_blank"
               rel="noreferrer"
               className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-400 rounded-lg text-xs font-mono font-bold flex items-center gap-2 transition-all"
@@ -214,7 +214,7 @@ export const ContactPage: React.FC = () => {
               </a>
 
               <a
-                href="http://pf.kakao.com/_FxINhX"
+                href="https://pf.kakao.com/_FxlNhX"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all text-amber-400 group"
@@ -271,7 +271,7 @@ export const ContactPage: React.FC = () => {
               📞 전화 (031-712-6665)
             </a>
             <a
-              href="http://pf.kakao.com/_FxINhX"
+              href="https://pf.kakao.com/_FxlNhX"
               target="_blank"
               rel="noreferrer"
               className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-mono text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-2 shadow-lg"

@@ -19,6 +19,7 @@ import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
 import { ReaddyPartners } from './components/ReaddyPartners';
 import { ReaddyLocationSection } from './components/ReaddyLocationSection';
 import { InlineTextEditor } from './components/InlineTextEditor';
+import { PublicWarrantyPage } from './components/PublicWarrantyPage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -113,6 +114,12 @@ export default function App() {
     window.addEventListener('hashchange', checkHash);
     return () => window.removeEventListener('hashchange', checkHash);
   }, []);
+
+  /* ── 0. 고객용 보증서 공개 화면 (알림톡 [보증서 보기] 링크: /w/<토큰>) ── */
+  const publicMatch = window.location.pathname.match(/^\/w\/([A-Za-z0-9_-]{16,64})\/?$/);
+  if (publicMatch) {
+    return <PublicWarrantyPage token={publicMatch[1]} />;
+  }
 
   /* ── 0-A. Customer Warranty Portal (본인 인증 전용) ── */
   if (activeTab === 'warranty') {

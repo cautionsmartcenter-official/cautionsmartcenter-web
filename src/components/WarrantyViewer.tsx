@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { type WarrantyItem, getWarrantyViewUrl } from '../lib/warrantyStorage';
+import { type WarrantyItem, getWarrantyViewUrl, downloadWarrantyImage, copyTextToClipboard } from '../lib/warrantyStorage';
 import { sendKakaoWarranty } from '../lib/kakao';
 
 interface WarrantyViewerProps {
   warranty: WarrantyItem;
   onClose?: () => void;
+  /** 고객용 공개 화면(알림톡 [보증서 보기] 링크)에서 열릴 때 true */
+  publicMode?: boolean;
 }
 
 export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   warranty,
-  onClose
+  onClose,
+  publicMode = false
 }) => {
   const [activePage, setActivePage] = useState<'front' | 'back' | 'mobile'>(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -44,16 +47,20 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   };
 
   // 링크 복사
-  const handleCopyLink = () => {
-    const url = getWarrantyViewUrl(warranty.warrantyNo);
-    navigator.clipboard.writeText(url).then(() => {
+  const handleCopyLink = async () => {
+    const url = publicMode ? window.location.href : getWarrantyViewUrl(warranty.warrantyNo);
+    const ok = await copyTextToClipboard(url);
+    if (ok) {
       setCopied(true);
       setShareFeedback('보증서 확인 링크가 클립보드에 복사되었습니다!');
       setTimeout(() => {
         setCopied(false);
         setShareFeedback(null);
       }, 3000);
-    });
+    } else {
+      setShareFeedback('링크 복사에 실패했습니다.');
+      setTimeout(() => setShareFeedback(null), 3000);
+    }
   };
 
   // 카카오톡 전송 / 공유
@@ -66,6 +73,17 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   // 인쇄 실행
   const handlePrint = () => {
     window.print();
+  };
+
+  // 보증서 이미지(PNG)로 저장 (고객용)
+  const handleSaveImage = async () => {
+    try {
+      await downloadWarrantyImage(warranty);
+      setShareFeedback('보증서 2장(1면 상세 + 2면 약관)이 저장되었습니다. 사진첩(다운로드 폴더)에서 확인하세요.');
+    } catch {
+      setShareFeedback('이미지 저장에 실패했습니다. 화면을 길게 눌러 저장하거나 캡처해 주세요.');
+    }
+    setTimeout(() => setShareFeedback(null), 4000);
   };
 
   return (
@@ -122,14 +140,25 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
         {/* 액션 버튼들 */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleKakaoShare}
-            className="px-3 py-1.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
-            title="고객 카카오톡으로 보증서 전송"
-          >
-            <i className="ri-kakao-talk-fill text-sm" />
-            <span className="hidden sm:inline">카카오톡 전송</span>
-          </button>
+          {publicMode ? (
+            <button
+              onClick={handleSaveImage}
+              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+              title="보증서를 이미지 파일로 저장"
+            >
+              <i className="ri-download-2-line text-sm" />
+              <span>이미지로 저장</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleKakaoShare}
+              className="px-3 py-1.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+              title="고객 카카오톡으로 보증서 전송"
+            >
+              <i className="ri-kakao-talk-fill text-sm" />
+              <span className="hidden sm:inline">카카오톡 전송</span>
+            </button>
+          )}
 
           <button
             onClick={handleCopyLink}
@@ -177,6 +206,9 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       {/* ─────────────────────────────────────────────────────────────
          1. 원본 양식 인쇄 뷰 (Front Page)
       ───────────────────────────────────────────────────────────── */}
+      {/* ─────────────────────────────────────────────────────────────
+         1. 원본 양식 인쇄 뷰 (Front Page) - 정밀 좌표 교정
+      ───────────────────────────────────────────────────────────── */}
       {(activePage === 'front' || typeof window !== 'undefined') && (
         <div
           className={`relative bg-white shadow-2xl rounded-lg overflow-hidden mx-auto transition-all ${
@@ -185,25 +217,26 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           style={{
             width: '100%',
             maxWidth: '723px',
-            aspectRatio: '723 / 1024',
             pageBreakAfter: 'always'
           }}
         >
-          {/* 원본 배경 이미지 */}
+          {/* 원본 배경 이미지 - 비율 왜곡/크롭 없이 100% 온전하게 렌더링 */}
           <img
             src="/images/warranty/warranty_front.png"
             alt="Caution Smart Center Certificate of Warranty Front"
-            className="w-full h-full object-cover select-none pointer-events-none"
+            className="w-full h-auto block select-none pointer-events-none"
+            style={{ display: 'block', width: '100%', height: 'auto' }}
           />
 
           {/* ── 1. 고객정보 오버레이 ── */}
           {/* 고객명 */}
           <div
-            className="absolute font-bold text-gray-900 font-sans tracking-wide"
+            className="absolute font-bold text-gray-900 font-sans tracking-wide leading-none"
             style={{
-              top: '42.2%',
-              left: '20.5%',
+              top: '43.4%',
+              left: '20.0%',
               width: '26%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(11px, 2.0vw, 15px)'
             }}
           >
@@ -212,11 +245,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 연락처 */}
           <div
-            className="absolute font-bold text-gray-900 font-mono tracking-wider"
+            className="absolute font-bold text-gray-900 font-mono tracking-wider leading-none"
             style={{
-              top: '45.4%',
-              left: '20.5%',
+              top: '46.6%',
+              left: '20.0%',
               width: '26%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(10px, 1.8vw, 14px)'
             }}
           >
@@ -225,11 +259,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 주소 */}
           <div
-            className="absolute font-medium text-gray-800 font-sans truncate text-left"
+            className="absolute font-medium text-gray-800 font-sans truncate text-left leading-none"
             style={{
-              top: '48.6%',
-              left: '20.5%',
+              top: '50.2%',
+              left: '20.0%',
               width: '26%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(9px, 1.4vw, 12px)'
             }}
             title={warranty.customerAddress}
@@ -240,11 +275,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           {/* ── 2. 보증서 정보 오버레이 ── */}
           {/* WARRANTY NO */}
           <div
-            className="absolute font-bold text-gray-900 font-mono tracking-wider"
+            className="absolute font-bold text-gray-900 font-mono tracking-wider leading-none"
             style={{
-              top: '42.2%',
-              left: '67.5%',
+              top: '43.8%',
+              left: '67.0%',
               width: '27%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(10px, 1.7vw, 13.5px)'
             }}
           >
@@ -253,11 +289,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* DATE OF ISSUE (시공일자) */}
           <div
-            className="absolute font-bold text-gray-900 font-mono tracking-wider"
+            className="absolute font-bold text-gray-900 font-mono tracking-wider leading-none"
             style={{
-              top: '45.4%',
-              left: '67.5%',
+              top: '46.8%',
+              left: '67.0%',
               width: '27%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(10px, 1.7vw, 13.5px)'
             }}
           >
@@ -267,11 +304,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           {/* ── 3. 차량정보 오버레이 ── */}
           {/* 차종 */}
           <div
-            className="absolute font-bold text-gray-900 font-sans truncate"
+            className="absolute font-bold text-gray-900 font-sans truncate leading-none"
             style={{
-              top: '58.8%',
-              left: '21.8%',
+              top: '60.4%',
+              left: '20.5%',
               width: '25%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(10px, 1.8vw, 14px)'
             }}
             title={warranty.carModel}
@@ -281,11 +319,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 색상 */}
           <div
-            className="absolute font-medium text-gray-800 font-sans truncate"
+            className="absolute font-medium text-gray-800 font-sans truncate leading-none"
             style={{
-              top: '61.9%',
-              left: '21.8%',
+              top: '63.4%',
+              left: '20.5%',
               width: '25%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(10px, 1.7vw, 13px)'
             }}
           >
@@ -294,11 +333,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 차량번호 */}
           <div
-            className="absolute font-bold text-gray-900 font-sans tracking-wider"
+            className="absolute font-bold text-gray-900 font-sans tracking-wider leading-none"
             style={{
-              top: '58.8%',
-              left: '62.6%',
+              top: '60.4%',
+              left: '62.0%',
               width: '32%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(11px, 2.0vw, 15px)'
             }}
           >
@@ -307,11 +347,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 차대번호 (VIN) */}
           <div
-            className="absolute font-semibold text-gray-800 font-mono tracking-widest truncate"
+            className="absolute font-semibold text-gray-800 font-mono tracking-widest truncate leading-none"
             style={{
-              top: '61.9%',
-              left: '62.6%',
+              top: '63.4%',
+              left: '62.0%',
               width: '32%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(9px, 1.4vw, 12px)'
             }}
             title={warranty.vin}
@@ -322,11 +363,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           {/* ── 4. 제품 및 시공가격 오버레이 ── */}
           {/* 투명PPS ( ) 내부 상세 */}
           <div
-            className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center"
+            className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center leading-none"
             style={{
-              top: '71.4%',
-              left: '46.8%',
-              width: '12.5%',
+              top: '73.2%',
+              left: '46.0%',
+              width: '13.0%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(9px, 1.4vw, 12px)'
             }}
           >
@@ -335,11 +377,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 컬러PPS ( ) 내부 상세 */}
           <div
-            className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center truncate"
+            className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center truncate leading-none"
             style={{
-              top: '71.4%',
-              left: '72.0%',
-              width: '12.5%',
+              top: '73.2%',
+              left: '71.5%',
+              width: '13.0%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(9px, 1.3vw, 11.5px)'
             }}
             title={warranty.colorPpsDetail}
@@ -349,11 +392,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 시공가격 */}
           <div
-            className="absolute font-black text-gray-900 font-mono tracking-wider text-right pr-4"
+            className="absolute font-black text-gray-900 font-mono tracking-wider text-right pr-4 leading-none"
             style={{
-              top: '75.8%',
+              top: '77.4%',
               left: '21.0%',
               width: '49.0%',
+              transform: 'translateY(-50%)',
               fontSize: 'clamp(11px, 2.2vw, 16px)'
             }}
           >
@@ -397,7 +441,6 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           style={{
             width: '100%',
             maxWidth: '723px',
-            aspectRatio: '723 / 1024',
             pageBreakBefore: 'always'
           }}
         >
@@ -405,7 +448,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           <img
             src="/images/warranty/warranty_back.png"
             alt="Caution Smart Center Certificate of Warranty Back"
-            className="w-full h-full object-cover select-none pointer-events-none"
+            className="w-full h-auto block select-none pointer-events-none"
+            style={{ display: 'block', width: '100%', height: 'auto' }}
           />
 
           {/* 보증기간이 6년(기본)과 다를 때만 덮어쓰기 오버레이 */}

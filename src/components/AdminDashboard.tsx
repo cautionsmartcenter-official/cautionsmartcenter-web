@@ -22,6 +22,7 @@ import { AdminWarrantyManager } from './AdminWarrantyManager';
 import { AdminCalendar } from './AdminCalendar';
 import { exportWarrantiesToCSV } from '../lib/warrantyStorage';
 import { getSchedules } from '../lib/scheduleStorage';
+import { verifyAdminPassword, setAdminKey, clearAdminKey, ServerUnavailableError } from '../lib/warrantyCloud';
 
 interface AdminDashboardProps {
   onExit: () => void;
@@ -109,16 +110,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
   }, [realtimeAlert]);
 
   // 로그인 핸들러
-  const handleLogin = (e: React.FormEvent) => {
+  // - 인터넷 배포 후: 서버(Vercel 환경변수 ADMIN_PASSWORD)가 비밀번호를 확인
+  // - 로컬 작업(npm run dev): 서버가 없으므로 기존 비밀번호로 확인
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === DEFAULT_ADMIN_PW) {
+    let ok = false;
+    try {
+      ok = await verifyAdminPassword(passwordInput);
+    } catch (err) {
+      if (err instanceof ServerUnavailableError) {
+        ok = passwordInput === DEFAULT_ADMIN_PW;
+      }
+    }
+    if (ok) {
+      setAdminKey(passwordInput);
       sessionStorage.setItem('caution_admin_auth', 'true');
       setIsAuthenticated(true);
       setAuthError('');
       // 로그인 시 오디오 엔진 활성화 및 성공 알림음
       playChimeSound();
     } else {
-      setAuthError('관리자 비밀번호가 일치하지 않습니다. (기본: caution2026!)');
+      setAuthError('관리자 비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -171,6 +183,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
 
   const handleLogout = () => {
     sessionStorage.removeItem('caution_admin_auth');
+    clearAdminKey();
     setIsAuthenticated(false);
     setPasswordInput('');
   };

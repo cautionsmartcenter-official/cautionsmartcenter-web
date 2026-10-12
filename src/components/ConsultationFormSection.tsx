@@ -125,7 +125,7 @@ export function ConsultationFormSection({ initialService }: ConsultationFormSect
               </a>
 
               <a
-                href="http://pf.kakao.com/_FxINhX"
+                href="https://pf.kakao.com/_FxlNhX"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all group"

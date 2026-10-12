@@ -29,6 +29,12 @@ export interface WarrantyItem {
   // 관리용
   status: 'active' | 'expired' | 'cancelled';
   notes?: string;
+
+  // 서버(고객 열람용) 동기화 및 카카오 알림톡 발송 기록
+  viewToken?: string; // 고객 열람 링크용 무작위 토큰 (/w/<토큰>)
+  alimtalkStatus?: 'sent' | 'failed';
+  alimtalkMessage?: string;
+  alimtalkAt?: string; // ISO string
 }
 
 const STORAGE_KEY = 'caution_warranty_db';
@@ -184,7 +190,6 @@ export const getWarrantyViewUrl = (warrantyNo: string): string => {
 
 // 카카오톡/문자 전송 메시지 생성 함수
 export const createWarrantyShareMessage = (item: WarrantyItem): string => {
-  const viewUrl = getWarrantyViewUrl(item.warrantyNo);
   const ppsType = [
     item.hasClearPps ? `투명PPS(${item.clearPpsDetail || '전체'})` : '',
     item.hasColorPps ? `컬러PPS(${item.colorPpsDetail || '전체'})` : ''
@@ -203,11 +208,189 @@ export const createWarrantyShareMessage = (item: WarrantyItem): string => {
 ■ 보증기간 : 시공일(${item.issueDate})로부터 ${item.warrantyPeriodYears}년
 ■ 보증번호 : ${item.warrantyNo}
 
-아래 링크를 터치하시면 고객님의 공식 전자 보증서(정품 인증 및 사후 관리 요령)를 언제든 확인 및 보관하실 수 있습니다.
-
-▶ 전자 보증서 바로 확인하기:
-${viewUrl}
+📎 함께 보내드린 정품 보증서 이미지를 꼭 저장해 두세요.
+(이미지를 길게 눌러 [저장]하시면 사진첩에 보관됩니다. 사고·보험 처리 시 제출용으로 사용하실 수 있습니다.)
 
 *본 보증서는 독일 CARDIP 공식 수입원인 (주)코션스마트센터에서 발급한 정품 보증서입니다.
 *문의전화: 031-705-1888`;
+};
+
+// 클립보드 복사 함수 (최신 API + 구형 브라우저 textarea execCommand 완벽 폴백)
+export const copyTextToClipboard = async (text: string): Promise<boolean> => {
+  if (typeof window === 'undefined') return false;
+
+  // 1. 최신 navigator.clipboard 시도 (https 또는 localhost 지원 환경)
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (err) {
+      console.warn('navigator.clipboard.writeText failed, using fallback textarea:', err);
+    }
+  }
+
+  // 2. Fallback: 임시 textarea 생성 후 document.execCommand('copy') 실행
+  try {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-9999px';
+    textArea.style.top = '0';
+    textArea.setAttribute('readonly', '');
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    console.error('Fallback execCommand copy failed:', err);
+    return false;
+  }
+};
+
+// 이미지 로드 헬퍼 함수
+const loadImage = (src: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = (e) => reject(e);
+    img.src = src;
+  });
+};
+
+// 캔버스를 이미지 파일(PNG)로 다운로드하는 헬퍼
+const downloadCanvas = (canvas: HTMLCanvasElement, filename: string): Promise<boolean> => {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if (!blob) return resolve(false);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        resolve(true);
+      }, 100);
+    }, 'image/png');
+  });
+};
+
+// 카카오톡 전송용 고해상도(2x) 정품 보증서 2페이지(1면 상세 + 2면 약관) 자동 생성 및 다운로드 함수
+export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean> => {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const scale = 2; // 레티나 2배율 고해상도 (1446 x 2048)
+    const width = 723 * scale;
+    const height = 1024 * scale;
+    const cleanName = (item.customerName || '고객').replace(/[^a-zA-Z0-9가-힣]/g, '');
+    const cleanPlate = (item.carPlate || '차량').replace(/[^a-zA-Z0-9가-힣]/g, '');
+
+    // ─────────────────────────────────────────────
+    // 1. 앞면(보증상세) 생성 및 다운로드
+    // ─────────────────────────────────────────────
+    const frontImg = await loadImage('/images/warranty/warranty_front.png');
+    const canvasFront = document.createElement('canvas');
+    canvasFront.width = width;
+    canvasFront.height = height;
+    const ctxFront = canvasFront.getContext('2d');
+    if (!ctxFront) return false;
+
+    // 원본 서식 그리기
+    ctxFront.drawImage(frontImg, 0, 0, width, height);
+
+    // 텍스트 그리기 헬퍼
+    ctxFront.textBaseline = 'middle';
+    const drawFrontText = (
+      text: string,
+      xPct: number,
+      yPct: number,
+      fontSize: number,
+      isBold = true,
+      isMono = false,
+      color = '#111827'
+    ) => {
+      ctxFront.fillStyle = color;
+      const fontName = isMono ? 'monospace, Courier, sans-serif' : 'Pretendard, -apple-system, sans-serif';
+      ctxFront.font = `${isBold ? 'bold ' : 'normal '}${fontSize * scale}px ${fontName}`;
+      ctxFront.fillText(text, (xPct / 100) * width, (yPct / 100) * height);
+    };
+
+    // 고객정보
+    drawFrontText(item.customerName, 20.0, 43.4, 13);
+    drawFrontText(item.customerPhone, 20.0, 46.6, 12, true, true);
+    drawFrontText(item.customerAddress || '-', 20.0, 50.2, 11, false);
+
+    // 보증서 정보
+    drawFrontText(item.warrantyNo, 67.0, 43.8, 12.5, true, true);
+    drawFrontText(item.issueDate, 67.0, 46.8, 12.5, true, true);
+
+    // 차량정보
+    drawFrontText(item.carModel, 20.5, 60.4, 13);
+    drawFrontText(item.carColor || '-', 20.5, 63.4, 12, false);
+    drawFrontText(item.carPlate, 62.0, 60.4, 14);
+    drawFrontText(item.vin?.trim() || '-', 62.0, 63.4, 11, false, true);
+
+    // 제품 및 시공가격
+    const clearText = item.hasClearPps ? (item.clearPpsDetail || '전체') : '-';
+    const colorText = item.hasColorPps ? (item.colorPpsDetail || '전체') : '-';
+    drawFrontText(clearText, 46.0, 73.2, 11.5, true, false, '#b91c1c');
+    drawFrontText(colorText, 71.5, 73.2, 11.5, true, false, '#b91c1c');
+
+    if (item.price) {
+      ctxFront.textAlign = 'right';
+      drawFrontText(`${item.price} 원`, 70.0, 77.4, 14, true, true);
+      ctxFront.textAlign = 'left';
+    }
+
+    // 1페이지 다운로드
+    await downloadCanvas(canvasFront, `코션스마트센터_정품보증서_1면_상세_${cleanName}_${cleanPlate}.png`);
+
+    // 브라우저 팝업/다운로드 블로킹 방지를 위해 300ms 텀
+    await new Promise((r) => setTimeout(r, 300));
+
+    // ─────────────────────────────────────────────
+    // 2. 뒷면(보증약관) 생성 및 다운로드
+    // ─────────────────────────────────────────────
+    const backImg = await loadImage('/images/warranty/warranty_back.png');
+    const canvasBack = document.createElement('canvas');
+    canvasBack.width = width;
+    canvasBack.height = height;
+    const ctxBack = canvasBack.getContext('2d');
+    if (!ctxBack) return true; // 1면은 성공했으므로 true 반환
+
+    // 원본 서식 그리기
+    ctxBack.drawImage(backImg, 0, 0, width, height);
+
+    // 보증기간이 6년(기본)과 다를 때 오버레이 처리
+    if (item.warrantyPeriodYears && item.warrantyPeriodYears !== 6) {
+      ctxBack.fillStyle = '#ffffff';
+      // 흰색 마스킹
+      const maskX = (38.6 / 100) * width;
+      const maskY = (29.1 / 100) * height;
+      const maskW = (2.5 / 100) * width;
+      const maskH = (1.8 / 100) * height;
+      ctxBack.fillRect(maskX, maskY, maskW, maskH);
+
+      // 새 보증기간 텍스트
+      ctxBack.fillStyle = '#111827';
+      ctxBack.textBaseline = 'middle';
+      ctxBack.textAlign = 'center';
+      ctxBack.font = `bold ${12 * scale}px monospace, Courier, sans-serif`;
+      ctxBack.fillText(String(item.warrantyPeriodYears), maskX + maskW / 2, maskY + maskH / 2);
+    }
+
+    // 2페이지 다운로드
+    await downloadCanvas(canvasBack, `코션스마트센터_정품보증서_2면_약관_${cleanName}_${cleanPlate}.png`);
+
+    return true;
+  } catch (err) {
+    console.error('Failed to generate warranty images:', err);
+    return false;
+  }
 };

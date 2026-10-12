@@ -212,7 +212,7 @@ export function ReaddyFaq({ onNavigateToContact, onNavigateToNotice: _onNavigate
               </a>
 
               <a
-                href="http://pf.kakao.com/_FxINhX"
+                href="https://pf.kakao.com/_FxlNhX"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 sm:flex-initial px-5 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer shadow-md shadow-amber-400/20"

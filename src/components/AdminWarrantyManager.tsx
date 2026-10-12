@@ -10,7 +10,9 @@ import {
   exportWarrantiesToCSV,
   generateWarrantyNo,
   createWarrantyShareMessage,
-  getWarrantyViewUrl
+  getWarrantyViewUrl,
+  downloadWarrantyImage,
+  copyTextToClipboard
 } from '../lib/warrantyStorage';
 import {
   getKakaoKey,
@@ -20,13 +22,30 @@ import {
   initKakao
 } from '../lib/kakao';
 import {
-  getAlimtalkConfig,
-  saveAlimtalkConfig,
-  isAlimtalkConfigured,
-  sendDirectAlimtalk,
-  type AlimtalkConfig
-} from '../lib/alimtalk';
+  publishWarranty,
+  deleteCloudWarranty,
+  getCloudStatus,
+  isAutoAlimtalkEnabled,
+  setAutoAlimtalkEnabled,
+  ServerUnavailableError,
+  type CloudStatus
+} from '../lib/warrantyCloud';
 import { WarrantyViewer } from './WarrantyViewer';
+
+// 솔라피에 승인 신청할 알림톡 템플릿 본문 (변수 이름은 서버 api/_lib/solapi.ts 와 반드시 일치)
+const ALIMTALK_TEMPLATE_TEXT = `[코션스마트센터] PPS 시공 보증서 발급 안내
+
+안녕하세요, #{고객명} 고객님.
+코션스마트센터를 믿고 시공을 맡겨 주셔서 감사합니다.
+
+고객님 차량의 PPS 시공 보증서가 발급되었습니다.
+
+■ 차량번호 : #{차량번호} (#{차종})
+■ 시공내역 : #{시공내역}
+■ 보증기간 : #{보증기간}
+■ 보증번호 : #{보증번호}
+
+아래 [보증서 보기] 버튼을 누르시면 전자 보증서를 확인하고 이미지로 저장하실 수 있습니다.`;
 
 interface AdminWarrantyManagerProps {
   initialPrefill?: Partial<WarrantyItem> | null;
@@ -55,10 +74,21 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
   const [kakaoKeyInput, setKakaoKeyInput] = useState('');
   const [isKakaoConfigured, setIsKakaoConfigured] = useState(false);
 
-  // 카카오 공식 알림톡 (고객 번호 다이렉트 자동 발송) 상태
-  const [alimtalkConfig, setAlimtalkConfig] = useState<AlimtalkConfig>(() => getAlimtalkConfig());
-  const [isAlimtalkReady, setIsAlimtalkReady] = useState(false);
+  // 카카오 공식 알림톡 (서버 자동 발송) 상태
+  const [autoAlimtalk, setAutoAlimtalk] = useState<boolean>(() => isAutoAlimtalkEnabled());
+  const [cloudStatus, setCloudStatus] = useState<CloudStatus | null>(null);
+  const [cloudStatusError, setCloudStatusError] = useState<string>('');
+  const [isCheckingStatus, setIsCheckingStatus] = useState(false);
   const [isSendingAlimtalk, setIsSendingAlimtalk] = useState(false);
+  const [issuedAlimtalk, setIssuedAlimtalk] = useState<{
+    state: 'idle' | 'sending' | 'sent' | 'failed' | 'local';
+    message: string;
+  }>({ state: 'idle', message: '' });
+
+  const isAlimtalkReady = Boolean(
+    cloudStatus && cloudStatus.firestore.ok && Object.values(cloudStatus.alimtalk).every(Boolean)
+  );
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // 알림 토스트
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -96,7 +126,10 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
   useEffect(() => {
     reloadData();
-    setIsAlimtalkReady(isAlimtalkConfigured());
+    // 서버 연동 상태 조용히 확인 (로컬 작업 모드면 그냥 넘어감)
+    getCloudStatus()
+      .then((s) => setCloudStatus(s))
+      .catch(() => {});
     const key = getKakaoKey();
     setKakaoKeyInput(key);
     if (key) {
@@ -144,33 +177,68 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     }
   };
 
-  // 솔라피 알림톡 설정 저장 핸들러
-  const handleSaveAlimtalkConfig = (e: React.FormEvent) => {
-    e.preventDefault();
-    saveAlimtalkConfig(alimtalkConfig);
-    const ready = isAlimtalkConfigured();
-    setIsAlimtalkReady(ready);
-    setIsKakaoSettingsOpen(false);
-    showToast('카카오 알림톡 연동 설정이 성공적으로 저장되었습니다!');
+  // 서버 연동 상태 점검 (설정 화면의 [연동 상태 확인] 버튼)
+  const handleCheckCloudStatus = async () => {
+    setIsCheckingStatus(true);
+    setCloudStatusError('');
+    try {
+      setCloudStatus(await getCloudStatus());
+    } catch (e) {
+      setCloudStatus(null);
+      setCloudStatusError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setIsCheckingStatus(false);
+    }
   };
 
-  // 고객 번호로 공식 알림톡 즉시 발송
-  const handleSendDirectAlimtalk = async (item: WarrantyItem) => {
-    if (!isAlimtalkReady) {
-      setSettingsTab('alimtalk');
-      setIsKakaoSettingsOpen(true);
+  // 보증서를 서버에 등록하고, send=true면 고객 번호로 카카오 알림톡 발송
+  const handlePublishAndSend = async (
+    item: WarrantyItem,
+    send: boolean
+  ): Promise<{ ok: boolean; local: boolean; message: string }> => {
+    if (send) setIsSendingAlimtalk(true);
+    try {
+      const res = await publishWarranty(item, send);
+      const patch: Partial<WarrantyItem> = { viewToken: res.token };
+      if (send && res.alimtalk) {
+        patch.alimtalkStatus = res.alimtalk.success ? 'sent' : 'failed';
+        patch.alimtalkMessage = res.alimtalk.message;
+        patch.alimtalkAt = new Date().toISOString();
+      }
+      const updated = updateWarranty(item.id, patch);
+      reloadData();
+      if (updated) {
+        setSendingKakaoWarranty((prev) => (prev && prev.id === item.id ? updated : prev));
+      }
+      if (!send) return { ok: true, local: false, message: '서버 저장 완료' };
+      if (res.alimtalk?.success) {
+        return { ok: true, local: false, message: '카카오 알림톡 발송 완료' };
+      }
+      return { ok: false, local: false, message: res.alimtalk?.message || '알림톡 발송 실패' };
+    } catch (e) {
+      return {
+        ok: false,
+        local: e instanceof ServerUnavailableError,
+        message: e instanceof Error ? e.message : String(e)
+      };
+    } finally {
+      if (send) setIsSendingAlimtalk(false);
+    }
+  };
+
+  // 전송 센터에서 [알림톡 자동 발송] 버튼
+  const handleSendServerAlimtalk = async (item: WarrantyItem) => {
+    if (
+      item.alimtalkStatus === 'sent' &&
+      !window.confirm(`${item.customerName} 고객님께 이미 알림톡을 보냈습니다. 한 번 더 보낼까요? (건당 비용 발생)`)
+    ) {
       return;
     }
-
-    setIsSendingAlimtalk(true);
-    const res = await sendDirectAlimtalk(item, alimtalkConfig);
-    setIsSendingAlimtalk(false);
-
-    if (res.success) {
-      showToast(`🎉 ${item.customerName} 고객님(${item.customerPhone})께 공식 카카오 알림톡이 발송되었습니다!`);
-      setSendingKakaoWarranty(null);
+    const r = await handlePublishAndSend(item, true);
+    if (r.ok) {
+      showToast(`🎉 ${item.customerName} 고객님(${item.customerPhone})께 카카오 알림톡을 보냈습니다!`);
     } else {
-      alert(`알림톡 발송 실패 안내:\n\n${res.errorMessage}`);
+      alert(`알림톡 발송 실패 안내:\n\n${r.message}\n\n급하시면 위의 [보증서 파일 다운로드 & 카톡 바로 연결]로 수동 전송해 주세요.`);
     }
   };
 
@@ -257,18 +325,42 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         reloadData();
         setIsFormOpen(false);
         showToast(`보증서(${formData.warrantyNo})가 성공적으로 수정되었습니다.`);
+        // 이미 고객에게 링크가 나간 보증서면, 고객이 보는 화면도 최신 내용으로 갱신 (재발송 없음)
+        if (updated.viewToken) {
+          handlePublishAndSend(updated, false).then((r) => {
+            if (!r.ok && !r.local) showToast(`고객 화면 갱신 실패: ${r.message}`);
+          });
+        }
       }
     } else {
       const created = saveWarranty(formData);
       reloadData();
       setIsFormOpen(false);
       setIssuedSuccessWarranty(created);
+
+      // 발급과 동시에 카카오 알림톡 자동 발송 (설정에서 끌 수 있음)
+      if (autoAlimtalk) {
+        setIssuedAlimtalk({ state: 'sending', message: '' });
+        handlePublishAndSend(created, true).then((r) => {
+          setIssuedAlimtalk({
+            state: r.ok ? 'sent' : r.local ? 'local' : 'failed',
+            message: r.message
+          });
+        });
+      } else {
+        setIssuedAlimtalk({ state: 'idle', message: '' });
+      }
     }
   };
 
   // 삭제 처리
   const handleDelete = (id: string, no: string, name: string) => {
     if (window.confirm(`[${no}] ${name} 고객님의 보증서 내역을 삭제하시겠습니까?`)) {
+      const token = warranties.find((w) => w.id === id)?.viewToken;
+      if (token) {
+        // 고객 열람 링크도 함께 삭제 (실패해도 관리자 대장 삭제는 진행)
+        deleteCloudWarranty(token).catch(() => {});
+      }
       deleteWarranty(id);
       reloadData();
       showToast('보증서 내역이 삭제되었습니다.');
@@ -290,12 +382,68 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     showToast(res.message);
   };
 
+  // 0. 보증서 고화질 이미지 파일 즉시 다운로드 & 카카오톡 자동 연계
+  const handleDownloadFile = async (item: WarrantyItem) => {
+    setIsDownloading(true);
+
+    // 1) 고객 전달용 안내 문구 클립보드 자동 복사 (호환성 100% 보장)
+    const message = createWarrantyShareMessage(item);
+    const copied = await copyTextToClipboard(message);
+
+    // 2) 고화질 보증서 파일 다운로드 실행
+    const success = await downloadWarrantyImage(item);
+    setIsDownloading(false);
+
+    if (success) {
+      if (copied) {
+        showToast(`🎉 보증서 2장(1면 상세 + 2면 약관) 다운로드 & 안내문구 복사 완료! 카톡 채팅창이 열립니다.`);
+      } else {
+        showToast(`🎉 보증서 2장(1면 상세 + 2면 약관) 다운로드 완료! 카톡 채팅창이 열립니다.`);
+      }
+
+      // 3) 다운로드 완료 후 카카오 채널 1:1 채팅 관리자 센터 자동 오픈!
+      setTimeout(() => {
+        window.open('https://business.kakao.com/_FxlNhX/chats', '_blank');
+      }, 500);
+    } else {
+      showToast('파일 생성 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 1. 카카오톡 채널 관리자 1:1 채팅으로 발송 (비용 0원)
+  const handleSendChannelChat = async (item: WarrantyItem) => {
+    const message = createWarrantyShareMessage(item);
+    const copied = await copyTextToClipboard(message);
+    if (copied) {
+      showToast('✅ 보증서 안내문구가 복사되었습니다! 채널 채팅방에 붙여넣기(Ctrl+V)하세요.');
+    } else {
+      showToast('채널 채팅창으로 이동합니다.');
+    }
+    window.open('https://business.kakao.com/_FxlNhX/chats', '_blank');
+  };
+
+  // 2. 고객용 카카오 채널 1:1 채팅방 열기 (모바일 앱 연동용)
+  const handleOpenClientChannelChat = async (item: WarrantyItem) => {
+    const message = createWarrantyShareMessage(item);
+    const copied = await copyTextToClipboard(message);
+    if (copied) {
+      showToast('✅ 보증서 문구가 복사되었습니다! 카톡 대화창에 붙여넣기하세요.');
+    }
+    window.open('https://pf.kakao.com/_FxlNhX/chat', '_blank');
+  };
+
   // 보증서 열람 링크 복사
-  const handleCopyLink = (item: WarrantyItem) => {
+  const handleCopyLink = async (item: WarrantyItem) => {
     const url = getWarrantyViewUrl(item.warrantyNo);
-    navigator.clipboard.writeText(url).then(() => {
-      showToast('보증서 확인 링크가 클립보드에 복사되었습니다. (문자 전송 가능)');
-    });
+    await copyTextToClipboard(url);
+    showToast('보증서 확인 링크가 클립보드에 복사되었습니다. (문자 전송 가능)');
+  };
+
+  // 보증서 링크만 단독 복사
+  const handleCopyOnlyLink = async (item: WarrantyItem) => {
+    const url = getWarrantyViewUrl(item.warrantyNo);
+    await copyTextToClipboard(url);
+    showToast('🔗 전자보증서 바로가기 링크만 복사되었습니다.');
   };
 
   // 필터링 및 검색
@@ -968,7 +1116,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       </AnimatePresence>
 
       {/* ─────────────────────────────────────────────────────────────
-         5. 카카오톡 전송 센터 모달 (SendKakaoModal)
+         5. 카카오톡 전송 센터 모달 (SendKakaoModal) - 채널 1:1 무료 발송 중심
       ───────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {sendingKakaoWarranty && (
@@ -981,12 +1129,19 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             >
               {/* 모달 상단 */}
               <div className="bg-[#FEE500] px-6 py-4 flex items-center justify-between text-[#3c1e1e]">
-                <div className="flex items-center gap-2">
-                  <i className="ri-kakao-talk-fill text-2xl" />
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-[#3c1e1e] text-[#FEE500] flex items-center justify-center shadow-sm">
+                    <i className="ri-kakao-talk-fill text-2xl" />
+                  </div>
                   <div>
-                    <h3 className="font-black text-base">카카오톡 보증서 전송 센터</h3>
-                    <p className="text-[11px] font-medium opacity-80">
-                      고객 카카오톡 또는 문자로 보증서 안내문과 바로가기 링크를 전송합니다.
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-black text-base">카카오톡 보증서 전송 센터</h3>
+                      <span className="bg-[#3c1e1e] text-[#FEE500] text-[10px] font-black px-2 py-0.5 rounded-full">
+                        비용 0원
+                      </span>
+                    </div>
+                    <p className="text-[11px] font-medium opacity-85">
+                      코션스마트센터 카카오 채널 및 무료 문자로 보증서를 전달합니다.
                     </p>
                   </div>
                 </div>
@@ -999,7 +1154,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
               </div>
 
               {/* 모달 본문 */}
-              <div className="p-6 space-y-4">
+              <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
                 {/* 고객 정보 요약 배너 */}
                 <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between text-xs">
                   <div>
@@ -1014,116 +1169,212 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   </div>
                 </div>
 
-                {/* 카카오 연동 상태 뱃지 및 안내 */}
-                <div className="flex items-center justify-between bg-slate-100/90 px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        isAlimtalkReady
-                          ? 'bg-emerald-500 animate-pulse'
-                          : isKakaoConfigured
-                          ? 'bg-blue-500'
-                          : 'bg-amber-500'
-                      }`}
-                    />
-                    <span className="font-semibold text-slate-800">
-                      {isAlimtalkReady
-                        ? '카카오 공식 알림톡 연동됨 (개인 로그인 불필요)'
-                        : isKakaoConfigured
-                        ? '카카오 JS 공유키 연동됨 (개인 계정 로그인 필요)'
-                        : '알림톡 미연동 (아래 설정 클릭 시 3분 연동 가능)'}
-                    </span>
+                {/* 비용 0원 무료 채널 발송 안내 배너 */}
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 text-xs text-emerald-950 flex items-start gap-2.5">
+                  <i className="ri-checkbox-circle-fill text-emerald-600 text-lg flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="block font-bold text-emerald-900 mb-0.5">
+                      개인 로그인 / 유료 과금 없는 완전 무료(0원) 발송
+                    </strong>
+                    <p className="text-[11px] text-emerald-800 leading-relaxed">
+                      아래 <strong>[채널 1:1 채팅으로 보내기]</strong>를 누르면 안내문구가 자동 복사되고 카카오 채널 채팅창이 열립니다. 채팅창에서 <strong>[붙여넣기(Ctrl+V)]</strong>만 하시면 우리 채널 이름으로 안전하게 전송됩니다.
+                    </p>
                   </div>
-                  <button
-                    onClick={() => {
-                      setSettingsTab('alimtalk');
-                      setIsKakaoSettingsOpen(true);
-                    }}
-                    className="text-[11px] font-bold text-red-600 hover:underline cursor-pointer"
-                  >
-                    {isAlimtalkReady ? '연동 설정 관리' : '알림톡 설정하기'}
-                  </button>
                 </div>
 
                 {/* 발송 메시지 미리보기 박스 */}
                 <div>
-                  <label className="text-xs font-bold text-slate-600 block mb-1.5 flex items-center justify-between">
-                    <span>발송 메시지 미리보기</span>
-                    <span className="text-[11px] text-slate-400 font-normal">고객 스마트폰에 도착하는 본문</span>
-                  </label>
-                  <div className="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80 text-xs text-slate-800 font-sans whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto select-all">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <i className="ri-chat-poll-line text-amber-600" />
+                      <span>고객 전달 메시지 미리보기</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const copied = await copyTextToClipboard(createWarrantyShareMessage(sendingKakaoWarranty));
+                        if (copied) {
+                          showToast('✅ 안내문구 전체가 복사되었습니다!');
+                        } else {
+                          showToast('복사에 실패했습니다. 아래 내용을 직접 드래그해서 복사해 주세요.');
+                        }
+                      }}
+                      className="text-[11px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer"
+                    >
+                      <i className="ri-file-copy-line text-xs" />
+                      <span>전체 복사</span>
+                    </button>
+                  </div>
+                  <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 text-xs text-slate-800 font-sans whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto select-all shadow-inner">
                     {createWarrantyShareMessage(sendingKakaoWarranty)}
                   </div>
                 </div>
 
-                {/* 전송 액션 버튼들 */}
-                <div className="space-y-2.5 pt-2">
-                  {/* 메인 버튼: 고객 번호로 공식 알림톡 다이렉트 발송 (로그인 불필요!) */}
+                {/* ────────────────── 주요 발송 버튼들 ────────────────── */}
+                <div className="space-y-2.5 pt-1">
+                  {/* 메인 버튼 1 (추천): 보증서 다운로드 & 카톡 전송 바로 연계 */}
                   <button
-                    onClick={() => handleSendDirectAlimtalk(sendingKakaoWarranty)}
+                    onClick={() => handleDownloadFile(sendingKakaoWarranty)}
+                    disabled={isDownloading}
+                    className="w-full py-4 px-4 bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 hover:from-blue-800 hover:to-slate-950 text-white font-black rounded-2xl text-sm sm:text-base flex flex-col items-center justify-center gap-0.5 shadow-xl shadow-blue-900/25 hover:scale-[1.01] transition-all cursor-pointer border border-blue-500/40"
+                  >
+                    <div className="flex items-center gap-2">
+                      {isDownloading ? (
+                        <i className="ri-loader-4-line animate-spin text-2xl text-yellow-300" />
+                      ) : (
+                        <i className="ri-file-download-fill text-2xl text-yellow-300" />
+                      )}
+                      <span>{isDownloading ? '보증서 2장 생성 & 카톡 연결 중...' : '보증서 2장(상세+약관) 다운로드 & 카톡 바로 연결'}</span>
+                      <span className="text-[10px] bg-yellow-400 text-slate-900 px-2 py-0.5 rounded-full font-bold">
+                        총 2페이지
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-blue-200 font-normal">
+                      앞면(상세) + 뒷면(약관) 2장 자동 저장 + 문구 복사 + 카카오 채널 채팅창 오픈!
+                    </span>
+                  </button>
+
+                  {/* 메인 버튼 2: 우리 카카오 채널 1:1 채팅으로 보내기 (비용 0원) */}
+                  <button
+                    onClick={() => handleSendChannelChat(sendingKakaoWarranty)}
+                    className="w-full py-3.5 px-4 bg-gradient-to-r from-[#FEE500] to-amber-400 hover:from-[#FDD835] hover:to-amber-500 text-[#3c1e1e] font-black rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md hover:scale-[1.01] transition-all cursor-pointer border border-yellow-300"
+                  >
+                    <i className="ri-kakao-talk-fill text-xl text-[#3c1e1e]" />
+                    <span>우리 카카오 채널 1:1 채팅창 열기 + 문구 자동 복사</span>
+                    <span className="text-[10px] bg-[#3c1e1e] text-[#FEE500] px-2 py-0.5 rounded-full font-bold">
+                      비용 0원
+                    </span>
+                  </button>
+
+                  {/* 메인 버튼 3: 보증서 원본 보기 & PDF 인쇄/저장 */}
+                  <button
+                    onClick={() => {
+                      setViewingWarranty(sendingKakaoWarranty);
+                      setSendingKakaoWarranty(null);
+                    }}
+                    className="w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow transition-all cursor-pointer border border-slate-700"
+                  >
+                    <i className="ri-printer-line text-lg text-emerald-400" />
+                    <span>보증서 원본 전체 열람 & PDF 인쇄/저장</span>
+                  </button>
+
+                  {/* 메인 버튼 4: 스마트폰 무료 문자(SMS) 즉시 전송 */}
+                  <a
+                    href={`sms:${sendingKakaoWarranty.customerPhone}?body=${encodeURIComponent(
+                      createWarrantyShareMessage(sendingKakaoWarranty)
+                    )}`}
+                    className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow transition-all cursor-pointer text-center"
+                  >
+                    <i className="ri-message-2-line text-lg" />
+                    <span>스마트폰 무료 문자(SMS) 즉시 전송</span>
+                    <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">
+                      통신사 무료문자 활용
+                    </span>
+                  </a>
+
+                  {/* 보조 옵션 4개 그리드 */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                    {/* 안내 문구 복사 */}
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(createWarrantyShareMessage(sendingKakaoWarranty)).then(() => {
+                          showToast('✅ 안내문구가 복사되었습니다. 원하는 채팅창에 붙여넣기하세요.');
+                        });
+                      }}
+                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
+                    >
+                      <i className="ri-file-copy-line text-slate-700 text-base" />
+                      <span>안내문구 복사</span>
+                    </button>
+
+                    {/* 보증서 단일 링크 복사 */}
+                    <button
+                      onClick={() => handleCopyOnlyLink(sendingKakaoWarranty)}
+                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
+                    >
+                      <i className="ri-links-line text-blue-600 text-base" />
+                      <span>보증서 링크만</span>
+                    </button>
+
+                    {/* 고객용 카톡 채널 열기 */}
+                    <button
+                      onClick={() => handleOpenClientChannelChat(sendingKakaoWarranty)}
+                      className="py-2.5 px-2 bg-yellow-50 hover:bg-yellow-100 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-yellow-200"
+                      title="모바일 카카오톡 앱으로 코션 채널 1:1 대화창 열기"
+                    >
+                      <i className="ri-chat-smile-2-line text-yellow-700 text-base" />
+                      <span>모바일 채널방</span>
+                    </button>
+
+                    {/* 개인 카카오톡 공유 (선택) */}
+                    <button
+                      onClick={() => handleExecuteSendKakao(sendingKakaoWarranty)}
+                      className="py-2.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer border border-slate-200"
+                      title="개인 카카오톡 계정으로 친구에게 공유"
+                    >
+                      <i className="ri-share-forward-line text-slate-600 text-base" />
+                      <span>개인카톡 공유</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* ────────────────── 카카오 공식 알림톡 자동 발송 (서버) ────────────────── */}
+                <div className="pt-3 border-t border-slate-200 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                      <i className="ri-robot-2-line text-red-600" />
+                      <span>카카오 공식 알림톡 자동 발송 (건당 약 7~15원)</span>
+                    </span>
+                    <button
+                      onClick={() => {
+                        setSettingsTab('alimtalk');
+                        setIsKakaoSettingsOpen(true);
+                      }}
+                      className="font-bold text-red-600 hover:underline cursor-pointer"
+                    >
+                      연동 상태 보기
+                    </button>
+                  </div>
+
+                  {sendingKakaoWarranty.alimtalkStatus && (
+                    <div
+                      className={`text-[11px] px-3 py-2 rounded-xl border ${
+                        sendingKakaoWarranty.alimtalkStatus === 'sent'
+                          ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                          : 'bg-red-50 border-red-200 text-red-800'
+                      }`}
+                    >
+                      {sendingKakaoWarranty.alimtalkStatus === 'sent' ? '✅ 알림톡 발송됨' : '⚠️ 지난 발송 실패'}
+                      {sendingKakaoWarranty.alimtalkAt &&
+                        ` · ${new Date(sendingKakaoWarranty.alimtalkAt).toLocaleString('ko-KR')}`}
+                      {sendingKakaoWarranty.alimtalkStatus === 'failed' && sendingKakaoWarranty.alimtalkMessage && (
+                        <span className="block mt-0.5 opacity-80">{sendingKakaoWarranty.alimtalkMessage}</span>
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => handleSendServerAlimtalk(sendingKakaoWarranty)}
                     disabled={isSendingAlimtalk}
-                    className={`w-full py-4 font-black rounded-2xl text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all ${
-                      isAlimtalkReady
-                        ? 'bg-gradient-to-r from-[#FEE500] to-amber-400 hover:from-[#FDD835] hover:to-amber-500 text-[#3c1e1e] hover:scale-[1.01]'
-                        : 'bg-slate-900 hover:bg-slate-800 text-white'
-                    }`}
+                    className="w-full py-3 bg-slate-900 hover:bg-slate-800 disabled:opacity-60 text-white font-bold rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
                   >
                     {isSendingAlimtalk ? (
                       <>
-                        <i className="ri-loader-4-line animate-spin text-xl" />
-                        <span>고객님 번호로 알림톡 발송 중...</span>
-                      </>
-                    ) : isAlimtalkReady ? (
-                      <>
-                        <i className="ri-send-plane-fill text-xl text-red-600" />
-                        <span>고객 번호({sendingKakaoWarranty.customerPhone})로 알림톡 즉시 발송</span>
+                        <i className="ri-loader-4-line animate-spin" />
+                        <span>알림톡 보내는 중...</span>
                       </>
                     ) : (
                       <>
-                        <i className="ri-settings-4-line text-lg text-yellow-400" />
-                        <span>고객 번호로 바로 쏘기 (알림톡 연동 설정 열기)</span>
+                        <i className="ri-send-plane-fill text-yellow-400" />
+                        <span>
+                          {sendingKakaoWarranty.customerPhone} 번호로 알림톡 보내기 ([보증서 보기] 버튼 포함)
+                        </span>
                       </>
                     )}
                   </button>
-
-                  <div className="pt-2 border-t border-slate-200">
-                    <span className="text-[11px] text-slate-500 block mb-2 font-medium">보조 발송 옵션:</span>
-                    <div className="grid grid-cols-3 gap-2">
-                      {/* 개인 카카오톡 공유 */}
-                      <button
-                        onClick={() => handleExecuteSendKakao(sendingKakaoWarranty)}
-                        className="py-2.5 bg-yellow-50 hover:bg-yellow-100 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer border border-yellow-200"
-                        title="스마트폰/PC의 개인 카카오톡 앱을 통해 친구/채팅방으로 공유"
-                      >
-                        <i className="ri-kakao-talk-fill text-yellow-600 text-sm" />
-                        <span>개인카톡 공유</span>
-                      </button>
-
-                      {/* 문자(SMS) 바로 전송 */}
-                      <a
-                        href={`sms:${sendingKakaoWarranty.customerPhone}?body=${encodeURIComponent(
-                          createWarrantyShareMessage(sendingKakaoWarranty)
-                        )}`}
-                        className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-colors text-center"
-                      >
-                        <i className="ri-message-2-line text-emerald-600 text-sm" />
-                        <span>문자(SMS)</span>
-                      </a>
-
-                      {/* 안내 문구 복사 */}
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(createWarrantyShareMessage(sendingKakaoWarranty)).then(() => {
-                            showToast('안내문구가 복사되었습니다. 카톡 창에 붙여넣기(Ctrl+V) 하세요.');
-                          });
-                        }}
-                        className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                      >
-                        <i className="ri-file-copy-line text-slate-600 text-sm" />
-                        <span>문구 복사</span>
-                      </button>
-                    </div>
-                  </div>
+                  <p className="text-[10px] text-slate-400 leading-relaxed">
+                    * 인터넷에 배포된 사이트에서만 동작합니다. 고객은 채널 친구가 아니어도 받으며, 버튼을 누르면 본인 보증서 화면이 열립니다.
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -1173,7 +1424,7 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                   }`}
                 >
                   <i className="ri-send-plane-fill text-sm" />
-                  <span>1. 카카오 공식 알림톡 (고객 번호 직발송 - 추천)</span>
+                  <span>1. 카카오 공식 알림톡 (자동 발송 - 추천)</span>
                   <span
                     className={`w-2 h-2 rounded-full ${isAlimtalkReady ? 'bg-emerald-500' : 'bg-slate-300'}`}
                   />
@@ -1195,168 +1446,141 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </button>
               </div>
 
-              {/* ── 탭 1: 카카오 공식 알림톡 (솔라피 Solapi API 연동) ── */}
+              {/* ── 탭 1: 카카오 공식 알림톡 (서버 자동 발송) ── */}
               {settingsTab === 'alimtalk' && (
-                <form onSubmit={handleSaveAlimtalkConfig} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                <div className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
                   <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-xs text-amber-900 leading-relaxed flex items-start gap-2.5">
                     <i className="ri-lightbulb-fill text-amber-600 text-lg flex-shrink-0 mt-0.5" />
                     <div>
-                      <strong className="block font-bold mb-0.5">개인 카카오톡 로그인 필요 없는 완벽한 자동 발송</strong>
-                      고객 핸드폰 번호(010-XXXX-XXXX)만 있으면 코션스마트센터 공식 채널 이름으로 고객에게 즉시 전송되며, 카카오톡 미설치 고객에겐 장문 문자(LMS)로 자동 대체 발송됩니다.
+                      <strong className="block font-bold mb-0.5">보증서 발급 = 고객 카톡 자동 도착</strong>
+                      보증서를 발급하면 고객 전화번호로 <strong>코션스마트센터 채널 이름의 알림톡</strong>이 자동으로 갑니다.
+                      [보증서 보기] 버튼을 누르면 고객 본인의 보증서 화면이 열립니다. 비밀키는 서버(Vercel)에만 보관되어 안전합니다.
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">
-                        솔라피 API Key <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={alimtalkConfig.apiKey}
-                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, apiKey: e.target.value })}
-                        placeholder="예: NCS..."
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">
-                        솔라피 API Secret <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        value={alimtalkConfig.apiSecret}
-                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, apiSecret: e.target.value })}
-                        placeholder="••••••••••••••••••••••••••••••"
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
-                        required
-                      />
-                    </div>
-                  </div>
+                  {/* 자동 발송 스위치 */}
+                  <label className="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer">
+                    <span className="text-xs">
+                      <strong className="block text-slate-900">발급할 때 알림톡 자동 발송</strong>
+                      <span className="text-slate-500 text-[11px]">끄면 전송 센터에서 버튼으로 직접 보냅니다.</span>
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={autoAlimtalk}
+                      onChange={(e) => {
+                        setAutoAlimtalk(e.target.checked);
+                        setAutoAlimtalkEnabled(e.target.checked);
+                        showToast(e.target.checked ? '알림톡 자동 발송을 켰습니다.' : '알림톡 자동 발송을 껐습니다.');
+                      }}
+                      className="w-5 h-5 accent-red-600"
+                    />
+                  </label>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">
-                        카카오 채널 발신프로필 ID (PFID) <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={alimtalkConfig.pfId}
-                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, pfId: e.target.value })}
-                        placeholder="예: KA01PF..."
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">
-                        승인된 알림톡 템플릿 ID (Template ID)
-                      </label>
-                      <input
-                        type="text"
-                        value={alimtalkConfig.templateId}
-                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, templateId: e.target.value })}
-                        placeholder="예: KA01TP... (승인 후 입력)"
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">
-                        발신번호 (코션 대표번호) <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={alimtalkConfig.senderPhone}
-                        onChange={(e) => setAlimtalkConfig({ ...alimtalkConfig, senderPhone: e.target.value })}
-                        placeholder="예: 02-1234-5678 또는 010-..."
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:border-red-500"
-                        required
-                      />
-                    </div>
-                    <div className="flex items-center pt-5">
-                      <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={alimtalkConfig.autoSmsFallback}
-                          onChange={(e) =>
-                            setAlimtalkConfig({ ...alimtalkConfig, autoSmsFallback: e.target.checked })
-                          }
-                          className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
-                        />
-                        <span>카톡 미수신 시 문자로 자동 대체 발송</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* 3단계 연동 안내 가이드 박스 */}
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2.5 text-slate-700">
-                    <h4 className="font-bold text-slate-900 flex items-center justify-between">
-                      <span className="flex items-center gap-1.5">
-                        <i className="ri-guide-line text-red-600" />
-                        <span>솔라피(Solapi) 3분 연동 순서 안내</span>
-                      </span>
-                      <a
-                        href="https://solapi.com"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-primary hover:underline font-bold text-[11px]"
+                  {/* 서버 연동 상태 */}
+                  <div className="p-4 bg-white border border-slate-200 rounded-2xl space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <i className="ri-server-line text-red-600" />
+                        <span>서버 연동 상태</span>
+                        <span
+                          className={`ml-1 px-2 py-0.5 rounded-full text-[10px] font-black ${
+                            isAlimtalkReady ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
+                          }`}
+                        >
+                          {isAlimtalkReady ? '발송 준비 완료' : '설정 필요'}
+                        </span>
+                      </h4>
+                      <button
+                        type="button"
+                        onClick={handleCheckCloudStatus}
+                        disabled={isCheckingStatus}
+                        className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[10px] font-bold cursor-pointer flex items-center gap-1"
                       >
-                        solapi.com 바로가기 ↗
-                      </a>
-                    </h4>
-                    <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-600 leading-relaxed pl-1">
-                      <li>
-                        <strong>솔라피 가입</strong> 후 우측 상단 <strong>[API Key 관리]</strong>에서 API Key와 Secret 생성 후 위 칸에 입력합니다.
-                      </li>
-                      <li>
-                        좌측 <strong>[카카오톡] → [발신 프로필 관리]</strong>에서 코션스마트센터 카카오 채널을 추가합니다 (휴대폰 인증번호 1분 완료). 생성된 PFID를 입력합니다.
-                      </li>
-                      <li>
-                        좌측 <strong>[발신번호 관리]</strong>에서 코션 대표번호를 등록합니다.
-                      </li>
-                      <li>
-                        <strong>[템플릿 관리]</strong>에 아래 [템플릿 양식 복사] 버튼을 눌러 승인 신청 후 승인된 템플릿 ID를 넣으면 끝!
-                      </li>
-                    </ol>
+                        <i className={`ri-refresh-line ${isCheckingStatus ? 'animate-spin' : ''}`} />
+                        <span>연동 상태 확인</span>
+                      </button>
+                    </div>
 
-                    <div className="pt-1 flex items-center justify-between border-t border-slate-200">
-                      <span className="text-[10px] text-slate-500">* 템플릿 승인 전에도 문자로 즉시 발송 가능합니다.</span>
+                    {cloudStatusError && (
+                      <p className="text-[11px] text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+                        {cloudStatusError}
+                      </p>
+                    )}
+
+                    {cloudStatus ? (
+                      <ul className="grid grid-cols-2 gap-1.5 text-[11px] font-mono">
+                        <li className={cloudStatus.firestore.ok ? 'text-emerald-700' : 'text-red-600'}>
+                          {cloudStatus.firestore.ok ? '✓' : '✗'} 데이터 서버(Firebase)
+                        </li>
+                        {Object.entries(cloudStatus.alimtalk).map(([k, ok]) => (
+                          <li key={k} className={ok ? 'text-emerald-700' : 'text-red-600'}>
+                            {ok ? '✓' : '✗'} {k}
+                          </li>
+                        ))}
+                        {cloudStatus.firestore.error && (
+                          <li className="col-span-2 text-red-600 font-sans">{cloudStatus.firestore.error}</li>
+                        )}
+                      </ul>
+                    ) : (
+                      !cloudStatusError && (
+                        <p className="text-[11px] text-slate-500">
+                          [연동 상태 확인]을 누르면 서버 설정이 끝났는지 항목별로 보여드립니다.
+                        </p>
+                      )
+                    )}
+                  </div>
+
+                  {/* 템플릿 신청 문구 */}
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2 text-slate-700">
+                    <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+                      <i className="ri-file-text-line text-red-600" />
+                      <span>솔라피 알림톡 템플릿 신청 문구</span>
+                    </h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      솔라피 [카카오톡 → 템플릿 관리]에 아래 문구를 그대로 붙여넣고 승인 신청하세요. 버튼은 <strong>웹링크</strong>로 추가합니다.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
                       <button
                         type="button"
                         onClick={() => {
-                          const tpl = `[코션스마트센터] PPS 시공 보증서 발급 안내\n\n안녕하세요, #{고객명} 고객님.\n(주)코션스마트센터를 믿고 차량 시공을 맡겨주셔서 진심으로 감사드립니다.\n\n고객님의 차량에 PPS 시공 보증서가 정상 발급되었습니다.\n\n■ 차량번호 : #{차량번호} (#{차종})\n■ 시공내역 : #{시공내역}\n■ 보증기간 : #{보증기간}\n■ 보증번호 : #{보증번호}\n\n아래 [전자 보증서 바로 확인하기] 버튼을 터치하시면 고객님의 공식 전자 보증서를 언제든 확인 및 보관하실 수 있습니다.\n\n버튼: 웹링크 (버튼명: 전자 보증서 바로 확인하기 / URL: #{보증서링크})`;
-                          navigator.clipboard.writeText(tpl).then(() => {
-                            showToast('알림톡 템플릿 승인 양식이 복사되었습니다. 솔라피에 붙여넣기 하세요!');
+                          navigator.clipboard.writeText(ALIMTALK_TEMPLATE_TEXT).then(() => {
+                            showToast('템플릿 본문이 복사되었습니다. 솔라피에 붙여넣으세요!');
                           });
                         }}
-                        className="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-[10px] font-bold text-slate-700 cursor-pointer flex items-center gap-1 shadow-sm"
+                        className="px-2.5 py-1.5 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-[11px] font-bold text-slate-700 cursor-pointer flex items-center gap-1 shadow-sm"
                       >
-                        <i className="ri-file-copy-line text-xs" />
-                        <span>알림톡 템플릿 신청문구 복사</span>
+                        <i className="ri-file-copy-line" />
+                        <span>본문 복사</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url = `${cloudStatus?.siteUrl || window.location.origin}/w/#{토큰}`;
+                          navigator.clipboard.writeText(url).then(() => {
+                            showToast('버튼 링크 주소가 복사되었습니다. (모바일·PC 링크 둘 다 같은 주소)');
+                          });
+                        }}
+                        className="px-2.5 py-1.5 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-[11px] font-bold text-slate-700 cursor-pointer flex items-center gap-1 shadow-sm"
+                      >
+                        <i className="ri-link" />
+                        <span>버튼 링크 복사</span>
                       </button>
                     </div>
+                    <p className="text-[10px] text-slate-500 font-mono break-all">
+                      버튼명: 보증서 보기 / 링크: {cloudStatus?.siteUrl || window.location.origin}/w/#{'{토큰}'}
+                    </p>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-end gap-2">
+                  <div className="pt-1 flex items-center justify-end">
                     <button
                       type="button"
                       onClick={() => setIsKakaoSettingsOpen(false)}
-                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
+                      className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
                     >
                       닫기
                     </button>
-                    <button
-                      type="submit"
-                      className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
-                    >
-                      알림톡 설정 저장하기
-                    </button>
                   </div>
-                </form>
+                </div>
               )}
 
               {/* ── 탭 2: 카카오 JavaScript 키 설정 ── */}
@@ -1420,8 +1644,42 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 정품 보증서 발급 완료!
               </h3>
               <p className="text-xs text-slate-500 mb-5">
-                관리자 DB에 안전하게 저장되었습니다. 이제 고객님의 핸드폰으로 보증서를 바로 전송하실 수 있습니다.
+                관리자 대장에 저장되었습니다.
               </p>
+
+              {/* 알림톡 자동 발송 결과 */}
+              {issuedAlimtalk.state !== 'idle' && (
+                <div
+                  className={`mb-4 px-3.5 py-2.5 rounded-2xl border text-xs text-left flex items-start gap-2 ${
+                    issuedAlimtalk.state === 'sent'
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : issuedAlimtalk.state === 'sending'
+                      ? 'bg-slate-50 border-slate-200 text-slate-700'
+                      : 'bg-amber-50 border-amber-200 text-amber-900'
+                  }`}
+                >
+                  <i
+                    className={`text-base flex-shrink-0 ${
+                      issuedAlimtalk.state === 'sending'
+                        ? 'ri-loader-4-line animate-spin'
+                        : issuedAlimtalk.state === 'sent'
+                        ? 'ri-checkbox-circle-fill'
+                        : 'ri-error-warning-line'
+                    }`}
+                  />
+                  <div>
+                    <strong className="block">
+                      {issuedAlimtalk.state === 'sending' && '고객 카톡으로 알림톡 보내는 중...'}
+                      {issuedAlimtalk.state === 'sent' && '고객 카톡으로 알림톡이 자동 발송되었습니다!'}
+                      {issuedAlimtalk.state === 'failed' && '알림톡 자동 발송 실패 → 아래 버튼으로 수동 전송해 주세요'}
+                      {issuedAlimtalk.state === 'local' && '자동 발송은 인터넷 배포 후 동작 → 지금은 아래 버튼으로 전송'}
+                    </strong>
+                    {issuedAlimtalk.state === 'failed' && (
+                      <span className="block mt-0.5 opacity-80 break-all">{issuedAlimtalk.message}</span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div className="bg-slate-50 rounded-2xl p-4 text-xs space-y-1.5 text-left border border-slate-200 mb-6 font-sans">
                 <div className="flex justify-between">
