@@ -331,16 +331,19 @@ export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean
     drawFrontText(item.issueDate, 67.0, 46.8, 12.5, true, true);
 
     // 차량정보
-    drawFrontText(item.carModel, 20.5, 60.4, 13);
-    drawFrontText(item.carColor || '-', 20.5, 63.4, 12, false);
-    drawFrontText(item.carPlate, 62.0, 60.4, 14);
-    drawFrontText(item.vin?.trim() || '-', 62.0, 63.4, 11, false, true);
+    drawFrontText(item.carModel, 20.5, 60.4, 13, true);
+    drawFrontText(item.carColor || '-', 20.5, 63.4, 13, true);
+    drawFrontText(item.carPlate, 62.0, 60.4, 14, true);
+    drawFrontText(item.vin?.trim() || '-', 62.0, 63.4, 12, true, true);
 
-    // 제품 및 시공가격
+    // 제품 및 시공가격 (괄호 정중앙 정렬)
     const clearText = item.hasClearPps ? (item.clearPpsDetail || '전체') : '-';
     const colorText = item.hasColorPps ? (item.colorPpsDetail || '전체') : '-';
-    drawFrontText(clearText, 46.0, 73.2, 11.5, true, false, '#b91c1c');
-    drawFrontText(colorText, 71.5, 73.2, 11.5, true, false, '#b91c1c');
+
+    ctxFront.textAlign = 'center';
+    drawFrontText(clearText, 53.0, 72.3, 11.5, true, false, '#b91c1c');
+    drawFrontText(colorText, 78.9, 72.3, 11.5, true, false, '#b91c1c');
+    ctxFront.textAlign = 'left';
 
     if (item.price) {
       ctxFront.textAlign = 'right';

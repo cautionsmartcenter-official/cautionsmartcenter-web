@@ -319,13 +319,13 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 색상 */}
           <div
-            className="absolute font-medium text-gray-800 font-sans truncate leading-none"
+            className="absolute font-bold text-gray-900 font-sans truncate leading-none"
             style={{
               top: '63.4%',
               left: '20.5%',
               width: '25%',
               transform: 'translateY(-50%)',
-              fontSize: 'clamp(10px, 1.7vw, 13px)'
+              fontSize: 'clamp(10px, 1.8vw, 14px)'
             }}
           >
             {warranty.carColor || '-'}
@@ -347,7 +347,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
           {/* 차대번호 (VIN) */}
           <div
-            className="absolute font-semibold text-gray-800 font-mono tracking-widest truncate leading-none"
+            className="absolute font-bold text-gray-900 font-mono tracking-widest truncate leading-none"
             style={{
               top: '63.4%',
               left: '62.0%',
@@ -361,28 +361,28 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           </div>
 
           {/* ── 4. 제품 및 시공가격 오버레이 ── */}
-          {/* 투명PPS ( ) 내부 상세 */}
+          {/* 투명PPS ( ) 내부 상세 - 괄호(334~431px, 중심 52.9%) 정중앙 배치 */}
           <div
             className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center leading-none"
             style={{
-              top: '73.2%',
-              left: '46.0%',
+              top: '72.3%',
+              left: '52.9%',
               width: '13.0%',
-              transform: 'translateY(-50%)',
+              transform: 'translate(-50%, -50%)',
               fontSize: 'clamp(9px, 1.4vw, 12px)'
             }}
           >
             {warranty.hasClearPps ? warranty.clearPpsDetail || '전체' : '-'}
           </div>
 
-          {/* 컬러PPS ( ) 내부 상세 */}
+          {/* 컬러PPS ( ) 내부 상세 - 괄호(524~617px, 중심 78.9%) 정중앙 배치 */}
           <div
             className="absolute font-bold text-red-700 font-sans flex items-center justify-center text-center truncate leading-none"
             style={{
-              top: '73.2%',
-              left: '71.5%',
+              top: '72.3%',
+              left: '78.9%',
               width: '13.0%',
-              transform: 'translateY(-50%)',
+              transform: 'translate(-50%, -50%)',
               fontSize: 'clamp(9px, 1.3vw, 11.5px)'
             }}
             title={warranty.colorPpsDetail}
@@ -590,30 +590,42 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
               )}
             </div>
 
-            {/* ── 보증서 원본 열람 & PDF 파일 다운로드 버튼 ── */}
-            <div className="grid grid-cols-2 gap-2 pt-1">
+            {/* ── 보증서 이미지 2장 저장 & 원본 열람 & PDF 다운로드 버튼 ── */}
+            <div className="space-y-2 pt-1">
               <button
                 type="button"
-                onClick={() => {
-                  setActivePage('front');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
-                title="정품 보증서 원본(앞면·뒷면) 전체 양식을 엽니다"
+                onClick={handleSaveImage}
+                className="w-full py-3.5 bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+                title="정품 보증서 2장(1면 상세 + 2면 약관)을 사진첩/다운로드 폴더에 저장합니다"
               >
-                <i className="ri-file-text-line text-base" />
-                <span>보증서 원본 보기</span>
+                <i className="ri-image-line text-lg text-yellow-300" />
+                <span>보증서 이미지(총 2페이지) 다운로드</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
-                title="스마트폰이나 PC에 PDF 파일로 저장하거나 인쇄합니다"
-              >
-                <i className="ri-download-2-line text-base text-red-500" />
-                <span>PDF 파일 다운로드</span>
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActivePage('front');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-700"
+                  title="정품 보증서 원본(앞면·뒷면) 전체 양식을 엽니다"
+                >
+                  <i className="ri-file-text-line text-base" />
+                  <span>보증서 원본 보기</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-800"
+                  title="스마트폰이나 PC에 PDF 파일로 저장하거나 인쇄합니다"
+                >
+                  <i className="ri-printer-line text-base text-red-500" />
+                  <span>PDF 인쇄 / 저장</span>
+                </button>
+              </div>
             </div>
 
             {/* 정품 인증 마크 */}
