@@ -463,7 +463,10 @@ export const downloadWarrantyPdf = async (item: WarrantyItem): Promise<boolean> 
   }
 };
 
-// 고해상도 PNG 이미지 2장(1면 상세 + 2면 약관) 개별 다운로드 함수
+/**
+ * 보증서 1면(상세) + 2면(약관)을 1장의 초고화질 통합 PNG 이미지로 결합하여 다운로드
+ * 스마트폰 사진첩 및 PC 모니터에서 확대해도 글씨가 매우 또렷하게 보이도록 2000px 와이드 규격으로 결합
+ */
 export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean> => {
   if (typeof window === 'undefined') return false;
 
@@ -471,21 +474,41 @@ export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean
     const canvases = await renderWarrantyCanvases(item);
     if (!canvases) return false;
 
+    const { canvasFront, canvasBack } = canvases;
+
+    // 모바일 갤러리 및 PC 이미지 뷰어에서 100% 튕김 없이 가장 선명하게 열리는 2000px 와이드 규격
+    const targetWidth = 2000;
+    const scale = targetWidth / canvasFront.width;
+    const frontHeight = Math.round(canvasFront.height * scale);
+    const backHeight = Math.round(canvasBack.height * scale);
+    const totalHeight = frontHeight + backHeight;
+
+    const combinedCanvas = document.createElement('canvas');
+    combinedCanvas.width = targetWidth;
+    combinedCanvas.height = totalHeight;
+
+    const ctx = combinedCanvas.getContext('2d');
+    if (!ctx) return false;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, targetWidth, totalHeight);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // 1면 (상세) 그리기
+    ctx.drawImage(canvasFront, 0, 0, targetWidth, frontHeight);
+
+    // 2면 (약관) 그리기
+    ctx.drawImage(canvasBack, 0, frontHeight, targetWidth, backHeight);
+
     const cleanName = (item.customerName || '고객').replace(/[^a-zA-Z0-9가-힣]/g, '');
     const cleanPlate = (item.carPlate || '차량').replace(/[^a-zA-Z0-9가-힣]/g, '');
+    const fileName = `코션스마트센터_정품보증서_통합본_${cleanName}_${cleanPlate}.png`;
 
-    // 1페이지 다운로드
-    await downloadCanvas(canvases.canvasFront, `코션스마트센터_정품보증서_1면_상세_${cleanName}_${cleanPlate}.png`);
-
-    // 브라우저 팝업/다운로드 블로킹 방지를 위해 300ms 텀
-    await new Promise((r) => setTimeout(r, 300));
-
-    // 2페이지 다운로드
-    await downloadCanvas(canvases.canvasBack, `코션스마트센터_정품보증서_2면_약관_${cleanName}_${cleanPlate}.png`);
-
+    await downloadCanvas(combinedCanvas, fileName);
     return true;
   } catch (err) {
-    console.error('Failed to download warranty images:', err);
+    console.error('Failed to download combined warranty image:', err);
     return false;
   }
 };

@@ -147,11 +147,6 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
     }, 2500);
   };
 
-  // 일반 인쇄 호출 시 기본적으로 2장(보증서 + 보증조건 관리안내) 인쇄
-  const handlePrint = async () => {
-    await handlePrintBoth();
-  };
-
   const [isSavingPdf, setIsSavingPdf] = useState(false);
 
   // 보증서 1면(상세)+2면(약관) 통합 2페이지 PDF로 저장
@@ -172,15 +167,23 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
     }
   };
 
-  // 보증서 이미지(PNG 2장)로 저장 (고객용)
+  // 보증서 1면(상세) + 2면(약관)을 1장의 초고화질 통합 PNG로 저장
+  const [isSavingImage, setIsSavingImage] = useState(false);
   const handleSaveImage = async () => {
+    setIsSavingImage(true);
     try {
-      await downloadWarrantyImage(warranty);
-      setShareFeedback('보증서 2장(1면 상세 + 2면 약관)이 저장되었습니다. 사진첩(다운로드 폴더)에서 확인하세요.');
+      const ok = await downloadWarrantyImage(warranty);
+      if (ok) {
+        setShareFeedback('📸 [보증서 + 보증조건 관리안내]가 1장의 고화질 사진(PNG)으로 저장되었습니다. 사진첩/다운로드 폴더를 확인하세요.');
+      } else {
+        setShareFeedback('이미지 저장에 실패했습니다. PDF 저장을 이용해 주세요.');
+      }
     } catch {
-      setShareFeedback('이미지 저장에 실패했습니다. 상단의 [PDF 저장] 또는 브라우저 다운로드를 이용해 주세요.');
+      setShareFeedback('이미지 저장 중 오류가 발생했습니다.');
+    } finally {
+      setIsSavingImage(false);
+      setTimeout(() => setShareFeedback(null), 4000);
     }
-    setTimeout(() => setShareFeedback(null), 4000);
   };
 
   return (
@@ -253,6 +256,21 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
               <i className="ri-file-pdf-fill text-sm text-yellow-300" />
             )}
             <span>PDF 저장</span>
+          </button>
+
+          {/* 1면+2면 통합 PNG 이미지 다운로드 버튼 */}
+          <button
+            onClick={handleSaveImage}
+            disabled={isSavingImage}
+            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            title="보증서(1면)와 관리안내(2면)를 1장의 고화질 사진(PNG)으로 다운로드"
+          >
+            {isSavingImage ? (
+              <i className="ri-loader-4-line animate-spin text-sm" />
+            ) : (
+              <i className="ri-image-fill text-sm text-yellow-300" />
+            )}
+            <span>이미지(PNG 1장) 저장</span>
           </button>
 
           {!publicMode && (
@@ -441,102 +459,102 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 print:hidden text-gray-900"
+          className="w-full max-w-lg sm:max-w-xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 print:hidden text-gray-900"
         >
           {/* 상단 프리미엄 헤더 */}
-          <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-red-950 text-white p-6 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-red-950 text-white p-6 sm:p-7 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-red-600/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
             <div className="flex items-center justify-between mb-4">
               <span
-                className="text-xs sm:text-sm tracking-wider text-white"
-                style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 500, letterSpacing: '0.05em' }}
+                className="text-xs sm:text-sm tracking-widest text-red-400 font-bold"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 CAUTION SMART CENTER
               </span>
-              <span className="text-xs font-mono text-gray-300 font-bold tracking-wider">
+              <span className="px-2.5 py-1 bg-white/10 rounded-lg text-xs sm:text-sm font-mono text-yellow-300 font-bold tracking-wider border border-white/20">
                 {warranty.warrantyNo}
               </span>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white mb-1">
+            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white mb-1.5">
               공식 정품 품질 보증서
             </h3>
-            <p className="text-xs text-gray-400 font-sans">
+            <p className="text-xs sm:text-sm text-gray-300 font-sans">
               (주)코션스마트센터 공식 인증 시공 보증 시스템
             </p>
 
-            <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
+            <div className="mt-5 pt-4 border-t border-white/15 flex items-center justify-between">
               <div>
-                <span className="text-[10px] text-gray-400 block">고객명</span>
-                <span className="text-base font-bold text-white">{warranty.customerName} 고객님</span>
+                <span className="text-[11px] sm:text-xs text-gray-400 block font-medium">고객명</span>
+                <span className="text-lg sm:text-xl font-black text-white">{warranty.customerName} 고객님</span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-gray-400 block">시공 차량</span>
-                <span className="text-base font-bold text-red-500">{warranty.carPlate}</span>
+                <span className="text-[11px] sm:text-xs text-gray-400 block font-medium">시공 차량</span>
+                <span className="text-lg sm:text-xl font-black text-red-400">{warranty.carPlate}</span>
               </div>
             </div>
           </div>
 
           {/* 보증 요약 카드 */}
-          <div className="p-6 space-y-4">
-            {/* 차량 & 시공 정보 테이블 (검정과 빨간색 2가지 컬러 & 통일된 폰트) */}
-            <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2.5 text-xs sm:text-sm">
-              <div className="flex justify-between py-1 border-b border-gray-200/60">
-                <span className="text-gray-600 font-medium">시공 차종</span>
-                <span className="font-bold text-gray-900">{warranty.carModel}</span>
+          <div className="p-6 sm:p-7 space-y-5">
+            {/* 차량 & 시공 정보 테이블 (핸드폰/PC 모두 글씨가 시원시원하고 또렷하게 표시) */}
+            <div className="bg-slate-50/90 rounded-2xl p-5 border border-slate-200/80 space-y-3.5 text-xs sm:text-sm">
+              <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+                <span className="text-slate-600 font-bold text-xs sm:text-sm">시공 차종</span>
+                <span className="font-extrabold text-slate-950 text-sm sm:text-base">{warranty.carModel}</span>
               </div>
               {warranty.carColor && (
-                <div className="flex justify-between py-1 border-b border-gray-200/60">
-                  <span className="text-gray-600 font-medium">차량 색상</span>
-                  <span className="font-bold text-gray-900">{warranty.carColor}</span>
+                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+                  <span className="text-slate-600 font-bold text-xs sm:text-sm">차량 색상</span>
+                  <span className="font-extrabold text-slate-900 text-sm sm:text-base">{warranty.carColor}</span>
                 </div>
               )}
               {warranty.vin?.trim() && (
-                <div className="flex justify-between py-1 border-b border-gray-200/60">
-                  <span className="text-gray-600 font-medium">차대번호 (VIN)</span>
-                  <span className="font-bold text-gray-900">{warranty.vin}</span>
+                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+                  <span className="text-slate-600 font-bold text-xs sm:text-sm">차대번호 (VIN)</span>
+                  <span className="font-mono font-bold text-slate-900 text-xs sm:text-sm tracking-wide">{warranty.vin}</span>
                 </div>
               )}
-              <div className="flex justify-between py-1 border-b border-gray-200/60">
-                <span className="text-gray-600 font-medium">시공 제품</span>
-                <span className="font-bold text-red-600">
+              <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+                <span className="text-slate-600 font-bold text-xs sm:text-sm">시공 제품</span>
+                <span className="font-black text-red-600 text-sm sm:text-base">
                   {[
                     warranty.hasClearPps ? `투명PPS(${warranty.clearPpsDetail || '전체'})` : '',
                     warranty.hasColorPps ? `컬러PPS(${warranty.colorPpsDetail || '전체'})` : ''
                   ].filter(Boolean).join(' + ') || '독일 정품 CARDIP PPS'}
                 </span>
               </div>
-              <div className="flex justify-between py-1 border-b border-gray-200/60">
-                <span className="text-gray-600 font-medium">시공 일자</span>
-                <span className="font-bold text-gray-900">{warranty.issueDate}</span>
+              <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+                <span className="text-slate-600 font-bold text-xs sm:text-sm">시공 일자</span>
+                <span className="font-extrabold text-slate-900 text-sm sm:text-base">{warranty.issueDate}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-gray-200/60">
-                <span className="text-gray-600 font-medium">품질 보증기간</span>
-                <span className="font-bold text-red-600">시공일로부터 {warranty.warrantyPeriodYears}년</span>
+              <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+                <span className="text-slate-600 font-bold text-xs sm:text-sm">품질 보증기간</span>
+                <span className="font-black text-red-600 text-sm sm:text-base">시공일로부터 {warranty.warrantyPeriodYears}년</span>
               </div>
               {expiryDateStr && (
-                <div className="flex justify-between py-1 border-b border-gray-200/60">
-                  <span className="text-gray-600 font-medium">보증 만료일</span>
-                  <span className="font-bold text-gray-900">{expiryDateStr}까지</span>
+                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+                  <span className="text-slate-600 font-bold text-xs sm:text-sm">보증 만료일</span>
+                  <span className="font-extrabold text-slate-900 text-sm sm:text-base">{expiryDateStr}까지</span>
                 </div>
               )}
               {warranty.price && (
-                <div className="flex justify-between py-1">
-                  <span className="text-gray-600 font-medium">시공 금액</span>
-                  <span className="font-bold text-gray-900">
-                    {formatPriceWithCommas(warranty.price)} 원 <span className="text-xs font-normal text-gray-500">(VAT 별도)</span>
+                <div className="flex justify-between items-center py-1.5">
+                  <span className="text-slate-600 font-bold text-xs sm:text-sm">시공 금액</span>
+                  <span className="font-black text-slate-950 text-base sm:text-lg">
+                    {formatPriceWithCommas(warranty.price)} 원 <span className="text-xs font-normal text-slate-500">(VAT 별도)</span>
                   </span>
                 </div>
               )}
             </div>
 
-            {/* ── 보증서 PDF(2페이지 합본) 저장 & 이미지 저장 & A4 인쇄 버튼 ── */}
-            <div className="space-y-2 pt-1">
+            {/* ── 보증서 PDF(2페이지 합본) 저장 & 이미지 1장(PNG) 저장 & A4 인쇄 버튼 ── */}
+            <div className="space-y-2.5 pt-1">
               <button
                 type="button"
                 onClick={handleSavePdf}
                 disabled={isSavingPdf}
-                className="w-full py-3.5 bg-gradient-to-r from-red-600 via-rose-700 to-slate-900 hover:from-red-700 hover:to-slate-950 text-white rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+                className="w-full py-3.5 bg-gradient-to-r from-red-600 via-rose-700 to-slate-900 hover:from-red-700 hover:to-slate-950 text-white rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer disabled:opacity-50"
                 title="정품 보증서 1면(상세) + 2면(약관)을 하나의 완성된 PDF 파일로 다운로드합니다"
               >
                 {isSavingPdf ? (
@@ -544,27 +562,32 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
                 ) : (
                   <i className="ri-file-pdf-fill text-lg text-yellow-300" />
                 )}
-                <span>정품 보증서 PDF(총 2페이지 합본) 다운로드</span>
+                <span>정품 보증서 PDF (총 2페이지 합본) 다운로드</span>
               </button>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2.5">
                 <button
                   type="button"
                   onClick={handleSaveImage}
-                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-700"
-                  title="정품 보증서 2장을 PNG 이미지 파일로 저장합니다"
+                  disabled={isSavingImage}
+                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-700 disabled:opacity-50"
+                  title="보증서 앞면과 뒷면 약관을 1장의 초고화질 통합 PNG 사진으로 저장합니다"
                 >
-                  <i className="ri-image-line text-sm text-yellow-300" />
-                  <span>이미지 2장(PNG) 저장</span>
+                  {isSavingImage ? (
+                    <i className="ri-loader-4-line animate-spin text-sm text-yellow-300" />
+                  ) : (
+                    <i className="ri-image-fill text-sm text-yellow-300" />
+                  )}
+                  <span>보증서 1장(PNG) 저장</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={handlePrint}
-                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-800"
-                  title="스마트폰이나 PC에서 A4 양식으로 직접 인쇄합니다"
+                  onClick={handlePrintBoth}
+                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow cursor-pointer border border-slate-800"
+                  title="보증서와 관리안내 총 2장을 A4 규격으로 출력합니다"
                 >
-                  <i className="ri-printer-line text-sm text-red-500" />
+                  <i className="ri-printer-fill text-sm text-red-500" />
                   <span>A4 직접 인쇄</span>
                 </button>
               </div>
