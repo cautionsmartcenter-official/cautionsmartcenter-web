@@ -1,4 +1,9 @@
-import { type WarrantyItem, createWarrantyShareMessage } from './warrantyStorage';
+import {
+  type WarrantyItem,
+  createWarrantyShareMessage,
+  copyTextToClipboard,
+  getWarrantyViewUrl
+} from './warrantyStorage';
 
 const KAKAO_KEY_STORAGE = 'caution_kakao_js_key';
 export const DEFAULT_KAKAO_JS_KEY = '152595fa743ee259e0884cf17e26d66b';
@@ -58,7 +63,10 @@ export const sendKakaoWarranty = async (
   item: WarrantyItem
 ): Promise<{ success: boolean; method: 'kakao_sdk' | 'web_share' | 'clipboard'; message: string }> => {
   const viewUrl = getPublicWarrantyViewUrl(item.warrantyNo);
-  const shareMessage = createWarrantyShareMessage(item);
+  // 안내문구 속 링크가 localhost 등 내부 주소일 수 있으므로 고객이 열 수 있는 공식 주소로 교체
+  const shareMessage = createWarrantyShareMessage(item)
+    .split(getWarrantyViewUrl(item.warrantyNo))
+    .join(viewUrl);
   const imageUrl = `${PRODUCTION_URL}/images/warranty/warranty_front.png`;
 
   // 1. 카카오 공식 SDK 공유 시도
@@ -70,17 +78,35 @@ export const sendKakaoWarranty = async (
   }
 
   if (kakao && kakao.isInitialized && kakao.isInitialized() && kakao.Share) {
+    // ⚠️ 카카오 공유 팝업이 열리면 포커스가 넘어가 복사가 막히므로, 팝업 열기 "직전"에 전체 안내문구 복사를 시작
+    const copyPromise = copyTextToClipboard(shareMessage).catch(() => false);
+
+    const ppsType = [
+      item.hasClearPps ? `투명PPS(${item.clearPpsDetail || '전체'})` : '',
+      item.hasColorPps ? `컬러PPS(${item.colorPpsDetail || '전체'})` : ''
+    ].filter(Boolean).join(', ') || '독일 정품 CARDIP PPS';
+    const cut = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
+
     try {
       kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title: '[코션스마트센터] PPS 시공 보증서 발급 안내',
-          description: `${item.customerName} 고객님 (${item.carPlate} / ${item.carModel})\nPPS 시공 보증서가 정상 발급되었습니다.`,
+          description: `안녕하세요, ${item.customerName} 고객님.\n코션스마트센터를 믿고 시공을 맡겨주셔서 감사합니다. PPS 시공 보증서가 정상 발급되었습니다.\n아래 [전자 보증서 확인하기]에서 보증서(PDF)를 꼭 다운로드하여 보관해 주세요.\n문의: 031-705-1888`,
           imageUrl: imageUrl,
           link: {
             mobileWebUrl: viewUrl,
             webUrl: viewUrl
           }
+        },
+        itemContent: {
+          profileText: '코션스마트센터 · 독일 CARDIP 정품',
+          items: [
+            { item: '차량번호', itemOp: cut(`${item.carPlate} (${item.carModel})`, 25) },
+            { item: '시공내역', itemOp: cut(ppsType, 25) },
+            { item: '보증기간', itemOp: cut(`${item.issueDate}부터 ${item.warrantyPeriodYears || 6}년`, 25) },
+            { item: '보증번호', itemOp: cut(item.warrantyNo, 25) }
+          ]
         },
         buttons: [
           {
@@ -93,10 +119,13 @@ export const sendKakaoWarranty = async (
         ]
       });
 
+      const copied = await copyPromise;
       return {
         success: true,
         method: 'kakao_sdk',
-        message: '카카오톡 공유 창이 열렸습니다. 고객 또는 대화방을 선택해 주세요.'
+        message: copied
+          ? '카카오톡 공유 창이 열렸습니다. 고객을 선택해 보내주세요. (전체 안내문구도 복사됐어요 — 필요하면 대화방에 붙여넣기 하세요)'
+          : '카카오톡 공유 창이 열렸습니다. 고객 또는 대화방을 선택해 주세요.'
       };
     } catch (err) {
       console.warn('Kakao.Share.sendDefault failed, trying fallback:', err);
