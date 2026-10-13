@@ -312,17 +312,20 @@ export const renderWarrantyCanvases = async (
   if (typeof window === 'undefined') return null;
 
   try {
-    const scale = 2; // 레티나 2배율 고해상도 (1446 x 2048)
-    const width = 723 * scale;
-    const height = 1024 * scale;
-
-    // 1. 앞면 (상세)
+    // 1. 앞면 (상세) 초고해상도 로드 (2482 x 3510, A4 300DPI 표준 규격)
     const frontImg = await loadImage('/images/warranty/warranty_front.png');
+    const width = frontImg.naturalWidth || 2482;
+    const height = frontImg.naturalHeight || 3510;
+    const fontScale = width / 723; // 기존 723px 레이아웃 기준 스케일 팩터
+
     const canvasFront = document.createElement('canvas');
     canvasFront.width = width;
     canvasFront.height = height;
     const ctxFront = canvasFront.getContext('2d');
     if (!ctxFront) return null;
+
+    ctxFront.imageSmoothingEnabled = true;
+    ctxFront.imageSmoothingQuality = 'high';
 
     // 원본 서식 그리기
     ctxFront.drawImage(frontImg, 0, 0, width, height);
@@ -340,41 +343,41 @@ export const renderWarrantyCanvases = async (
     ) => {
       ctxFront.fillStyle = color;
       const fontName = isMono ? 'monospace, Courier, sans-serif' : 'Pretendard, -apple-system, sans-serif';
-      ctxFront.font = `${isBold ? 'bold ' : 'normal '}${fontSize * scale}px ${fontName}`;
+      ctxFront.font = `${isBold ? 'bold ' : 'normal '}${fontSize * fontScale}px ${fontName}`;
       ctxFront.fillText(text, (xPct / 100) * width, (yPct / 100) * height);
     };
 
     // 고객정보
-    drawFrontText(item.customerName, 20.0, 43.4, 13);
-    drawFrontText(item.customerPhone, 20.0, 46.6, 12, true, true);
-    drawFrontText(item.customerAddress || '-', 20.0, 50.2, 11, false);
+    drawFrontText(item.customerName, 20.0, 43.0, 13);
+    drawFrontText(item.customerPhone, 20.0, 45.9, 12.5, true, true);
+    drawFrontText(item.customerAddress || '-', 20.0, 49.3, 11, false);
 
     // 보증서 정보
-    drawFrontText(item.warrantyNo, 67.0, 43.8, 12.5, true, true);
-    drawFrontText(item.issueDate, 67.0, 46.8, 12.5, true, true);
+    drawFrontText(item.warrantyNo, 66.5, 43.1, 12.5, true, true);
+    drawFrontText(item.issueDate, 66.5, 46.1, 12.5, true, true);
 
     // 차량정보
-    drawFrontText(item.carModel, 20.5, 60.4, 13, true);
-    drawFrontText(item.carColor || '-', 20.5, 63.4, 13, true);
-    drawFrontText(item.carPlate, 62.0, 60.4, 14, true);
-    drawFrontText(item.vin?.trim() || '-', 62.0, 63.4, 12, true, true);
+    drawFrontText(item.carModel, 20.0, 59.8, 13, true);
+    drawFrontText(item.carColor || '-', 20.0, 62.8, 13, true);
+    drawFrontText(item.carPlate, 61.5, 59.8, 14, true);
+    drawFrontText(item.vin?.trim() || '-', 61.5, 62.8, 12, true, true);
 
     // 제품 및 시공가격 (괄호 정중앙 정렬)
     const clearText = item.hasClearPps ? (item.clearPpsDetail || '전체') : '-';
     const colorText = item.hasColorPps ? (item.colorPpsDetail || '전체') : '-';
 
     ctxFront.textAlign = 'center';
-    drawFrontText(clearText, 53.0, 72.3, 11.5, true, false, '#b91c1c');
-    drawFrontText(colorText, 78.9, 72.3, 11.5, true, false, '#b91c1c');
+    drawFrontText(clearText, 53.5, 71.8, 11.5, true, false, '#b91c1c');
+    drawFrontText(colorText, 79.0, 71.8, 11.5, true, false, '#b91c1c');
     ctxFront.textAlign = 'left';
 
     if (item.price) {
       ctxFront.textAlign = 'right';
-      drawFrontText(`${formatPriceWithCommas(item.price)} 원`, 70.0, 77.4, 14, true, true);
+      drawFrontText(`${formatPriceWithCommas(item.price)} 원`, 69.5, 76.5, 14.5, true, true);
       ctxFront.textAlign = 'left';
     }
 
-    // 2. 뒷면 (약관)
+    // 2. 뒷면 (약관) 초고해상도 로드
     const backImg = await loadImage('/images/warranty/warranty_back.png');
     const canvasBack = document.createElement('canvas');
     canvasBack.width = width;
@@ -382,23 +385,26 @@ export const renderWarrantyCanvases = async (
     const ctxBack = canvasBack.getContext('2d');
     if (!ctxBack) return null;
 
+    ctxBack.imageSmoothingEnabled = true;
+    ctxBack.imageSmoothingQuality = 'high';
+
     // 원본 서식 그리기
     ctxBack.drawImage(backImg, 0, 0, width, height);
 
     // 보증기간이 6년(기본)과 다를 때 오버레이 처리
     if (item.warrantyPeriodYears && item.warrantyPeriodYears !== 6) {
       ctxBack.fillStyle = '#ffffff';
-      const maskX = (38.6 / 100) * width;
-      const maskY = (29.1 / 100) * height;
-      const maskW = (2.5 / 100) * width;
-      const maskH = (1.8 / 100) * height;
+      const maskX = (35.8 / 100) * width;
+      const maskY = (27.2 / 100) * height;
+      const maskW = (5.0 / 100) * width;
+      const maskH = (2.4 / 100) * height;
       ctxBack.fillRect(maskX, maskY, maskW, maskH);
 
       ctxBack.fillStyle = '#111827';
       ctxBack.textBaseline = 'middle';
       ctxBack.textAlign = 'center';
-      ctxBack.font = `bold ${12 * scale}px monospace, Courier, sans-serif`;
-      ctxBack.fillText(String(item.warrantyPeriodYears), maskX + maskW / 2, maskY + maskH / 2);
+      ctxBack.font = `bold ${13 * fontScale}px monospace, Courier, sans-serif`;
+      ctxBack.fillText(String(item.warrantyPeriodYears), (38.3 / 100) * width, (28.5 / 100) * height);
     }
 
     return { canvasFront, canvasBack };

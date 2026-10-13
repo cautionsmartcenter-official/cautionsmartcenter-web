@@ -255,8 +255,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           }`}
           style={{
             width: '100%',
-            maxWidth: '723px',
-            aspectRatio: '723 / 1024',
+            maxWidth: '780px',
+            aspectRatio: '2482 / 3510',
             pageBreakAfter: 'always'
           }}
         >
@@ -312,8 +312,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           }`}
           style={{
             width: '100%',
-            maxWidth: '723px',
-            aspectRatio: '723 / 1024',
+            maxWidth: '780px',
+            aspectRatio: '2482 / 3510',
             pageBreakBefore: 'always'
           }}
         >
