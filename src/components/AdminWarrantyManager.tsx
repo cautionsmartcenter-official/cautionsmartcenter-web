@@ -698,9 +698,153 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         </div>
       </div>
 
-      {/* ── 3. 보증서 목록 테이블 (한 화면에 슬라이드 없이 100% 표시) ── */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* ── 3-A. 모바일 & 태블릿 전용 카드형 리스트 (가로 스크롤 없이 한눈에 보기 완벽 지원) ── */}
+      <div className="block lg:hidden space-y-3">
+        {filteredWarranties.length === 0 ? (
+          <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400">
+            <i className="ri-shield-cross-line text-3xl block mb-2 text-slate-300" />
+            <p className="font-semibold text-slate-600">검색 조건에 맞는 보증서 내역이 없습니다.</p>
+            <p className="text-xs text-slate-400 mt-1">상단의 [+ 새 보증서 발급하기] 버튼을 눌러 등록해 보세요.</p>
+          </div>
+        ) : (
+          filteredWarranties.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow space-y-3"
+            >
+              {/* 카드 상단: 보증번호 & 상태 */}
+              <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setViewingWarranty(item)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg border border-red-200 font-mono font-bold text-xs cursor-pointer transition-all active:scale-95"
+                  title="클릭 시 정품 보증서 원본 열람"
+                >
+                  <i className="ri-shield-check-fill text-red-500 text-sm" />
+                  <span>{item.warrantyNo}</span>
+                </button>
+                
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>정상 유효</span>
+                </span>
+              </div>
+
+              {/* 차량 및 고객 정보 */}
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2 py-0.5 bg-white text-slate-900 font-mono font-black text-xs tracking-tight rounded border border-slate-300 shadow-2xs">
+                      {item.carPlate}
+                    </span>
+                    <span className="font-black text-slate-900 text-sm">
+                      {item.carModel}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1.5 flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-slate-800">{item.customerName} 고객님</span>
+                    <span className="text-slate-300">|</span>
+                    <a
+                      href={`tel:${item.customerPhone}`}
+                      className="text-blue-600 font-mono font-semibold hover:underline flex items-center gap-0.5"
+                    >
+                      <i className="ri-phone-line text-xs" />
+                      <span>{item.customerPhone}</span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* 시공가격 */}
+                <div className="text-right shrink-0">
+                  <div className="text-[10px] text-slate-400 font-medium">시공금액(VAT별도)</div>
+                  <div className="font-mono font-black text-slate-900 text-sm">
+                    {item.price ? `${formatPriceWithCommas(item.price)}원` : '-'}
+                  </div>
+                </div>
+              </div>
+
+              {/* 시공 제품 및 상세 내역 */}
+              <div className="bg-slate-50 rounded-xl p-2.5 flex items-center justify-between text-xs gap-2 flex-wrap border border-slate-100">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {item.hasClearPps && (
+                    <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-900 border border-blue-200 px-2 py-0.5 rounded font-bold text-[11px]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                      투명PPS {item.clearPpsDetail && `(${item.clearPpsDetail})`}
+                    </span>
+                  )}
+                  {item.hasColorPps && (
+                    <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-900 border border-purple-200 px-2 py-0.5 rounded font-bold text-[11px]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+                      컬러PPS {item.colorPpsDetail && `(${item.colorPpsDetail})`}
+                    </span>
+                  )}
+                  {!item.hasClearPps && !item.hasColorPps && (
+                    <span className="text-slate-400 text-xs">-</span>
+                  )}
+                </div>
+                <div className="text-[11px] text-slate-500 font-medium">
+                  발급일: <span className="font-mono text-slate-700 font-bold">{item.issueDate}</span> ({item.warrantyPeriodYears}년 보증)
+                </div>
+              </div>
+
+              {/* 하단 모바일 핵심 액션 버튼 바 (카톡 전송 & 보증서 열람) */}
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                {/* 💬 카카오톡 전송 버튼 */}
+                <button
+                  onClick={() => setSendingKakaoWarranty(item)}
+                  className="w-full py-2.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+                  title="카카오톡 또는 이메일로 보증서 전송"
+                >
+                  <i className="ri-kakao-talk-fill text-base" />
+                  <span>카톡 전송</span>
+                </button>
+
+                {/* 👁️ 보증서 원본 열람 & 인쇄 버튼 */}
+                <button
+                  onClick={() => setViewingWarranty(item)}
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+                  title="보증서 원본 열람 및 인쇄"
+                >
+                  <i className="ri-file-text-line text-emerald-400 text-sm" />
+                  <span>보증서 열람</span>
+                </button>
+              </div>
+
+              {/* 하단 보조 액션 (링크복사, 수정, 삭제) */}
+              <div className="flex items-center justify-end gap-1 pt-1 border-t border-slate-100 text-slate-500 text-xs">
+                <button
+                  onClick={() => handleCopyLink(item)}
+                  className="px-2.5 py-1 hover:text-blue-600 hover:bg-slate-100 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                  title="웹 보증서 링크 복사"
+                >
+                  <i className="ri-file-copy-line text-sm" />
+                  <span>링크복사</span>
+                </button>
+                <button
+                  onClick={() => handleOpenEditModal(item)}
+                  className="px-2.5 py-1 hover:text-indigo-600 hover:bg-slate-100 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                  title="정보 수정"
+                >
+                  <i className="ri-edit-line text-sm" />
+                  <span>수정</span>
+                </button>
+                <button
+                  onClick={() => handleDelete(item.id, item.warrantyNo, item.customerName)}
+                  className="px-2.5 py-1 hover:text-red-600 hover:bg-red-50 text-slate-400 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                  title="보증서 삭제"
+                >
+                  <i className="ri-delete-bin-line text-sm" />
+                  <span>삭제</span>
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* ── 3-B. PC 데스크탑 전용 테이블 (한 화면에 슬라이드 없이 100% 표시) ── */}
+      <div className="hidden lg:block bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto touch-pan-x overscroll-x-contain pb-1">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] uppercase tracking-wider font-bold">
