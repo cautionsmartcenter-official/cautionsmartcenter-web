@@ -191,12 +191,14 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   return (
     <div 
       id="warranty-modal-root"
-      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md overflow-y-auto overscroll-y-contain flex flex-col items-center px-2.5 sm:px-6 pt-3 sm:pt-6 pb-20 sm:pb-28 print:p-0 print:m-0 print:bg-white print:static print:overflow-visible print:w-full print:block"
+      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md overflow-y-auto overscroll-contain print:p-0 print:m-0 print:bg-white print:static print:overflow-visible print:w-full print:block custom-warranty-scrollbar"
+      style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
     >
-      {/* ── Top Header Controls (상단 잘림 방지 및 모바일 반응형 완벽 최적화) ── */}
-      <div className={`w-full ${isZoomed ? 'max-w-6xl' : 'max-w-5xl'} bg-slate-900/95 text-white rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 border border-slate-700 shadow-2xl flex flex-col gap-3 sticky top-2 sm:top-3 z-30 print:hidden transition-all duration-300`}>
-        {/* 상단 라인: 타이틀 & 닫기(X) 버튼 */}
-        <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+      <div className="min-h-full w-full flex flex-col items-center justify-start px-2 sm:px-6 pt-2.5 sm:pt-6 pb-28 sm:pb-36">
+        {/* ── Top Header Controls (상단 잘림 방지 및 모바일 반응형 완벽 최적화) ── */}
+        <div className={`w-full ${isZoomed ? 'max-w-6xl' : 'max-w-5xl'} bg-slate-900/95 text-white rounded-2xl p-2.5 sm:p-4 mb-3 sm:mb-6 border border-slate-700 shadow-2xl flex flex-col gap-2.5 sm:gap-3 sticky top-1 sm:top-3 z-30 print:hidden transition-all duration-300`}>
+          {/* 상단 라인: 타이틀 & 닫기(X) 버튼 */}
+          <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span
               style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, letterSpacing: '0.05em' }}
@@ -482,47 +484,54 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-[440px] sm:max-w-xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 print:hidden text-gray-900 mb-16 sm:mb-24"
+          className="w-full max-w-[440px] sm:max-w-xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 print:hidden text-gray-900 mb-8 sm:mb-16"
+          style={{ touchAction: 'pan-y' }}
         >
-          {/* 상단 프리미엄 헤더 */}
-          <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-red-950 text-white p-6 sm:p-7 relative overflow-hidden">
+          {/* 상단 프리미엄 헤더 (모바일 컴팩트 & 시원한 타이포) */}
+          <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-red-950 text-white p-5 sm:p-7 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-red-600/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <span
                 className="text-xs sm:text-sm tracking-widest text-red-400 font-bold"
                 style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 CAUTION SMART CENTER
               </span>
-              <span className="px-2.5 py-1 bg-white/10 rounded-lg text-xs sm:text-sm font-mono text-yellow-300 font-bold tracking-wider border border-white/20">
+              <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-white/10 rounded-lg text-xs sm:text-sm font-mono text-yellow-300 font-bold tracking-wider border border-white/20">
                 {warranty.warrantyNo}
               </span>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white mb-1.5">
+            <h3 className="text-xl sm:text-3xl font-black tracking-tight text-white mb-1">
               공식 정품 품질 보증서
             </h3>
-            <p className="text-xs sm:text-sm text-gray-300 font-sans">
+            <p className="text-[11px] sm:text-xs text-gray-300 font-sans">
               (주)코션스마트센터 공식 인증 시공 보증 시스템
             </p>
 
-            <div className="mt-5 pt-4 border-t border-white/15 flex items-center justify-between">
+            <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between">
               <div>
-                <span className="text-[11px] sm:text-xs text-gray-400 block font-medium">고객명</span>
-                <span className="text-lg sm:text-xl font-black text-white">{warranty.customerName} 고객님</span>
+                <span className="text-[10px] sm:text-xs text-gray-400 block font-medium">고객명</span>
+                <span className="text-base sm:text-xl font-black text-white">{warranty.customerName} 고객님</span>
               </div>
               <div className="text-right">
-                <span className="text-[11px] sm:text-xs text-gray-400 block font-medium">시공 차량</span>
-                <span className="text-lg sm:text-xl font-black text-red-400">{warranty.carPlate}</span>
+                <span className="text-[10px] sm:text-xs text-gray-400 block font-medium">시공 차량</span>
+                <span className="text-base sm:text-xl font-black text-red-400">{warranty.carPlate}</span>
               </div>
             </div>
           </div>
 
-          {/* 보증 요약 카드 */}
-          <div className="p-6 sm:p-7 space-y-5">
+          {/* 보증 요약 카드 본문 */}
+          <div className="p-4 sm:p-7 space-y-4 sm:space-y-5">
+            {/* 💡 모바일 스크롤 가이드 바 */}
+            <div className="bg-slate-100/90 border border-slate-200 rounded-xl px-3 py-1.5 text-center text-[11px] text-slate-600 font-medium flex items-center justify-center gap-1.5 shadow-xs">
+              <i className="ri-arrow-down-line text-red-500 animate-bounce" />
+              <span>화면을 아래로 스크롤하여 <strong>상세내역·다운로드·약관</strong>을 확인하세요</span>
+            </div>
+
             {/* 차량 & 시공 정보 테이블 (핸드폰/PC 모두 글씨가 시원시원하고 또렷하게 표시) */}
-            <div className="bg-slate-50/90 rounded-2xl p-5 border border-slate-200/80 space-y-3.5 text-xs sm:text-sm">
-              <div className="flex justify-between items-center py-1.5 border-b border-gray-200/70">
+            <div className="bg-slate-50/90 rounded-2xl p-4 sm:p-5 border border-slate-200/80 space-y-2.5 sm:space-y-3.5 text-xs sm:text-sm">
+              <div className="flex justify-between items-center py-1 border-b border-gray-200/70">
                 <span className="text-slate-600 font-bold text-xs sm:text-sm">시공 차종</span>
                 <span className="font-extrabold text-slate-950 text-sm sm:text-base">{warranty.carModel}</span>
               </div>
@@ -792,12 +801,46 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
               <i className="ri-customer-service-2-fill text-red-500 text-base" />
               <span>코션스마트센터 사후관리 문의 (031-705-1888)</span>
             </a>
+
+            {/* 모바일 화면 하단 편의용 창 닫기 버튼 */}
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-gray-200"
+              >
+                <i className="ri-close-line text-sm" />
+                <span>보증서 닫기</span>
+              </button>
+            )}
           </div>
         </motion.div>
       )}
 
-      {/* 인쇄 스타일 지정 */}
+      {/* 내부 플렉스 래퍼(min-h-full) 닫기 */}
+      </div>
+
+      {/* 인쇄 및 커스텀 스크롤바 스타일 지정 */}
       <style>{`
+        /* 모달 세로 스크롤바를 눈에 잘 띄고 부드럽게 표시 */
+        .custom-warranty-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(239, 68, 68, 0.7) rgba(15, 23, 42, 0.8);
+        }
+        .custom-warranty-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        .custom-warranty-scrollbar::-webkit-scrollbar-track {
+          background: rgba(15, 23, 42, 0.8);
+        }
+        .custom-warranty-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(239, 68, 68, 0.7);
+          border-radius: 9999px;
+        }
+        .custom-warranty-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(239, 68, 68, 1);
+        }
+
         @media print {
           body {
             background: white !important;
