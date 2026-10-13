@@ -41,7 +41,15 @@ export interface WarrantyItem {
   emailAt?: string; // ISO string
 }
 
+// ── 엑셀 영구 보존 대장용 인터페이스 ──
+export interface ArchiveWarrantyItem extends WarrantyItem {
+  isDeletedFromScreen?: boolean; // 관리자 화면 목록에서 삭제 여부
+  deletedAt?: string;            // 삭제 일시 (ISO String)
+  archivedAt?: string;           // 아카이브 등록 일시
+}
+
 const STORAGE_KEY = 'caution_warranty_db';
+const ARCHIVE_STORAGE_KEY = 'caution_warranty_archive_db'; // 엑셀 대장 영구 보관소 (화면에서 삭제해도 절대 안 지워짐)
 
 // 보증서 일련번호 자동 생성 함수: CSC-YYYY-MMDD-순번
 export const generateWarrantyNo = (): string => {
@@ -85,9 +93,102 @@ export const getWarranties = (): WarrantyItem[] => {
   }
 };
 
-// 전체 보증서 내역 삭제 / 초기화
+/**
+ * 엑셀 대장용 영구 아카이브 데이터 조회
+ * - 기존 메인 DB(caution_warranty_db)에 등록된 항목 중 아카이브에 아직 누락된 것이 있다면 자동으로 합쳐서 영구 보존합니다.
+ */
+export const getArchiveWarranties = (): ArchiveWarrantyItem[] => {
+  try {
+    const rawArchive = localStorage.getItem(ARCHIVE_STORAGE_KEY);
+    let archiveList: ArchiveWarrantyItem[] = [];
+    if (rawArchive) {
+      const parsed = JSON.parse(rawArchive);
+      if (Array.isArray(parsed)) {
+        archiveList = parsed;
+      }
+    }
+
+    // 메인 DB에 있는 항목들을 가져와서 아카이브에 없으면 자동 편입
+    const mainList = getWarranties();
+    let isArchiveUpdated = false;
+
+    for (const item of mainList) {
+      const existsIndex = archiveList.findIndex(
+        (a) => a.id === item.id || a.warrantyNo === item.warrantyNo
+      );
+      if (existsIndex === -1) {
+        archiveList.unshift({
+          ...item,
+          isDeletedFromScreen: false,
+          archivedAt: item.createdAt || new Date().toISOString()
+        });
+        isArchiveUpdated = true;
+      } else {
+        // 아카이브에 이미 있고 화면에도 살아있는 경우 상태 동기화
+        if (archiveList[existsIndex].isDeletedFromScreen) {
+          archiveList[existsIndex].isDeletedFromScreen = false;
+          delete archiveList[existsIndex].deletedAt;
+          isArchiveUpdated = true;
+        }
+      }
+    }
+
+    if (isArchiveUpdated) {
+      localStorage.setItem(ARCHIVE_STORAGE_KEY, JSON.stringify(archiveList));
+    }
+
+    return archiveList;
+  } catch (err) {
+    console.error('Error fetching archive warranties:', err);
+    return [];
+  }
+};
+
+/**
+ * 영구 엑셀 대장 아카이브에 보증서 저장/갱신 (화면 삭제 여부 플래그 지원)
+ */
+export const saveToArchive = (item: WarrantyItem, isDeleted = false, deletedAt?: string): void => {
+  try {
+    const rawArchive = localStorage.getItem(ARCHIVE_STORAGE_KEY);
+    let archiveList: ArchiveWarrantyItem[] = rawArchive ? JSON.parse(rawArchive) : [];
+    if (!Array.isArray(archiveList)) archiveList = [];
+
+    const existingIndex = archiveList.findIndex(
+      (a) => a.id === item.id || a.warrantyNo === item.warrantyNo
+    );
+
+    const archiveEntry: ArchiveWarrantyItem = {
+      ...(existingIndex !== -1 ? archiveList[existingIndex] : {}),
+      ...item,
+      isDeletedFromScreen: isDeleted,
+      deletedAt: isDeleted ? (deletedAt || new Date().toISOString()) : undefined,
+      archivedAt: existingIndex !== -1 && archiveList[existingIndex].archivedAt 
+        ? archiveList[existingIndex].archivedAt 
+        : (item.createdAt || new Date().toISOString())
+    };
+
+    if (existingIndex !== -1) {
+      archiveList[existingIndex] = archiveEntry;
+    } else {
+      archiveList.unshift(archiveEntry);
+    }
+
+    localStorage.setItem(ARCHIVE_STORAGE_KEY, JSON.stringify(archiveList));
+  } catch (err) {
+    console.error('Failed to save warranty to archive:', err);
+  }
+};
+
+// 전체 보증서 내역 화면에서 비우기 / 초기화 (화면 목록만 비우고 엑셀 대장에는 영구 보존!)
 export const clearAllWarranties = (): void => {
   try {
+    const list = getWarranties();
+    const deletedTime = new Date().toISOString();
+    // 기존 활성 데이터들을 엑셀 대장에 '화면삭제' 상태로 안전하게 보관 처리
+    list.forEach((item) => {
+      saveToArchive(item, true, deletedTime);
+    });
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
   } catch (err) {
     console.error('Error clearing warranties:', err);
@@ -177,21 +278,33 @@ export const cacheReceivedWarranty = (item: WarrantyItem): void => {
   }
 };
 
-// 이 기기에서 알 수 있는 모든 보증서 (관리자 등록분 + 링크로 받은 것), 보증번호 기준 중복 제거
+// 이 기기에서 알 수 있는 모든 보증서 (관리자 등록분 + 링크로 받은 것 + 엑셀 영구대장 보관분), 보증번호 기준 중복 제거
 export const getAllKnownWarranties = (): WarrantyItem[] => {
   const map = new Map<string, WarrantyItem>();
-  [...getReceivedWarranties(), ...getWarranties()].forEach((w) => map.set(w.warrantyNo, w));
+  [...getArchiveWarranties(), ...getReceivedWarranties(), ...getWarranties()].forEach((w) => map.set(w.warrantyNo, w));
   return Array.from(map.values());
 };
 
-// 단건 조회 (ID 또는 보증번호)
+// 단건 조회 (ID 또는 보증번호) - 화면 목록 -> 고객 수신함 -> 영구 대장 순으로 탐색
 export const getWarrantyById = (idOrNo: string): WarrantyItem | null => {
-  const list = getWarranties();
   const decoded = decodeURIComponent(idOrNo).trim();
-  return list.find((w) => w.id === decoded || w.warrantyNo === decoded) || null;
+  
+  // 1. 관리자 화면 활성 목록
+  const activeList = getWarranties();
+  const foundActive = activeList.find((w) => w.id === decoded || w.warrantyNo === decoded);
+  if (foundActive) return foundActive;
+
+  // 2. 고객 수신함
+  const receivedList = getReceivedWarranties();
+  const foundReceived = receivedList.find((w) => w.id === decoded || w.warrantyNo === decoded);
+  if (foundReceived) return foundReceived;
+
+  // 3. 엑셀 영구 보존 대장 (화면에서 삭제된 건이라도 조회 가능)
+  const archiveList = getArchiveWarranties();
+  return archiveList.find((w) => w.id === decoded || w.warrantyNo === decoded) || null;
 };
 
-// 보증서 신규 저장
+// 보증서 신규 저장 (화면 활성 DB 및 엑셀 영구 대장 아카이브 동시 보존)
 export const saveWarranty = (data: Omit<WarrantyItem, 'id' | 'createdAt'>): WarrantyItem => {
   const list = getWarranties();
   const newItem: WarrantyItem = {
@@ -206,10 +319,14 @@ export const saveWarranty = (data: Omit<WarrantyItem, 'id' | 'createdAt'>): Warr
 
   const updated = [newItem, ...list];
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+  // 엑셀 영구 대장 아카이브에도 즉시 영구 등록
+  saveToArchive(newItem, false);
+
   return newItem;
 };
 
-// 보증서 수정
+// 보증서 수정 (화면 활성 DB 및 엑셀 영구 대장 아카이브 동시 반영)
 export const updateWarranty = (id: string, updates: Partial<WarrantyItem>): WarrantyItem | null => {
   const list = getWarranties();
   const index = list.findIndex((w) => w.id === id);
@@ -217,27 +334,40 @@ export const updateWarranty = (id: string, updates: Partial<WarrantyItem>): Warr
 
   list[index] = { ...list[index], ...updates };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+
+  // 엑셀 영구 대장 아카이브에도 최신 내용 동기화
+  saveToArchive(list[index], false);
+
   return list[index];
 };
 
-// 보증서 삭제
+// 보증서 삭제 (화면 목록에서는 즉시 제거하되, 엑셀 대장에는 삭제일시와 함께 영구 보존!)
 export const deleteWarranty = (id: string): boolean => {
   const list = getWarranties();
+  const target = list.find((w) => w.id === id);
+  
+  if (target) {
+    // 엑셀 영구 대장 아카이브에는 삭제 일시를 달아서 영구 보존
+    saveToArchive(target, true, new Date().toISOString());
+  }
+
   const updated = list.filter((w) => w.id !== id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   return true;
 };
 
-// CSV 다운로드 (엑셀 호환)
+// CSV 다운로드 (엑셀 호환 - 화면에서 삭제된 보증서도 영구 대장에 모두 포함되어 출력)
 export const exportWarrantiesToCSV = () => {
-  const data = getWarranties();
+  // 영구 보존 아카이브 대장을 기준으로 조회 (화면에서 삭제된 이력까지 100% 누적 보관)
+  const data = getArchiveWarranties();
   if (data.length === 0) {
-    alert('저장된 보증서 내역이 없습니다.');
+    alert('저장된 보증서 대장 내역이 없습니다.');
     return;
   }
 
   const headers = [
     '보증번호',
+    '대장보관상태',
     '발급일자',
     '고객명',
     '연락처',
@@ -251,35 +381,44 @@ export const exportWarrantiesToCSV = () => {
     '시공가격(VAT별도)',
     '보증기간(년)',
     '시공점',
-    '상태',
+    '보증효력',
+    '삭제일시(대장보관)',
     '메모'
   ];
 
-  const rows = data.map((item) => [
-    `"${item.warrantyNo}"`,
-    `"${item.issueDate}"`,
-    `"${item.customerName}"`,
-    `"${item.customerPhone}"`,
-    `"${item.customerAddress || ''}"`,
-    `"${item.carModel}"`,
-    `"${item.carPlate}"`,
-    `"${item.carColor || ''}"`,
-    `"${item.vin || ''}"`,
-    `"${item.hasClearPps ? `적용(${item.clearPpsDetail || '전체'})` : '미적용'}"`,
-    `"${item.hasColorPps ? `적용(${item.colorPpsDetail || '전체'})` : '미적용'}"`,
-    `"${item.price}"`,
-    `"${item.warrantyPeriodYears}년"`,
-    `"${item.issuedBy}"`,
-    `"${item.status === 'active' ? '유효' : item.status === 'expired' ? '만료' : '취소'}"`,
-    `"${(item.notes || '').replace(/"/g, '""')}"`
-  ]);
+  const rows = data.map((item) => {
+    const storageStatus = item.isDeletedFromScreen ? '화면삭제(대장영구보관)' : '화면등록중(정상)';
+    const warrantyStatus = item.status === 'active' ? '유효' : item.status === 'expired' ? '만료' : '취소';
+    const deletedDate = item.deletedAt ? item.deletedAt.replace('T', ' ').slice(0, 19) : '-';
+
+    return [
+      `"${item.warrantyNo}"`,
+      `"${storageStatus}"`,
+      `"${item.issueDate}"`,
+      `"${item.customerName}"`,
+      `"${item.customerPhone}"`,
+      `"${item.customerAddress || ''}"`,
+      `"${item.carModel}"`,
+      `"${item.carPlate}"`,
+      `"${item.carColor || ''}"`,
+      `"${item.vin || ''}"`,
+      `"${item.hasClearPps ? `적용(${item.clearPpsDetail || '전체'})` : '미적용'}"`,
+      `"${item.hasColorPps ? `적용(${item.colorPpsDetail || '전체'})` : '미적용'}"`,
+      `"${item.price}"`,
+      `"${item.warrantyPeriodYears}년"`,
+      `"${item.issuedBy}"`,
+      `"${warrantyStatus}"`,
+      `"${deletedDate}"`,
+      `"${(item.notes || '').replace(/"/g, '""')}"`
+    ];
+  });
 
   const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `코션스마트센터_전자보증서_대장_${new Date().toISOString().slice(0, 10)}.csv`);
+  link.setAttribute('download', `코션스마트센터_전자보증서_누적대장_${new Date().toISOString().slice(0, 10)}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

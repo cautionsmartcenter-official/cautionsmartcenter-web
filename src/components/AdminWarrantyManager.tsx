@@ -448,9 +448,9 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     }
   };
 
-  // 삭제 처리
+  // 삭제 처리 (화면 목록에서만 제거, 엑셀 대장에는 영구 보존)
   const handleDelete = (id: string, no: string, name: string) => {
-    if (window.confirm(`[${no}] ${name} 고객님의 보증서 내역을 삭제하시겠습니까?`)) {
+    if (window.confirm(`[${no}] ${name} 고객님의 보증서를 관리자 화면에서 삭제하시겠습니까?\n\n💡 안내: 화면 목록에서만 삭제되며, [대장 엑셀저장]에는 영구 보존되어 언제든 엑셀 파일로 내려받으실 수 있습니다.`)) {
       const token = warranties.find((w) => w.id === id)?.viewToken;
       if (token) {
         // 고객 열람 링크도 함께 삭제 (실패해도 관리자 대장 삭제는 진행)
@@ -458,17 +458,23 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       }
       deleteWarranty(id);
       reloadData();
-      showToast('보증서 내역이 삭제되었습니다.');
+      showToast('화면 목록에서 삭제되었습니다. (엑셀 대장에는 영구 보존됩니다)');
     }
   };
 
-  // 전체 데이터 비우기 (초기화)
+  // 전체 데이터 비우기 (화면 목록만 정리, 엑셀 대장에는 영구 보존)
   const handleClearAllData = () => {
-    if (window.confirm('기존에 저장된 모든 보증서 내역을 삭제하고 초기화하시겠습니까?\n(이전 내역이 모두 영구 삭제되며 되돌릴 수 없습니다.)')) {
+    if (window.confirm('기존에 저장된 보증서 목록을 화면에서 비우시겠습니까?\n\n💡 안내: 화면 목록만 정리되며, 과거에 발급했던 모든 내역은 [대장 엑셀저장]에 영구 보존되어 언제든 엑셀 파일로 확인하실 수 있습니다.')) {
       clearAllWarranties();
       reloadData();
-      showToast('이전 보증서 내역이 모두 삭제되었습니다.');
+      showToast('화면 목록이 정리되었습니다. (엑셀 대장에는 모든 내역이 영구 보존됩니다)');
     }
+  };
+
+  // 엑셀 대장 다운로드 (삭제된 내역까지 모두 포함)
+  const handleExportCSV = () => {
+    exportWarrantiesToCSV();
+    showToast('📊 화면에서 삭제된 내역까지 모두 포함된 전체 보증서 영구 대장이 저장되었습니다.');
   };
 
   // 보증서 1면(상세)+2면(약관) 합본 PDF 즉시 다운로드 & 안내문구 자동 복사
@@ -678,25 +684,25 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             <span className="hidden sm:inline">카카오톡 설정</span>
           </button>
 
-          {/* 엑셀 다운로드 */}
+          {/* 엑셀 다운로드 (삭제된 내역까지 영구 보존된 전체 대장) */}
           <button
-            onClick={exportWarrantiesToCSV}
+            onClick={handleExportCSV}
             className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer border border-slate-300"
-            title="전체 보증서 발급 대장을 CSV 파일로 다운로드합니다"
+            title="화면에서 삭제된 내역까지 모두 포함된 전체 보증서 영구 대장을 엑셀(CSV)로 다운로드합니다"
           >
             <i className="ri-file-excel-2-line text-emerald-600 text-base" />
             <span className="hidden sm:inline">대장 엑셀저장</span>
           </button>
 
-          {/* 이전 데이터 전체 비우기 */}
+          {/* 화면 목록 비우기 (엑셀 대장에는 영구 보존) */}
           {warranties.length > 0 && (
             <button
               onClick={handleClearAllData}
               className="px-3 py-2.5 bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 text-xs sm:text-sm font-semibold rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer border border-transparent hover:border-red-200"
-              title="이전 보증서 목록을 전체 삭제하고 초기화합니다"
+              title="화면의 보증서 목록을 비웁니다 (엑셀 대장에는 모든 내역이 영구 보존됩니다)"
             >
               <i className="ri-delete-bin-line text-slate-500 hover:text-red-600 text-base" />
-              <span className="hidden sm:inline">이전 데이터 비우기</span>
+              <span className="hidden sm:inline">화면 목록 비우기</span>
             </button>
           )}
 
