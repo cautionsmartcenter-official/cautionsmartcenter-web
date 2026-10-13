@@ -968,13 +968,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                             }}
                           >
                             {/* 상태 뱃지 및 드롭다운 */}
-                            <td className="py-3.5 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                            <td className="py-4 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                               <select
                                 value={item.status}
                                 onChange={(e) =>
                                   handleStatusChange(item.id, e.target.value as ConsultationItem['status'])
                                 }
-                                className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${statusMeta.bg} ${statusMeta.color} focus:outline-none cursor-pointer`}
+                                className={`text-xs font-bold px-3 py-1.5 rounded-full border shadow-2xs ${statusMeta.bg} ${statusMeta.color} focus:outline-none cursor-pointer transition-colors`}
                               >
                                 <option value="new">신규 접수</option>
                                 <option value="contacted">상담 진행중</option>
@@ -986,63 +986,71 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                             </td>
 
                             {/* 접수일시 */}
-                            <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap font-mono text-[11px]">
+                            <td className="py-4 px-4 text-slate-500 whitespace-nowrap font-mono text-xs">
                               {dateFormatted}
                             </td>
 
                             {/* 고객명 / 연락처 */}
-                            <td className="py-3.5 px-4 whitespace-nowrap">
-                              <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                                {item.name}
+                            <td className="py-4 px-4 whitespace-nowrap">
+                              <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
+                                <span>{item.name}</span>
                                 {item.status === 'new' && (
-                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+                                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
                                 )}
                               </div>
-                              <div className="text-slate-500 font-mono text-[11px]">{item.phone}</div>
+                              <a
+                                href={`tel:${item.phone}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-xs font-mono font-semibold text-slate-500 hover:text-blue-600 flex items-center gap-1 mt-0.5 transition-colors"
+                                title="전화 걸기"
+                              >
+                                <i className="ri-phone-line text-[11px] text-slate-400" />
+                                <span>{item.phone}</span>
+                              </a>
                             </td>
 
                             {/* 차량정보 */}
-                            <td className="py-3.5 px-4">
-                              <div className="font-semibold text-slate-800 line-clamp-1">{item.model || '미입력'}</div>
+                            <td className="py-4 px-4 min-w-[160px]">
+                              <div className="font-bold text-slate-900 text-xs sm:text-sm line-clamp-1">{item.model || '미입력'}</div>
                               {item.codeName && (
-                                <div className="text-[11px] text-slate-500 font-mono">{item.codeName}</div>
+                                <div className="text-[11px] text-slate-500 font-mono mt-0.5">{item.codeName}</div>
                               )}
                             </td>
 
                             {/* 희망 시공 */}
-                            <td className="py-3.5 px-4 whitespace-nowrap">
-                              <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md font-medium text-xs">
+                            <td className="py-4 px-4 whitespace-nowrap">
+                              <span className="px-2.5 py-1 bg-slate-100 text-slate-700 border border-slate-200/80 rounded-lg font-bold text-xs">
                                 {item.service || '일반 상담'}
                               </span>
                             </td>
 
-                            {/* 문의 내용 및 상담 메모 (통합 정리) */}
-                            <td className="py-3.5 px-4 min-w-[220px] max-w-sm">
-                              <p className="text-slate-700 line-clamp-1 text-xs font-medium" title={item.message}>
+                            {/* 문의 내용 및 상담 메모 (2줄까지 편안하게 읽힘) */}
+                            <td className="py-4 px-4 min-w-[240px] max-w-md">
+                              <p className="text-slate-700 text-xs font-medium leading-relaxed line-clamp-2" title={item.message}>
                                 {item.message || '-'}
                               </p>
                               {item.notes && (
                                 <div
-                                  className="mt-1 flex items-center gap-1 text-[11px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 w-fit max-w-[220px] truncate"
+                                  className="mt-1.5 flex items-center gap-1.5 text-[11px] text-amber-900 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 w-fit max-w-[280px] truncate shadow-2xs"
                                   title={item.notes}
                                 >
-                                  <i className="ri-sticky-note-line text-xs shrink-0 text-amber-600" />
-                                  <span className="truncate">{item.notes}</span>
+                                  <i className="ri-sticky-note-fill text-xs shrink-0 text-amber-600" />
+                                  <span className="font-bold truncate">{item.notes}</span>
                                 </div>
                               )}
                             </td>
 
                             {/* 관리 액션 버튼 */}
-                            <td className="py-3.5 px-4 text-center whitespace-nowrap w-36 min-w-[140px]" onClick={(e) => e.stopPropagation()}>
-                              <div className="flex items-center justify-center gap-1.5">
+                            <td className="py-4 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                              <div className="inline-flex items-center gap-1 p-1 bg-slate-50 rounded-xl border border-slate-200">
                                 {/* 상세 보기 */}
                                 <button
                                   onClick={() => {
                                     setSelectedItem(item);
                                     setCurrentNote(item.notes || '');
                                   }}
-                                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
-                                  title="상담 상세 내역 및 메모 확인/수정"
+                                  className="p-1.5 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-white transition-colors cursor-pointer"
+                                  title="상담 상세 및 메모"
                                 >
                                   <i className="ri-file-list-3-line text-base" />
                                 </button>
@@ -1059,8 +1067,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                     });
                                     setAdminSection('calendar');
                                   }}
-                                  className="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors cursor-pointer"
-                                  title="이 상담 정보로 시공 예약 캘린더에 일정 등록"
+                                  className="p-1.5 rounded-lg text-blue-600 hover:bg-white transition-colors cursor-pointer"
+                                  title="시공 예약 캘린더 등록"
                                 >
                                   <i className="ri-calendar-event-line text-base" />
                                 </button>
@@ -1076,8 +1084,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                     });
                                     setAdminSection('warranties');
                                   }}
-                                  className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
-                                  title="이 고객 정보로 정품 보증서 발급하기"
+                                  className="p-1.5 rounded-lg text-red-600 hover:bg-white transition-colors cursor-pointer"
+                                  title="정품 보증서 발급하기"
                                 >
                                   <i className="ri-shield-check-line text-base" />
                                 </button>
@@ -1085,7 +1093,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                 {/* 삭제 */}
                                 <button
                                   onClick={() => handleDelete(item.id, item.name)}
-                                  className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors cursor-pointer"
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                                   title="상담 내역 삭제"
                                 >
                                   <i className="ri-delete-bin-line text-base" />

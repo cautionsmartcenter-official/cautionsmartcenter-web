@@ -664,13 +664,13 @@ export const AdminCalendar: React.FC<AdminCalendarProps> = ({
                               setSelectedDate(sch.date);
                               setViewItem(sch);
                             }}
-                            className={`px-1.5 py-0.5 rounded-md border text-[11px] leading-tight transition-all cursor-pointer truncate flex items-center gap-1 ${statusMeta.bg}`}
+                            className={`px-1.5 py-1 rounded-md border text-[11px] leading-tight transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] ${statusMeta.bg}`}
                             title={`[${sch.carPlate}] ${sch.carModel} - ${sch.serviceType} (${sch.customerName} 고객님 / ${sch.time})`}
                           >
                             <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusMeta.dotClass}`} />
                             {/* 차량번호 핵심 강조 */}
-                            <span className="font-black tracking-tight shrink-0">{sch.carPlate}</span>
-                            <span className="text-[10px] text-slate-600 truncate hidden sm:inline">
+                            <span className="font-mono font-black tracking-tight shrink-0 whitespace-nowrap">{sch.carPlate}</span>
+                            <span className="text-[10px] opacity-75 truncate hidden sm:inline font-medium">
                               {sch.carModel.split(' ')[0]}
                             </span>
                           </div>
@@ -685,12 +685,12 @@ export const AdminCalendar: React.FC<AdminCalendarProps> = ({
                             e.stopPropagation();
                             setSelectedDate(war.issueDate);
                           }}
-                          className="px-1.5 py-0.5 rounded-md border border-red-200 bg-red-50 text-red-700 text-[10px] leading-tight transition-all truncate flex items-center gap-1"
+                          className="px-1.5 py-1 rounded-md border border-red-200/90 bg-red-50 text-red-700 text-[10px] leading-tight transition-all flex items-center gap-1 shadow-2xs hover:scale-[1.02]"
                           title={`[정품 보증서 발급] ${war.carPlate} (${war.carModel})`}
                         >
                           <i className="ri-shield-check-fill text-red-600 text-xs shrink-0" />
-                          <span className="font-black shrink-0">{war.carPlate}</span>
-                          <span className="truncate hidden sm:inline text-red-600/80">보증완료</span>
+                          <span className="font-mono font-black shrink-0 whitespace-nowrap">{war.carPlate}</span>
+                          <span className="truncate hidden sm:inline text-red-600/80 font-medium">보증</span>
                         </div>
                       ))}
                     </div>
@@ -752,12 +752,12 @@ export const AdminCalendar: React.FC<AdminCalendarProps> = ({
                       >
                         {/* 차량번호 & 상태 */}
                         <div className="flex items-center justify-between gap-2 mb-1.5">
-                          {/* 차량번호 최우선 강조 */}
-                          <div className="flex items-center gap-1.5">
-                            <span className="px-2 py-0.5 bg-slate-900 text-white font-mono font-black text-xs rounded-md shadow-sm">
+                          {/* 차량번호 최우선 강조 (대한민국 번호판 스타일) */}
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="px-2 py-0.5 bg-white text-slate-900 font-mono font-black text-xs rounded-md border border-slate-300 shadow-2xs whitespace-nowrap">
                               {item.carPlate}
                             </span>
-                            <span className="font-bold text-xs text-slate-800 line-clamp-1">{item.carModel}</span>
+                            <span className="font-black text-xs sm:text-sm text-slate-900 truncate">{item.carModel}</span>
                           </div>
 
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusMeta.badgeClass}`}>
@@ -791,8 +791,8 @@ export const AdminCalendar: React.FC<AdminCalendarProps> = ({
                       key={war.id}
                       className="p-3 rounded-xl border border-red-200 bg-red-50/40 text-xs"
                     >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="px-2 py-0.5 bg-red-600 text-white font-mono font-black text-[11px] rounded-md">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="px-2 py-0.5 bg-white text-red-700 font-mono font-black text-[11px] rounded-md border border-red-200 shadow-2xs whitespace-nowrap">
                           {war.carPlate}
                         </span>
                         <span className="text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
@@ -860,18 +860,18 @@ export const AdminCalendar: React.FC<AdminCalendarProps> = ({
                           </select>
                         </td>
 
-                        {/* 차량번호 (가장 돋보이게) */}
-                        <td className="py-3 px-4 whitespace-nowrap">
-                          <span className="px-2.5 py-1 bg-slate-900 text-white font-mono font-black text-xs sm:text-sm rounded-lg shadow-sm">
+                        {/* 차량번호 (대한민국 번호판 스타일) */}
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <span className="inline-block px-2.5 py-1 bg-white text-slate-900 font-mono font-black text-xs sm:text-sm rounded-md border-2 border-slate-300 shadow-2xs tracking-wider">
                             {item.carPlate}
                           </span>
                         </td>
 
                         {/* 차종 / 색상 */}
-                        <td className="py-3 px-4">
-                          <div className="font-bold text-slate-900 line-clamp-1">{item.carModel}</div>
+                        <td className="py-3.5 px-4">
+                          <div className="font-black text-slate-900 text-sm line-clamp-1">{item.carModel}</div>
                           {item.carColor && (
-                            <div className="text-[11px] text-slate-500">{item.carColor}</div>
+                            <div className="text-[11px] text-slate-500 font-medium mt-0.5">색상: {item.carColor}</div>
                           )}
                         </td>
 
