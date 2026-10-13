@@ -112,17 +112,23 @@ body {
   pointer-events: none;
 }
 
-/* Image Sharpening & HD Clarity Optimization */
+/* Image Sharpening & HD Clarity Optimization: 부드러운 고화질 리샘플링 */
 img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
   backface-visibility: hidden;
   transform: translateZ(0);
 }
 
+.warranty-preview-img {
+  image-rendering: auto !important;
+  image-rendering: smooth !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .sharp-img {
-  filter: contrast(1.04) brightness(1.02);
-  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.03) brightness(1.01);
+  image-rendering: auto;
 }
 
 /* ─────────────────────────────────────────────────────────────

@@ -330,7 +330,7 @@ export const renderWarrantyCanvases = async (
     // 원본 서식 그리기
     ctxFront.drawImage(frontImg, 0, 0, width, height);
 
-    // 텍스트 그리기 헬퍼
+    // 텍스트 그리기 헬퍼 (모니터 100% 화면 및 모바일에서도 글씨가 시원하고 선명하게 보이도록 최적화)
     ctxFront.textBaseline = 'middle';
     const drawFrontText = (
       text: string,
@@ -342,38 +342,40 @@ export const renderWarrantyCanvases = async (
       color = '#111827'
     ) => {
       ctxFront.fillStyle = color;
-      const fontName = isMono ? 'monospace, Courier, sans-serif' : 'Pretendard, -apple-system, sans-serif';
-      ctxFront.font = `${isBold ? 'bold ' : 'normal '}${fontSize * fontScale}px ${fontName}`;
+      const fontName = isMono 
+        ? '"Space Mono", monospace, "Courier New", sans-serif' 
+        : '"Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif';
+      ctxFront.font = `${isBold ? '800 ' : '600 '}${fontSize * fontScale}px ${fontName}`;
       ctxFront.fillText(text, (xPct / 100) * width, (yPct / 100) * height);
     };
 
-    // 고객정보
-    drawFrontText(item.customerName, 20.0, 43.0, 13);
-    drawFrontText(item.customerPhone, 20.0, 45.9, 12.5, true, true);
-    drawFrontText(item.customerAddress || '-', 20.0, 49.3, 11, false);
+    // 고객정보 (폰트 크기 및 굵기 강화로 가독성 극대화)
+    drawFrontText(item.customerName, 20.0, 43.0, 14.5, true);
+    drawFrontText(item.customerPhone, 20.0, 45.9, 13.5, true, true);
+    drawFrontText(item.customerAddress || '-', 20.0, 49.3, 12.5, false);
 
     // 보증서 정보
-    drawFrontText(item.warrantyNo, 66.5, 43.1, 12.5, true, true);
-    drawFrontText(item.issueDate, 66.5, 46.1, 12.5, true, true);
+    drawFrontText(item.warrantyNo, 66.5, 43.1, 14.0, true, true);
+    drawFrontText(item.issueDate, 66.5, 46.1, 14.0, true, true);
 
     // 차량정보
-    drawFrontText(item.carModel, 20.0, 59.8, 13, true);
-    drawFrontText(item.carColor || '-', 20.0, 62.8, 13, true);
-    drawFrontText(item.carPlate, 61.5, 59.8, 14, true);
-    drawFrontText(item.vin?.trim() || '-', 61.5, 62.8, 12, true, true);
+    drawFrontText(item.carModel, 20.0, 59.8, 14.5, true);
+    drawFrontText(item.carColor || '-', 20.0, 62.8, 14.5, true);
+    drawFrontText(item.carPlate, 61.5, 59.8, 15.5, true);
+    drawFrontText(item.vin?.trim() || '-', 61.5, 62.8, 13.0, true, true);
 
     // 제품 및 시공가격 (괄호 정중앙 정렬)
     const clearText = item.hasClearPps ? (item.clearPpsDetail || '전체') : '-';
     const colorText = item.hasColorPps ? (item.colorPpsDetail || '전체') : '-';
 
     ctxFront.textAlign = 'center';
-    drawFrontText(clearText, 53.5, 71.8, 11.5, true, false, '#b91c1c');
-    drawFrontText(colorText, 79.0, 71.8, 11.5, true, false, '#b91c1c');
+    drawFrontText(clearText, 53.5, 71.8, 13.0, true, false, '#b91c1c');
+    drawFrontText(colorText, 79.0, 71.8, 13.0, true, false, '#b91c1c');
     ctxFront.textAlign = 'left';
 
     if (item.price) {
       ctxFront.textAlign = 'right';
-      drawFrontText(`${formatPriceWithCommas(item.price)} 원`, 69.5, 76.5, 14.5, true, true);
+      drawFrontText(`${formatPriceWithCommas(item.price)} 원`, 69.5, 76.5, 16.0, true, true);
       ctxFront.textAlign = 'left';
     }
 

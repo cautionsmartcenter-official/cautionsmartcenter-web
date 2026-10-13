@@ -33,6 +33,8 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   const [copied, setCopied] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const [showTermsDetail, setShowTermsDetail] = useState(false);
+  // 모니터 100% 화면에서 시원하게 크게 보기 토글 상태 (기본 960px / 확대 1180px)
+  const [isZoomed, setIsZoomed] = useState(false);
 
   // 완성본 캔버스 이미지 (양식에 글씨가 100% 한 치의 오차 없이 박힌 일체형 이미지)
   const [renderedFrontUrl, setRenderedFrontUrl] = useState<string | null>(null);
@@ -192,7 +194,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md overflow-y-auto flex flex-col items-center p-2 sm:p-6 print:p-0 print:m-0 print:bg-white print:static print:overflow-visible print:w-full print:block"
     >
       {/* ── Top Header Controls (인쇄 시 숨김) ── */}
-      <div className="w-full max-w-4xl bg-slate-900/90 text-white rounded-2xl p-4 mb-4 border border-slate-700/80 shadow-2xl flex flex-wrap items-center justify-between gap-3 sticky top-2 z-20 print:hidden">
+      <div className={`w-full ${isZoomed ? 'max-w-6xl' : 'max-w-5xl'} bg-slate-900/90 text-white rounded-2xl p-4 mb-4 border border-slate-700/80 shadow-2xl flex flex-wrap items-center justify-between gap-3 sticky top-2 z-20 print:hidden transition-all duration-300`}>
         <div className="flex items-center gap-3">
           <span
             style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 500, letterSpacing: '0.05em' }}
@@ -213,7 +215,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           </div>
         </div>
 
-        {/* 뷰 모드 전환 버튼들 */}
+        {/* 뷰 모드 전환 버튼들 + 🔍 크게 보기 토글 */}
         <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded-xl border border-slate-700">
           <button
             onClick={() => setActivePage('front')}
@@ -239,6 +241,22 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
           >
             모바일 카드
           </button>
+
+          {/* 🔍 크게 보기 토글 (화면 100%일 때 글씨 시원하게 보기) */}
+          {activePage !== 'mobile' && (
+            <button
+              onClick={() => setIsZoomed((prev) => !prev)}
+              className={`px-2.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1 ml-1 border ${
+                isZoomed
+                  ? 'bg-amber-500/20 text-yellow-300 border-amber-500/50 shadow'
+                  : 'bg-slate-700/70 hover:bg-slate-700 text-slate-200 border-slate-600'
+              }`}
+              title={isZoomed ? "표준 크기(960px)로 맞춤" : "화면 꽉 차게 120% 크게 보기(1180px)"}
+            >
+              <i className={isZoomed ? "ri-zoom-out-line text-sm" : "ri-zoom-in-line text-sm text-yellow-400"} />
+              <span>{isZoomed ? "화면 맞춤" : "🔍 크게 보기"}</span>
+            </button>
+          )}
         </div>
 
         {/* 액션 버튼들 */}
@@ -344,12 +362,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'front' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto transition-all warranty-print-page warranty-print-front ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto transition-all duration-300 warranty-print-page warranty-print-front ${
             activePage === 'front' ? 'block' : 'hidden print:block'
           }`}
           style={{
             width: '100%',
-            maxWidth: '780px',
+            maxWidth: isZoomed ? '1180px' : '960px',
             aspectRatio: '2482 / 3510',
             pageBreakAfter: 'always'
           }}
@@ -358,7 +376,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             <img
               src={renderedFrontUrl}
               alt="독일 CARDIP 정품 품질 보증서 앞면"
-              className="w-full h-full object-contain block select-none pointer-events-auto"
+              className="w-full h-full object-contain block select-none pointer-events-auto warranty-preview-img"
               style={{ display: 'block', width: '100%', height: '100%' }}
               title="이미지를 길게 누르면 사진첩에 저장할 수 있습니다."
             />
@@ -401,12 +419,12 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'back' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mt-4 print:mt-0 transition-all warranty-print-page warranty-print-back ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mt-4 print:mt-0 transition-all duration-300 warranty-print-page warranty-print-back ${
             activePage === 'back' ? 'block' : 'hidden print:block'
           }`}
           style={{
             width: '100%',
-            maxWidth: '780px',
+            maxWidth: isZoomed ? '1180px' : '960px',
             aspectRatio: '2482 / 3510',
             pageBreakBefore: 'always'
           }}
@@ -415,7 +433,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             <img
               src={renderedBackUrl}
               alt="독일 CARDIP 정품 품질 보증서 뒷면 약관"
-              className="w-full h-full object-contain block select-none pointer-events-auto"
+              className="w-full h-full object-contain block select-none pointer-events-auto warranty-preview-img"
               style={{ display: 'block', width: '100%', height: '100%' }}
               title="이미지를 길게 누르면 사진첩에 저장할 수 있습니다."
             />
