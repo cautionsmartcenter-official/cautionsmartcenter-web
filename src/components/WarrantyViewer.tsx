@@ -79,6 +79,36 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
     }
   };
 
+  // 인쇄 전후 Readdy AI 위젯("Talk with Us") 및 외부 플로팅 위젯 완벽 차단 처리
+  useEffect(() => {
+    const hideFloatingWidgets = () => {
+      document.body.classList.add('is-printing-warranty');
+      const vapiWidgets = document.querySelectorAll('vapi-widget, [cta-title*="Talk with Us"], [title*="Talk with Us"], [class*="vapi"], [id*="vapi"]');
+      vapiWidgets.forEach((el) => {
+        (el as HTMLElement).style.setProperty('display', 'none', 'important');
+        (el as HTMLElement).style.setProperty('visibility', 'hidden', 'important');
+      });
+    };
+
+    const restoreFloatingWidgets = () => {
+      document.body.classList.remove('is-printing-warranty');
+      const vapiWidgets = document.querySelectorAll('vapi-widget, [cta-title*="Talk with Us"], [title*="Talk with Us"], [class*="vapi"], [id*="vapi"]');
+      vapiWidgets.forEach((el) => {
+        (el as HTMLElement).style.removeProperty('display');
+        (el as HTMLElement).style.removeProperty('visibility');
+      });
+    };
+
+    window.addEventListener('beforeprint', hideFloatingWidgets);
+    window.addEventListener('afterprint', restoreFloatingWidgets);
+
+    return () => {
+      window.removeEventListener('beforeprint', hideFloatingWidgets);
+      window.removeEventListener('afterprint', restoreFloatingWidgets);
+      restoreFloatingWidgets();
+    };
+  }, []);
+
   // 카카오톡 전송 / 공유
   const handleKakaoShare = async () => {
     const res = await sendKakaoWarranty(warranty);
@@ -86,9 +116,24 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
     setTimeout(() => setShareFeedback(null), 4000);
   };
 
-  // 인쇄 실행
+  // 인쇄 실행 (Talk with Us 완벽 차단 후 인쇄 대화상자 호출)
   const handlePrint = () => {
+    const vapiWidgets = document.querySelectorAll('vapi-widget, [cta-title*="Talk with Us"], [title*="Talk with Us"], [class*="vapi"], [id*="vapi"]');
+    vapiWidgets.forEach((el) => {
+      (el as HTMLElement).style.setProperty('display', 'none', 'important');
+      (el as HTMLElement).style.setProperty('visibility', 'hidden', 'important');
+    });
+    document.body.classList.add('is-printing-warranty');
+
     window.print();
+
+    setTimeout(() => {
+      document.body.classList.remove('is-printing-warranty');
+      vapiWidgets.forEach((el) => {
+        (el as HTMLElement).style.removeProperty('display');
+        (el as HTMLElement).style.removeProperty('visibility');
+      });
+    }, 1500);
   };
 
   const [isSavingPdf, setIsSavingPdf] = useState(false);
@@ -123,7 +168,10 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md overflow-y-auto flex flex-col items-center p-2 sm:p-6 print:p-0 print:bg-white print:static print:overflow-visible">
+    <div 
+      id="warranty-modal-root"
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md overflow-y-auto flex flex-col items-center p-2 sm:p-6 print:p-0 print:m-0 print:bg-white print:static print:overflow-visible print:w-full print:block"
+    >
       {/* ── Top Header Controls (인쇄 시 숨김) ── */}
       <div className="w-full max-w-4xl bg-slate-900/90 text-white rounded-2xl p-4 mb-4 border border-slate-700/80 shadow-2xl flex flex-wrap items-center justify-between gap-3 sticky top-2 z-20 print:hidden">
         <div className="flex items-center gap-3">
@@ -250,7 +298,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'front' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto transition-all ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto transition-all warranty-print-page warranty-print-front ${
             activePage === 'front' ? 'block' : 'hidden print:block'
           }`}
           style={{
@@ -307,7 +355,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'back' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mt-4 print:mt-0 transition-all ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mt-4 print:mt-0 transition-all warranty-print-page warranty-print-back ${
             activePage === 'back' ? 'block' : 'hidden print:block'
           }`}
           style={{
