@@ -19,7 +19,8 @@ import {
   getKakaoKey,
   setKakaoKey,
   isKakaoReady,
-  initKakao
+  initKakao,
+  sendKakaoWarranty
 } from '../lib/kakao';
 import {
   publishWarranty,
@@ -289,6 +290,16 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
       alert(`이메일 발송 오류:\n\n${e?.message || String(e)}\n\n아래의 [기본 메일 앱으로 열기 (mailto:)]를 이용해 주세요.`);
     } finally {
       setIsSendingEmail(false);
+    }
+  };
+
+  // 카카오톡 공식 SDK 공유 (친구/대화방 선택 전송)
+  const handleSendKakaoSdk = async (item: WarrantyItem) => {
+    try {
+      const res = await sendKakaoWarranty(item);
+      showToast(res.message);
+    } catch (e: any) {
+      alert(`카카오톡 전송 안내:\n\n${e?.message || String(e)}`);
     }
   };
 
@@ -1327,7 +1338,34 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
                 {/* ────────────────── 심플하고 명확한 주요 발송/다운로드 ────────────────── */}
                 <div className="space-y-3 pt-1">
-                  {/* 1. 보증서 1·2페이지 합본 PDF 다운로드 */}
+                  {/* 1. 카카오톡 친구/대화방 선택해서 바로 전송 (카카오 공식 무료 공유) */}
+                  <button
+                    onClick={() => handleSendKakaoSdk(sendingKakaoWarranty)}
+                    className="w-full py-4 px-4 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-black rounded-2xl shadow-xl shadow-yellow-500/20 hover:scale-[1.01] transition-all cursor-pointer border-2 border-[#E5CE00] flex items-center justify-between gap-3 text-left"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-11 h-11 rounded-xl bg-[#3c1e1e] text-[#FEE500] flex items-center justify-center shrink-0 shadow-md">
+                        <i className="ri-kakao-talk-fill text-2xl" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-sm sm:text-base font-black text-[#3c1e1e] tracking-tight flex items-center gap-2">
+                          <span>카카오톡 친구 선택해서 바로 전송</span>
+                          <span className="px-2 py-0.5 bg-[#3c1e1e] text-[#FEE500] text-[10px] font-black rounded-full whitespace-nowrap">
+                            추천 · 무료
+                          </span>
+                        </h4>
+                        <p className="text-[11px] sm:text-xs text-[#5c3a3a] font-normal truncate mt-0.5">
+                          카톡 친구/대화방 목록에서 고객을 선택하면 공식 보증서 카드가 즉시 전송됩니다.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-14 h-14 bg-[#3c1e1e]/10 border border-[#3c1e1e]/15 text-[#3c1e1e] rounded-xl font-black text-[11px] flex flex-col items-center justify-center leading-tight shadow-sm shrink-0 text-center">
+                      <i className="ri-share-forward-fill text-lg mb-0.5" />
+                      <span className="text-[9px] font-bold">친구 선택</span>
+                    </div>
+                  </button>
+
+                  {/* 2. 보증서 1·2페이지 합본 PDF 다운로드 */}
                   <button
                     onClick={() => handleDownloadPdf(sendingKakaoWarranty)}
                     disabled={isDownloading}

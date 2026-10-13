@@ -1,11 +1,12 @@
 import { type WarrantyItem, getWarrantyViewUrl, createWarrantyShareMessage } from './warrantyStorage';
 
 const KAKAO_KEY_STORAGE = 'caution_kakao_js_key';
+export const DEFAULT_KAKAO_JS_KEY = '152595fa743ea259e0884cf17e26d56b';
 
 // 기본 환경변수 또는 로컬스토리지에서 카카오 JS 키 가져오기
 export const getKakaoKey = (): string => {
-  if (typeof window === 'undefined') return '';
-  return localStorage.getItem(KAKAO_KEY_STORAGE) || (import.meta as any).env?.VITE_KAKAO_JS_KEY || '';
+  if (typeof window === 'undefined') return DEFAULT_KAKAO_JS_KEY;
+  return localStorage.getItem(KAKAO_KEY_STORAGE) || (import.meta as any).env?.VITE_KAKAO_JS_KEY || DEFAULT_KAKAO_JS_KEY;
 };
 
 // 카카오 JS 키 저장
