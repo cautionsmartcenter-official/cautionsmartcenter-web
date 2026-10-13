@@ -7,7 +7,8 @@ import {
   downloadWarrantyPdf,
   copyTextToClipboard,
   formatPriceWithCommas,
-  renderWarrantyCanvases
+  renderWarrantyCanvases,
+  printWarrantyDirect
 } from '../lib/warrantyStorage';
 import { sendKakaoWarranty } from '../lib/kakao';
 
@@ -116,24 +117,39 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
     setTimeout(() => setShareFeedback(null), 4000);
   };
 
-  // 인쇄 실행 (Talk with Us 완벽 차단 후 인쇄 대화상자 호출)
-  const handlePrint = () => {
-    const vapiWidgets = document.querySelectorAll('vapi-widget, [cta-title*="Talk with Us"], [title*="Talk with Us"], [class*="vapi"], [id*="vapi"]');
-    vapiWidgets.forEach((el) => {
-      (el as HTMLElement).style.setProperty('display', 'none', 'important');
-      (el as HTMLElement).style.setProperty('visibility', 'hidden', 'important');
-    });
-    document.body.classList.add('is-printing-warranty');
+  const [isPrinting, setIsPrinting] = useState(false);
 
-    window.print();
-
+  // 1. [보증서 + 보증조건 관리안내] 2장 모두 완벽 인쇄 (외부 UI 100% 차단)
+  const handlePrintBoth = async () => {
+    setIsPrinting(true);
+    setShareFeedback('🖨️ [보증서 + 보증조건 관리안내] 2장 인쇄를 준비하고 있습니다...');
+    const ok = await printWarrantyDirect(warranty, 'both');
+    if (!ok) {
+      window.print();
+    }
     setTimeout(() => {
-      document.body.classList.remove('is-printing-warranty');
-      vapiWidgets.forEach((el) => {
-        (el as HTMLElement).style.removeProperty('display');
-        (el as HTMLElement).style.removeProperty('visibility');
-      });
-    }, 1500);
+      setIsPrinting(false);
+      setShareFeedback(null);
+    }, 2500);
+  };
+
+  // 2. [보증서만 1장] 인쇄
+  const handlePrintFront = async () => {
+    setIsPrinting(true);
+    setShareFeedback('🖨️ [보증서 (앞면)] 1장 인쇄를 준비하고 있습니다...');
+    const ok = await printWarrantyDirect(warranty, 'front');
+    if (!ok) {
+      window.print();
+    }
+    setTimeout(() => {
+      setIsPrinting(false);
+      setShareFeedback(null);
+    }, 2500);
+  };
+
+  // 일반 인쇄 호출 시 기본적으로 2장(보증서 + 보증조건 관리안내) 인쇄
+  const handlePrint = async () => {
+    await handlePrintBoth();
   };
 
   const [isSavingPdf, setIsSavingPdf] = useState(false);
@@ -259,14 +275,26 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
             <span className="hidden sm:inline">{copied ? '복사완료' : '링크복사'}</span>
           </button>
 
-          <button
-            onClick={handlePrint}
-            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-600 transition-colors flex items-center gap-1 cursor-pointer"
-            title="보증서 인쇄 또는 PDF로 저장"
-          >
-            <i className="ri-printer-line text-sm" />
-            <span className="hidden sm:inline">인쇄 / PDF</span>
-          </button>
+          {/* 🖨️ 보증서 출력 버튼 그룹 (외부 UI 완벽 차단 & A4 풀핏 인쇄) */}
+          <div className="flex items-center bg-slate-800 p-0.5 rounded-xl border border-slate-600 shadow-sm">
+            <button
+              onClick={handlePrintBoth}
+              disabled={isPrinting}
+              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow disabled:opacity-50"
+              title="보증서(1면)와 보증조건 관리안내(2면) 총 2장 A4 인쇄"
+            >
+              <i className="ri-printer-fill text-sm" />
+              <span>보증서 + 관리안내 (2장)</span>
+            </button>
+            <button
+              onClick={handlePrintFront}
+              disabled={isPrinting}
+              className="px-2.5 py-1.5 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+              title="보증서 앞면만 1장 A4 인쇄"
+            >
+              <span>앞면만 1장</span>
+            </button>
+          </div>
 
           {onClose && (
             <button

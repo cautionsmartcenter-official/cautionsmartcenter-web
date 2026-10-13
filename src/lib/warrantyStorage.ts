@@ -489,3 +489,128 @@ export const downloadWarrantyImage = async (item: WarrantyItem): Promise<boolean
     return false;
   }
 };
+
+/**
+ * 외부 웹 UI(Talk with Us, 헤더, 배경 등)를 100% 배제하고
+ * 오직 [보증서]와 [보증조건 및 관리안내] 페이지만 A4 규격으로 인쇄하는 독립 iframe 출력 함수
+ * @param item 보증서 데이터
+ * @param target 'both' (보증서+관리안내 2장) | 'front' (보증서만 1장) | 'back' (관리안내만 1장)
+ */
+export const printWarrantyDirect = async (
+  item: WarrantyItem,
+  target: 'both' | 'front' | 'back' = 'both'
+): Promise<boolean> => {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const canvases = await renderWarrantyCanvases(item);
+    if (!canvases) return false;
+
+    const frontDataUrl = canvases.canvasFront.toDataURL('image/jpeg', 0.96);
+    const backDataUrl = canvases.canvasBack.toDataURL('image/jpeg', 0.96);
+
+    // 기존 iframe이 있다면 정리
+    const oldIframe = document.getElementById('warranty-print-iframe');
+    if (oldIframe) {
+      oldIframe.remove();
+    }
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'warranty-print-iframe';
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    iframe.style.visibility = 'hidden';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow?.document;
+    if (!doc) return false;
+
+    let pagesHtml = '';
+    if (target === 'both' || target === 'front') {
+      pagesHtml += `<div class="print-page"><img src="${frontDataUrl}" alt="독일 CARDIP 정품 품질 보증서" /></div>`;
+    }
+    if (target === 'both' || target === 'back') {
+      pagesHtml += `<div class="print-page"><img src="${backDataUrl}" alt="PPS 시공 보증 조건 및 관리안내" /></div>`;
+    }
+
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html lang="ko">
+      <head>
+        <meta charset="utf-8">
+        <title>독일 CARDIP 정품 품질 보증서_${item.customerName || '고객'}</title>
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 0mm;
+          }
+          * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+          }
+          html, body {
+            width: 210mm;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          .print-page {
+            width: 210mm;
+            height: 297mm;
+            max-width: 210mm;
+            max-height: 297mm;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            page-break-inside: avoid;
+            break-inside: avoid;
+          }
+          .print-page:not(:last-child) {
+            page-break-after: always;
+            break-after: page;
+          }
+          .print-page img {
+            width: 210mm;
+            height: 297mm;
+            display: block;
+            object-fit: fill;
+            image-rendering: -webkit-optimize-contrast;
+          }
+        </style>
+      </head>
+      <body>
+        ${pagesHtml}
+      </body>
+      </html>
+    `);
+    doc.close();
+
+    // 이미지 로드 및 렌더링 준비 후 인쇄 창 호출
+    setTimeout(() => {
+      try {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+      } catch (e) {
+        console.error('Direct print failed:', e);
+      }
+      // 3초 후 iframe 정리
+      setTimeout(() => {
+        iframe.remove();
+      }, 3000);
+    }, 400);
+
+    return true;
+  } catch (err) {
+    console.error('Failed to run printWarrantyDirect:', err);
+    return false;
+  }
+};
+
