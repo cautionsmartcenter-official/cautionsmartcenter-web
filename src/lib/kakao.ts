@@ -1,4 +1,4 @@
-import { type WarrantyItem, getWarrantyViewUrl, createWarrantyShareMessage } from './warrantyStorage';
+import { type WarrantyItem, createWarrantyShareMessage } from './warrantyStorage';
 
 const KAKAO_KEY_STORAGE = 'caution_kakao_js_key';
 export const DEFAULT_KAKAO_JS_KEY = '152595fa743ea259e0884cf17e26d56b';
@@ -47,17 +47,26 @@ export const initKakao = (customKey?: string): boolean => {
   }
 };
 
+export const PRODUCTION_URL = 'https://cautionsmartcenter-web.vercel.app';
+
+export const getPublicWarrantyViewUrl = (warrantyNo: string): string => {
+  return `${PRODUCTION_URL}/#warranty?no=${encodeURIComponent(warrantyNo)}`;
+};
+
 // 카카오톡 보증서 공유 실행
 export const sendKakaoWarranty = async (
   item: WarrantyItem
 ): Promise<{ success: boolean; method: 'kakao_sdk' | 'web_share' | 'clipboard'; message: string }> => {
-  const viewUrl = getWarrantyViewUrl(item.warrantyNo);
+  const viewUrl = getPublicWarrantyViewUrl(item.warrantyNo);
   const shareMessage = createWarrantyShareMessage(item);
+  const imageUrl = `${PRODUCTION_URL}/images/warranty/warranty_front.png`;
 
   // 1. 카카오 공식 SDK 공유 시도
   const kakao = typeof window !== 'undefined' ? (window as any).Kakao : null;
-  if (kakao && (!kakao.isInitialized() && getKakaoKey())) {
-    initKakao();
+  if (kakao) {
+    if (!kakao.isInitialized()) {
+      initKakao();
+    }
   }
 
   if (kakao && kakao.isInitialized && kakao.isInitialized() && kakao.Share) {
@@ -67,7 +76,7 @@ export const sendKakaoWarranty = async (
         content: {
           title: '[코션스마트센터] PPS 시공 보증서 발급 안내',
           description: `${item.customerName} 고객님 (${item.carPlate} / ${item.carModel})\nPPS 시공 보증서가 정상 발급되었습니다.`,
-          imageUrl: `${window.location.origin}/images/warranty/warranty_front.png`,
+          imageUrl: imageUrl,
           link: {
             mobileWebUrl: viewUrl,
             webUrl: viewUrl
