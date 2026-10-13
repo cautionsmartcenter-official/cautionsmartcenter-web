@@ -69,7 +69,31 @@ export const sendKakaoWarranty = async (
     .join(viewUrl);
   const imageUrl = `${PRODUCTION_URL}/images/warranty/warranty_front.png`;
 
-  // 1. 카카오 공식 SDK 공유 시도
+  // 0. 스마트폰: 전체 안내문구를 그대로 카톡으로 먼저 보내기 (문구 + 보증서 링크가 한 번에 전송됨)
+  //    카카오 카드(SDK)는 글자 수 제한 때문에 긴 안내문구를 담을 수 없어, 모바일에서는 문구 전송을 우선함
+  const isMobileDevice =
+    typeof navigator !== 'undefined' &&
+    (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+      (navigator.maxTouchPoints > 1 && /Mac/i.test(navigator.platform)));
+
+  if (isMobileDevice && typeof navigator !== 'undefined' && (navigator as any).share) {
+    try {
+      // url을 따로 넣으면 일부 기기에서 문구가 빠지고 링크만 가므로, 링크가 들어간 전체 문구를 text로만 전달
+      await navigator.share({ text: shareMessage });
+      return {
+        success: true,
+        method: 'web_share',
+        message: '공유 창에서 [카카오톡]을 선택하면 안내문구와 보증서 링크가 함께 전달됩니다.'
+      };
+    } catch (err: any) {
+      if (err?.name === 'AbortError') {
+        return { success: false, method: 'web_share', message: '공유를 취소했습니다.' };
+      }
+      console.warn('Web Share (mobile) failed, trying Kakao SDK:', err);
+    }
+  }
+
+  // 1. 카카오 공식 SDK 공유 (주로 PC) — 카드 전송 + 전체 안내문구 자동 복사
   const kakao = typeof window !== 'undefined' ? (window as any).Kakao : null;
   if (kakao) {
     if (!kakao.isInitialized()) {
@@ -124,7 +148,7 @@ export const sendKakaoWarranty = async (
         success: true,
         method: 'kakao_sdk',
         message: copied
-          ? '카카오톡 공유 창이 열렸습니다. 고객을 선택해 보내주세요. (전체 안내문구도 복사됐어요 — 필요하면 대화방에 붙여넣기 하세요)'
+          ? '카톡 카드를 보낸 뒤, 같은 대화방에 [붙여넣기(Ctrl+V / ⌘+V)] 하시면 전체 안내문구가 전송됩니다. (문구는 이미 복사됨)'
           : '카카오톡 공유 창이 열렸습니다. 고객 또는 대화방을 선택해 주세요.'
       };
     } catch (err) {
@@ -136,9 +160,7 @@ export const sendKakaoWarranty = async (
   if (typeof navigator !== 'undefined' && (navigator as any).share) {
     try {
       await navigator.share({
-        title: '[코션스마트센터] PPS 시공 보증서',
-        text: shareMessage,
-        url: viewUrl
+        text: shareMessage
       });
       return {
         success: true,

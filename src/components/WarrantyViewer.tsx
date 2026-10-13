@@ -116,7 +116,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   const handleKakaoShare = async () => {
     const res = await sendKakaoWarranty(warranty);
     setShareFeedback(res.message);
-    setTimeout(() => setShareFeedback(null), 4000);
+    setTimeout(() => setShareFeedback(null), 8000);
   };
 
   const [isPrinting, setIsPrinting] = useState(false);
