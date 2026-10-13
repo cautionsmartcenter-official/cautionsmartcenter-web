@@ -58,6 +58,45 @@ export const getPublicWarrantyViewUrl = (warrantyNo: string): string => {
   return `${PRODUCTION_URL}/#warranty?no=${encodeURIComponent(warrantyNo)}`;
 };
 
+// 카카오 '글 메시지' 템플릿용 안내문구 (카카오 제한: 최대 200자)
+export const createKakaoTextMessage = (item: WarrantyItem): string => {
+  const text = `[코션스마트센터] PPS 시공 보증서 발급 안내
+
+안녕하세요, ${item.customerName} 고객님.
+시공을 맡겨주셔서 진심으로 감사드립니다.
+
+■ 차량 : ${item.carPlate}
+■ 보증 : ${item.issueDate}부터 ${item.warrantyPeriodYears || 6}년
+■ 번호 : ${item.warrantyNo}
+
+아래 버튼에서 보증서(PDF)를 꼭 다운로드해 보관해 주세요.
+문의 031-705-1888`;
+  return text.length > 200 ? `${text.slice(0, 199)}…` : text;
+};
+
+// ②단계: 카드 다음에 이어서 보내는 안내문구(글 메시지 + 보증서 버튼)
+// ※ 브라우저 팝업 차단 때문에 반드시 버튼 클릭으로 실행되어야 함
+export const sendKakaoWarrantyText = (item: WarrantyItem): { success: boolean; message: string } => {
+  const viewUrl = getPublicWarrantyViewUrl(item.warrantyNo);
+  const kakao = typeof window !== 'undefined' ? (window as any).Kakao : null;
+  if (kakao && !kakao.isInitialized()) initKakao();
+  if (!kakao || !kakao.isInitialized() || !kakao.Share) {
+    return { success: false, message: '카카오 연결이 준비되지 않았습니다. [안내문구 전체 복사] 후 붙여넣기 해주세요.' };
+  }
+  try {
+    kakao.Share.sendDefault({
+      objectType: 'text',
+      text: createKakaoTextMessage(item),
+      link: { mobileWebUrl: viewUrl, webUrl: viewUrl },
+      buttonTitle: '전자 보증서 확인하기'
+    });
+    return { success: true, message: '안내문구 전송 창이 열렸습니다. 카드를 보낸 같은 고객을 선택해 주세요.' };
+  } catch (err) {
+    console.warn('Kakao text share failed:', err);
+    return { success: false, message: '안내문구 전송에 실패했습니다. [안내문구 전체 복사] 후 붙여넣기 해주세요.' };
+  }
+};
+
 // 카카오톡 보증서 공유 실행
 export const sendKakaoWarranty = async (
   item: WarrantyItem
@@ -116,7 +155,7 @@ export const sendKakaoWarranty = async (
         objectType: 'feed',
         content: {
           title: '[코션스마트센터] PPS 시공 보증서 발급 안내',
-          description: `안녕하세요, ${item.customerName} 고객님.\n코션스마트센터를 믿고 시공을 맡겨주셔서 감사합니다. PPS 시공 보증서가 정상 발급되었습니다.\n아래 [전자 보증서 확인하기]에서 보증서(PDF)를 꼭 다운로드하여 보관해 주세요.\n문의: 031-705-1888`,
+          description: `${item.customerName} 고객님, PPS 시공 보증서가 정상 발급되었습니다.`,
           imageUrl: imageUrl,
           link: {
             mobileWebUrl: viewUrl,
@@ -148,8 +187,8 @@ export const sendKakaoWarranty = async (
         success: true,
         method: 'kakao_sdk',
         message: copied
-          ? '카톡 카드를 보낸 뒤, 같은 대화방에 [붙여넣기(Ctrl+V / ⌘+V)] 하시면 전체 안내문구가 전송됩니다. (문구는 이미 복사됨)'
-          : '카카오톡 공유 창이 열렸습니다. 고객 또는 대화방을 선택해 주세요.'
+          ? '① 카드를 보낸 뒤 ② [안내문구 이어서 보내기] 버튼을 눌러 같은 고객을 선택해 주세요.'
+          : '① 카드를 보낸 뒤 ② [안내문구 이어서 보내기] 버튼을 눌러 같은 고객을 선택해 주세요.'
       };
     } catch (err) {
       console.warn('Kakao.Share.sendDefault failed, trying fallback:', err);

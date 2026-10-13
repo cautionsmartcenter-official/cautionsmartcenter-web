@@ -20,7 +20,8 @@ import {
   setKakaoKey,
   isKakaoReady,
   initKakao,
-  sendKakaoWarranty
+  sendKakaoWarranty,
+  sendKakaoWarrantyText
 } from '../lib/kakao';
 import {
   publishWarranty,
@@ -73,6 +74,8 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
   // 카카오 전송 모달 및 설정 모달
   const [sendingKakaoWarranty, setSendingKakaoWarranty] = useState<WarrantyItem | null>(null);
+  // 카드 전송 후 ②단계(안내문구 이어서 보내기) 대기 중인 보증서 id
+  const [kakaoTextStepId, setKakaoTextStepId] = useState<string | null>(null);
   const [isKakaoSettingsOpen, setIsKakaoSettingsOpen] = useState(false);
   const [settingsTab, setSettingsTab] = useState<'alimtalk' | 'email' | 'kakao_js'>('alimtalk');
   const [kakaoKeyInput, setKakaoKeyInput] = useState('');
@@ -298,9 +301,19 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     try {
       const res = await sendKakaoWarranty(item);
       showToast(res.message);
+      if (res.method === 'kakao_sdk' && res.success) {
+        setKakaoTextStepId(item.id);
+      }
     } catch (e: any) {
       alert(`카카오톡 전송 안내:\n\n${e?.message || String(e)}`);
     }
+  };
+
+  // ②단계: 카드 다음에 안내문구(글 메시지) 이어서 보내기
+  const handleSendKakaoText = (item: WarrantyItem) => {
+    const res = sendKakaoWarrantyText(item);
+    showToast(res.message);
+    if (res.success) setKakaoTextStepId(null);
   };
 
   // 신규 발급 모달 열기
@@ -1507,6 +1520,29 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                       <span className="text-[9px] font-bold">친구 선택</span>
                     </div>
                   </button>
+
+                  {/* ② 카드 전송 후: 안내문구(글 메시지 + 보증서 버튼) 이어서 보내기 */}
+                  {kakaoTextStepId === sendingKakaoWarranty.id && (
+                    <motion.button
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      onClick={() => handleSendKakaoText(sendingKakaoWarranty)}
+                      className="w-full py-4 px-4 bg-[#3c1e1e] hover:bg-[#2a1414] text-[#FEE500] font-black rounded-2xl shadow-xl ring-4 ring-[#FEE500]/60 animate-pulse hover:animate-none transition-all cursor-pointer flex items-center justify-between gap-3 text-left"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-11 h-11 rounded-xl bg-[#FEE500] text-[#3c1e1e] flex items-center justify-center shrink-0 font-black text-lg">
+                          ②
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-sm sm:text-base font-black tracking-tight">안내문구 이어서 보내기</h4>
+                          <p className="text-[11px] sm:text-xs text-yellow-100/90 font-normal mt-0.5">
+                            방금 카드를 보낸 <strong>같은 고객</strong>을 선택하면 안내 글이 이어서 전송됩니다.
+                          </p>
+                        </div>
+                      </div>
+                      <i className="ri-chat-forward-fill text-2xl shrink-0" />
+                    </motion.button>
+                  )}
 
                   {/* 2. 보증서 1·2페이지 합본 PDF 다운로드 */}
                   <button

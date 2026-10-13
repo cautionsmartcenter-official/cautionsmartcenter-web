@@ -10,7 +10,7 @@ import {
   renderWarrantyCanvases,
   printWarrantyDirect
 } from '../lib/warrantyStorage';
-import { sendKakaoWarranty } from '../lib/kakao';
+import { sendKakaoWarranty, sendKakaoWarrantyText } from '../lib/kakao';
 
 interface WarrantyViewerProps {
   warranty: WarrantyItem;
@@ -113,10 +113,20 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   }, []);
 
   // 카카오톡 전송 / 공유
+  const [showKakaoTextStep, setShowKakaoTextStep] = useState(false);
   const handleKakaoShare = async () => {
     const res = await sendKakaoWarranty(warranty);
     setShareFeedback(res.message);
+    if (res.method === 'kakao_sdk' && res.success) setShowKakaoTextStep(true);
     setTimeout(() => setShareFeedback(null), 8000);
+  };
+
+  // ②단계: 카드 다음에 안내문구(글 메시지) 이어서 보내기
+  const handleKakaoTextShare = () => {
+    const res = sendKakaoWarrantyText(warranty);
+    setShareFeedback(res.message);
+    if (res.success) setShowKakaoTextStep(false);
+    setTimeout(() => setShareFeedback(null), 6000);
   };
 
   const [isPrinting, setIsPrinting] = useState(false);
@@ -315,6 +325,16 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
               >
                 <i className="ri-kakao-talk-fill text-sm" />
                 <span className="hidden sm:inline">카카오톡 전송</span>
+              </button>
+            )}
+
+            {!publicMode && showKakaoTextStep && (
+              <button
+                onClick={handleKakaoTextShare}
+                className="px-2.5 sm:px-3 py-1.5 bg-[#3c1e1e] hover:bg-[#2a1414] text-[#FEE500] text-xs font-black rounded-xl transition-all shadow-md flex items-center gap-1 cursor-pointer ring-2 ring-[#FEE500]/70 animate-pulse hover:animate-none"
+                title="방금 카드를 보낸 같은 고객에게 안내문구를 이어서 전송"
+              >
+                <span>② 안내문구 이어서 보내기</span>
               </button>
             )}
 
