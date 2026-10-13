@@ -191,156 +191,161 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
   return (
     <div 
       id="warranty-modal-root"
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md overflow-y-auto flex flex-col items-center p-2 sm:p-6 print:p-0 print:m-0 print:bg-white print:static print:overflow-visible print:w-full print:block"
+      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md overflow-y-auto overscroll-y-contain flex flex-col items-center px-2.5 sm:px-6 pt-3 sm:pt-6 pb-20 sm:pb-28 print:p-0 print:m-0 print:bg-white print:static print:overflow-visible print:w-full print:block"
     >
-      {/* ── Top Header Controls (인쇄 시 숨김) ── */}
-      <div className={`w-full ${isZoomed ? 'max-w-6xl' : 'max-w-5xl'} bg-slate-900/90 text-white rounded-2xl p-4 mb-4 border border-slate-700/80 shadow-2xl flex flex-wrap items-center justify-between gap-3 sticky top-2 z-20 print:hidden transition-all duration-300`}>
-        <div className="flex items-center gap-3">
-          <span
-            style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 500, letterSpacing: '0.05em' }}
-            className="text-xs sm:text-sm text-red-500 font-medium tracking-wider"
-          >
-            CAUTION SMART CENTER
-          </span>
-          <div>
-            <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-              <span>독일 CARDIP 정품 품질 보증서</span>
-              <span className="text-xs bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-mono">
+      {/* ── Top Header Controls (상단 잘림 방지 및 모바일 반응형 완벽 최적화) ── */}
+      <div className={`w-full ${isZoomed ? 'max-w-6xl' : 'max-w-5xl'} bg-slate-900/95 text-white rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 border border-slate-700 shadow-2xl flex flex-col gap-3 sticky top-2 sm:top-3 z-30 print:hidden transition-all duration-300`}>
+        {/* 상단 라인: 타이틀 & 닫기(X) 버튼 */}
+        <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span
+              style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, letterSpacing: '0.05em' }}
+              className="text-xs sm:text-sm text-red-500 font-bold tracking-wider"
+            >
+              CAUTION SMART CENTER
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-xs sm:text-sm font-bold text-white">독일 CARDIP 정품 품질 보증서</span>
+              <span className="text-[11px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
                 {warranty.warrantyNo}
               </span>
-            </h2>
-            <p className="text-[11px] text-gray-400">
+            </div>
+            <span className="text-[11px] text-gray-400 hidden md:inline">
               고객: <strong className="text-white">{warranty.customerName}</strong>님 | 차량: <strong className="text-white">{warranty.carPlate}</strong> ({warranty.carModel})
-            </p>
-          </div>
-        </div>
-
-        {/* 뷰 모드 전환 버튼들 + 🔍 크게 보기 토글 */}
-        <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded-xl border border-slate-700">
-          <button
-            onClick={() => setActivePage('front')}
-            className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-              activePage === 'front' ? 'bg-red-600 text-white shadow-md' : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            앞면 (보증상세)
-          </button>
-          <button
-            onClick={() => setActivePage('back')}
-            className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-              activePage === 'back' ? 'bg-red-600 text-white shadow-md' : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            뒷면 (보증약관)
-          </button>
-          <button
-            onClick={() => setActivePage('mobile')}
-            className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-              activePage === 'mobile' ? 'bg-primary text-white shadow-md' : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            모바일 카드
-          </button>
-
-          {/* 🔍 크게 보기 토글 (화면 100%일 때 글씨 시원하게 보기) */}
-          {activePage !== 'mobile' && (
-            <button
-              onClick={() => setIsZoomed((prev) => !prev)}
-              className={`px-2.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1 ml-1 border ${
-                isZoomed
-                  ? 'bg-amber-500/20 text-yellow-300 border-amber-500/50 shadow'
-                  : 'bg-slate-700/70 hover:bg-slate-700 text-slate-200 border-slate-600'
-              }`}
-              title={isZoomed ? "표준 크기(960px)로 맞춤" : "화면 꽉 차게 120% 크게 보기(1180px)"}
-            >
-              <i className={isZoomed ? "ri-zoom-out-line text-sm" : "ri-zoom-in-line text-sm text-yellow-400"} />
-              <span>{isZoomed ? "화면 맞춤" : "🔍 크게 보기"}</span>
-            </button>
-          )}
-        </div>
-
-        {/* 액션 버튼들 */}
-        <div className="flex items-center gap-2">
-          {/* 1면+2면 통합 PDF 다운로드 버튼 */}
-          <button
-            onClick={handleSavePdf}
-            disabled={isSavingPdf}
-            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
-            title="정품 보증서 1면과 2면을 1개의 완성된 PDF 파일로 다운로드"
-          >
-            {isSavingPdf ? (
-              <i className="ri-loader-4-line animate-spin text-sm" />
-            ) : (
-              <i className="ri-file-pdf-fill text-sm text-yellow-300" />
-            )}
-            <span>PDF 저장</span>
-          </button>
-
-          {/* 1면+2면 통합 PNG 이미지 다운로드 버튼 */}
-          <button
-            onClick={handleSaveImage}
-            disabled={isSavingImage}
-            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-            title="보증서(1면)와 관리안내(2면)를 1장의 고화질 사진(PNG)으로 다운로드"
-          >
-            {isSavingImage ? (
-              <i className="ri-loader-4-line animate-spin text-sm" />
-            ) : (
-              <i className="ri-image-fill text-sm text-yellow-300" />
-            )}
-            <span>이미지(PNG 1장) 저장</span>
-          </button>
-
-          {!publicMode && (
-            <button
-              onClick={handleKakaoShare}
-              className="px-3 py-1.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
-              title="고객 카카오톡으로 보증서 전송"
-            >
-              <i className="ri-kakao-talk-fill text-sm" />
-              <span className="hidden sm:inline">카카오톡 전송</span>
-            </button>
-          )}
-
-          <button
-            onClick={handleCopyLink}
-            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-600 transition-colors flex items-center gap-1 cursor-pointer"
-            title="고객 전송용 보증서 열람 링크 복사"
-          >
-            <i className={copied ? 'ri-check-line text-emerald-400' : 'ri-file-copy-line'} />
-            <span className="hidden sm:inline">{copied ? '복사완료' : '링크복사'}</span>
-          </button>
-
-          {/* 🖨️ 보증서 출력 버튼 그룹 (외부 UI 완벽 차단 & A4 풀핏 인쇄) */}
-          <div className="flex items-center bg-slate-800 p-0.5 rounded-xl border border-slate-600 shadow-sm">
-            <button
-              onClick={handlePrintBoth}
-              disabled={isPrinting}
-              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow disabled:opacity-50"
-              title="보증서(1면)와 보증조건 관리안내(2면) 총 2장 A4 인쇄"
-            >
-              <i className="ri-printer-fill text-sm" />
-              <span>보증서 + 관리안내 (2장)</span>
-            </button>
-            <button
-              onClick={handlePrintFront}
-              disabled={isPrinting}
-              className="px-2.5 py-1.5 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-50"
-              title="보증서 앞면만 1장 A4 인쇄"
-            >
-              <span>앞면만 1장</span>
-            </button>
+            </span>
           </div>
 
           {onClose && (
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-red-500/20 text-gray-400 hover:text-red-400 flex items-center justify-center transition-colors cursor-pointer"
-              title="창 닫기"
+              className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-red-600 text-gray-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 shadow-sm"
+              title="창 닫기 (ESC)"
             >
-              <i className="ri-close-line text-lg" />
+              <i className="ri-close-line text-xl" />
             </button>
           )}
+        </div>
+
+        {/* 하단 컨트롤 라인: 뷰 모드 탭 & 다운로드/액션 버튼 그룹 */}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          {/* 뷰 모드 전환 탭 버튼들 + 🔍 크게 보기 토글 */}
+          <div className="flex items-center gap-1 bg-slate-800/90 p-1 rounded-xl border border-slate-700 shrink-0">
+            <button
+              onClick={() => setActivePage('front')}
+              className={`px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                activePage === 'front' ? 'bg-red-600 text-white shadow-md' : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              앞면 (보증상세)
+            </button>
+            <button
+              onClick={() => setActivePage('back')}
+              className={`px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                activePage === 'back' ? 'bg-red-600 text-white shadow-md' : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              뒷면 (보증약관)
+            </button>
+            <button
+              onClick={() => setActivePage('mobile')}
+              className={`px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
+                activePage === 'mobile' ? 'bg-red-600 text-white shadow-md' : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <i className="ri-smartphone-line text-xs" />
+              <span>모바일 카드</span>
+            </button>
+
+            {/* 🔍 크게 보기 토글 (A4 모드일 때 글씨 시원하게 보기) */}
+            {activePage !== 'mobile' && (
+              <button
+                onClick={() => setIsZoomed((prev) => !prev)}
+                className={`px-2 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1 ml-0.5 border ${
+                  isZoomed
+                    ? 'bg-amber-500/20 text-yellow-300 border-amber-500/50 shadow'
+                    : 'bg-slate-700/70 hover:bg-slate-700 text-slate-200 border-slate-600'
+                }`}
+                title={isZoomed ? "표준 크기(960px)로 맞춤" : "화면 꽉 차게 120% 크게 보기(1180px)"}
+              >
+                <i className={isZoomed ? "ri-zoom-out-line text-xs" : "ri-zoom-in-line text-xs text-yellow-400"} />
+                <span className="hidden sm:inline">{isZoomed ? "맞춤" : "크게보기"}</span>
+              </button>
+            )}
+          </div>
+
+          {/* 액션 버튼 그룹 (다운로드, 카톡, 인쇄) */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {/* 1면+2면 통합 PDF 다운로드 */}
+            <button
+              onClick={handleSavePdf}
+              disabled={isSavingPdf}
+              className="px-2.5 sm:px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              title="정품 보증서 1면과 2면을 1개의 완성된 PDF 파일로 다운로드"
+            >
+              {isSavingPdf ? (
+                <i className="ri-loader-4-line animate-spin text-sm" />
+              ) : (
+                <i className="ri-file-pdf-fill text-sm text-yellow-300" />
+              )}
+              <span>PDF 저장</span>
+            </button>
+
+            {/* 1면+2면 통합 PNG 사진 저장 */}
+            <button
+              onClick={handleSaveImage}
+              disabled={isSavingImage}
+              className="px-2.5 sm:px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              title="보증서(1면)와 관리안내(2면)를 1장의 고화질 사진(PNG)으로 다운로드"
+            >
+              {isSavingImage ? (
+                <i className="ri-loader-4-line animate-spin text-sm" />
+              ) : (
+                <i className="ri-image-fill text-sm text-yellow-300" />
+              )}
+              <span>이미지(PNG 1장) 저장</span>
+            </button>
+
+            {!publicMode && (
+              <button
+                onClick={handleKakaoShare}
+                className="px-2.5 sm:px-3 py-1.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1 cursor-pointer"
+                title="고객 카카오톡으로 보증서 전송"
+              >
+                <i className="ri-kakao-talk-fill text-sm" />
+                <span className="hidden sm:inline">카카오톡 전송</span>
+              </button>
+            )}
+
+            <button
+              onClick={handleCopyLink}
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl border border-slate-600 transition-colors flex items-center gap-1 cursor-pointer"
+              title="고객 전송용 보증서 열람 링크 복사"
+            >
+              <i className={copied ? 'ri-check-line text-emerald-400' : 'ri-file-copy-line'} />
+              <span className="hidden sm:inline">{copied ? '복사완료' : '링크복사'}</span>
+            </button>
+
+            {/* 🖨️ 보증서 출력 버튼 그룹 */}
+            <div className="flex items-center bg-slate-800 p-0.5 rounded-xl border border-slate-600 shadow-sm">
+              <button
+                onClick={handlePrintBoth}
+                disabled={isPrinting}
+                className="px-2.5 sm:px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer shadow disabled:opacity-50"
+                title="보증서(1면)와 보증조건 관리안내(2면) 총 2장 A4 인쇄"
+              >
+                <i className="ri-printer-fill text-xs" />
+                <span>인쇄(2장)</span>
+              </button>
+              <button
+                onClick={handlePrintFront}
+                disabled={isPrinting}
+                className="px-2 py-1.5 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-50 hidden sm:inline-block"
+                title="보증서 앞면만 1장 A4 인쇄"
+              >
+                <span>앞면만</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -362,7 +367,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'front' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto transition-all duration-300 warranty-print-page warranty-print-front ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mb-16 sm:mb-24 transition-all duration-300 warranty-print-page warranty-print-front ${
             activePage === 'front' ? 'block' : 'hidden print:block'
           }`}
           style={{
@@ -419,7 +424,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
       ───────────────────────────────────────────────────────────── */}
       {(activePage === 'back' || typeof window !== 'undefined') && (
         <div
-          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mt-4 print:mt-0 transition-all duration-300 warranty-print-page warranty-print-back ${
+          className={`relative bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto mt-4 mb-16 sm:mb-24 print:mt-0 transition-all duration-300 warranty-print-page warranty-print-back ${
             activePage === 'back' ? 'block' : 'hidden print:block'
           }`}
           style={{
@@ -477,7 +482,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-lg sm:max-w-xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 print:hidden text-gray-900"
+          className="w-full max-w-[440px] sm:max-w-xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 print:hidden text-gray-900 mb-16 sm:mb-24"
         >
           {/* 상단 프리미엄 헤더 */}
           <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-red-950 text-white p-6 sm:p-7 relative overflow-hidden">
