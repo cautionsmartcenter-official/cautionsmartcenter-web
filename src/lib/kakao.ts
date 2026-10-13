@@ -2,7 +2,8 @@ import {
   type WarrantyItem,
   createWarrantyShareMessage,
   copyTextToClipboard,
-  getWarrantyViewUrl
+  getWarrantyViewUrl,
+  encodeWarrantyPayload
 } from './warrantyStorage';
 
 const KAKAO_KEY_STORAGE = 'caution_kakao_js_key';
@@ -54,8 +55,10 @@ export const initKakao = (customKey?: string): boolean => {
 
 export const PRODUCTION_URL = 'https://cautionsmartcenter-web.vercel.app';
 
-export const getPublicWarrantyViewUrl = (warrantyNo: string): string => {
-  return `${PRODUCTION_URL}/#warranty?no=${encodeURIComponent(warrantyNo)}`;
+// 고객용 공개 링크: item을 넘기면 보증서 정보(d=)를 담아 고객 폰에서도 바로 조회·등록 가능
+export const getPublicWarrantyViewUrl = (warrantyNo: string, item?: WarrantyItem): string => {
+  const data = item ? `&d=${encodeWarrantyPayload(item)}` : '';
+  return `${PRODUCTION_URL}/#warranty?no=${encodeURIComponent(warrantyNo)}${data}`;
 };
 
 // 카카오 '글 메시지' 템플릿용 안내문구 (카카오 제한: 최대 200자)
@@ -77,7 +80,7 @@ export const createKakaoTextMessage = (item: WarrantyItem): string => {
 // ②단계: 카드 다음에 이어서 보내는 안내문구(글 메시지 + 보증서 버튼)
 // ※ 브라우저 팝업 차단 때문에 반드시 버튼 클릭으로 실행되어야 함
 export const sendKakaoWarrantyText = (item: WarrantyItem): { success: boolean; message: string } => {
-  const viewUrl = getPublicWarrantyViewUrl(item.warrantyNo);
+  const viewUrl = getPublicWarrantyViewUrl(item.warrantyNo, item);
   const kakao = typeof window !== 'undefined' ? (window as any).Kakao : null;
   if (kakao && !kakao.isInitialized()) initKakao();
   if (!kakao || !kakao.isInitialized() || !kakao.Share) {
@@ -101,10 +104,10 @@ export const sendKakaoWarrantyText = (item: WarrantyItem): { success: boolean; m
 export const sendKakaoWarranty = async (
   item: WarrantyItem
 ): Promise<{ success: boolean; method: 'kakao_sdk' | 'web_share' | 'clipboard'; message: string }> => {
-  const viewUrl = getPublicWarrantyViewUrl(item.warrantyNo);
-  // 안내문구 속 링크가 localhost 등 내부 주소일 수 있으므로 고객이 열 수 있는 공식 주소로 교체
+  const viewUrl = getPublicWarrantyViewUrl(item.warrantyNo, item);
+  // 안내문구 속 링크를 고객이 열 수 있는 공식 주소(보증서 정보 포함)로 통일
   const shareMessage = createWarrantyShareMessage(item)
-    .split(getWarrantyViewUrl(item.warrantyNo))
+    .split(getWarrantyViewUrl(item.warrantyNo, item))
     .join(viewUrl);
   const imageUrl = `${PRODUCTION_URL}/images/warranty/warranty_front.png`;
 

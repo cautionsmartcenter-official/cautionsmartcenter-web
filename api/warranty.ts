@@ -142,7 +142,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         try {
           const db = getDb();
           const ref = db.collection(WARRANTY_COLLECTION).doc(token);
-          await ref.set({ ...w, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+          await ref.set(
+            { ...w, carPlateKey: w.carPlate.replace(/\s+/g, ''), updatedAt: FieldValue.serverTimestamp() },
+            { merge: true }
+          );
         } catch (e) {
           console.warn('[publish] Firestore 저장 실패(계속 진행):', e);
         }

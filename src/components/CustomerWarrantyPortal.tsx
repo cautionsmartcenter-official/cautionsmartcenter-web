@@ -16,7 +16,11 @@ import {
   getCustomerVerifiedWarranties,
   type CustomerUser
 } from '../lib/customerAuthStorage';
-import { type WarrantyItem } from '../lib/warrantyStorage';
+import {
+  type WarrantyItem,
+  decodeWarrantyPayload,
+  cacheReceivedWarranty
+} from '../lib/warrantyStorage';
 import { WarrantyViewer } from './WarrantyViewer';
 
 interface CustomerWarrantyPortalProps {
@@ -28,6 +32,18 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
   onBackToHome,
   initialWarrantyNo
 }) => {
+  // 카톡 링크(#warranty?no=...&d=...)로 들어오면 보증서 정보를 이 폰에 보관
+  //  → 관리자 PC에만 있던 보증서를 고객 폰에서도 차량번호+연락처로 확인할 수 있게 됨
+  const [linkedWarranty] = useState<WarrantyItem | null>(() => {
+    const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    const encoded = params.get('d');
+    const decoded = encoded ? decodeWarrantyPayload(encoded) : null;
+    // 링크의 보증번호(no)와 담긴 정보가 일치할 때만 사용
+    const item = decoded && (!initialWarrantyNo || decoded.warrantyNo === initialWarrantyNo) ? decoded : null;
+    if (item) cacheReceivedWarranty(item);
+    return item;
+  });
+
   const [customer, setCustomer] = useState<CustomerUser | null>(() => getCurrentCustomer());
   const [selectedWarranty, setSelectedWarranty] = useState<WarrantyItem | null>(null);
 
@@ -55,7 +71,7 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
   };
 
   // 간편 로그인 완료 처리
-  const handleCompleteLogin = (e: React.FormEvent) => {
+  const handleCompleteLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputName.trim()) {
       setLoginError('성함을 입력해 주세요.');
@@ -74,8 +90,10 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
       user = loginWithNaver(inputName, clean);
     }
 
-    if (initialWarrantyNo) {
-      linkWarrantyToCustomer(user, '', initialWarrantyNo);
+    // 카톡 링크로 받은 보증서가 있으면, 차량번호 + 로그인 연락처로 본인 확인 후 계정에 연결
+    if (linkedWarranty) {
+      await linkWarrantyToCustomer(user, linkedWarranty.carPlate, clean);
+      user = getCurrentCustomer() || user;
     }
 
     setCustomer(user);
@@ -93,7 +111,7 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
   };
 
   // 보증서 신규 등록
-  const handleRegisterWarranty = (e: React.FormEvent) => {
+  const handleRegisterWarranty = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customer) return;
     if (!regPlate.trim()) {
@@ -105,7 +123,7 @@ export const CustomerWarrantyPortal: React.FC<CustomerWarrantyPortalProps> = ({
       return;
     }
 
-    const result = linkWarrantyToCustomer(customer, regPlate, regVerify);
+    const result = await linkWarrantyToCustomer(customer, regPlate, regVerify);
     setRegFeedback(result);
 
     if (result.success) {

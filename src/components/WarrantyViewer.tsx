@@ -67,7 +67,7 @@ export const WarrantyViewer: React.FC<WarrantyViewerProps> = ({
 
   // 링크 복사
   const handleCopyLink = async () => {
-    const url = publicMode ? window.location.href : getWarrantyViewUrl(warranty.warrantyNo);
+    const url = publicMode ? window.location.href : getWarrantyViewUrl(warranty.warrantyNo, warranty);
     const ok = await copyTextToClipboard(url);
     if (ok) {
       setCopied(true);

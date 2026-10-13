@@ -146,7 +146,7 @@ export const sendDirectAlimtalk = async (
     };
   }
 
-  const viewUrl = getWarrantyViewUrl(item.warrantyNo);
+  const viewUrl = getWarrantyViewUrl(item.warrantyNo, item);
   const textBody = generateAlimtalkBody(item, viewUrl);
 
   try {

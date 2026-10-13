@@ -2,7 +2,7 @@
 // 이메일이나 알림톡의 [보증서 확인 및 PDF 다운로드] 링크로 들어오면 열립니다.
 import React, { useEffect, useState } from 'react';
 import type { WarrantyItem } from '../lib/warrantyStorage';
-import { downloadWarrantyPdf, copyTextToClipboard, formatPriceWithCommas } from '../lib/warrantyStorage';
+import { downloadWarrantyPdf, copyTextToClipboard, formatPriceWithCommas, cacheReceivedWarranty } from '../lib/warrantyStorage';
 import { fetchPublicWarranty } from '../lib/warrantyCloud';
 import { WarrantyViewer } from './WarrantyViewer';
 
@@ -58,6 +58,8 @@ export const PublicWarrantyPage: React.FC<PublicWarrantyPageProps> = ({ token })
             issuedBy: p.by || '(주) 코션스마트센터',
             status: 'active'
           };
+          // 고객 폰에 보관 → 나중에 [내 차량 보증서 등록]에서 차량번호+연락처로 확인 가능
+          cacheReceivedWarranty(item);
           setWarranty(item);
           return;
         }

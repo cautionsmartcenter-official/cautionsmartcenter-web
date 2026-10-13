@@ -490,14 +490,14 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
 
   // 보증서 열람 링크 복사
   const handleCopyLink = async (item: WarrantyItem) => {
-    const url = getWarrantyViewUrl(item.warrantyNo);
+    const url = getWarrantyViewUrl(item.warrantyNo, item);
     await copyTextToClipboard(url);
     showToast('보증서 확인 링크가 클립보드에 복사되었습니다. (문자 전송 가능)');
   };
 
   // 보증서 링크만 단독 복사
   const handleCopyOnlyLink = async (item: WarrantyItem) => {
-    const url = getWarrantyViewUrl(item.warrantyNo);
+    const url = getWarrantyViewUrl(item.warrantyNo, item);
     await copyTextToClipboard(url);
     showToast('🔗 전자보증서 바로가기 링크만 복사되었습니다.');
   };

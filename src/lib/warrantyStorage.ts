@@ -94,6 +94,96 @@ export const clearAllWarranties = (): void => {
   }
 };
 
+// ── 링크에 보증서 정보 담기 (d= 파라미터) ──
+// 관리자 PC에만 저장된 보증서를 고객 폰에서도 확인할 수 있도록, 카톡/문자 링크에 정보를 함께 담습니다.
+// (서버 api/warranty.ts 의 buildWarrantyViewUrl 과 동일한 형식, 주소·메모는 제외)
+export const encodeWarrantyPayload = (w: WarrantyItem): string => {
+  const payload = {
+    no: w.warrantyNo || '',
+    name: w.customerName || '',
+    phone: w.customerPhone || '',
+    plate: w.carPlate || '',
+    model: w.carModel || '',
+    color: w.carColor || '',
+    vin: w.vin || '',
+    date: w.issueDate || '',
+    years: w.warrantyPeriodYears || 6,
+    c: w.hasClearPps ? 1 : 0,
+    cd: w.clearPpsDetail || '',
+    k: w.hasColorPps ? 1 : 0,
+    kd: w.colorPpsDetail || '',
+    p: w.price || '',
+    by: w.issuedBy || '(주) 코션스마트센터'
+  };
+  const bytes = new TextEncoder().encode(JSON.stringify(payload));
+  let bin = '';
+  bytes.forEach((b) => (bin += String.fromCharCode(b)));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+};
+
+export const decodeWarrantyPayload = (encoded: string): WarrantyItem | null => {
+  try {
+    const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+    const bin = atob(base64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const p = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    if (!p || !p.no || !p.name || !p.plate) return null;
+    return {
+      id: `recv-${p.no}`,
+      warrantyNo: p.no,
+      createdAt: p.date || new Date().toISOString(),
+      customerName: p.name,
+      customerPhone: p.phone || '',
+      carModel: p.model || '',
+      carPlate: p.plate || '',
+      carColor: p.color || '',
+      vin: p.vin || '',
+      hasClearPps: Boolean(p.c),
+      clearPpsDetail: p.cd || '',
+      hasColorPps: Boolean(p.k),
+      colorPpsDetail: p.kd || '',
+      price: p.p || '',
+      issueDate: p.date || '',
+      warrantyPeriodYears: Number(p.years) || 6,
+      issuedBy: p.by || '(주) 코션스마트센터',
+      status: 'active'
+    };
+  } catch {
+    return null;
+  }
+};
+
+// ── 고객 폰에 '받은 보증서' 보관 (관리자 목록과 별도) ──
+const RECEIVED_KEY = 'caution_received_warranties';
+
+export const getReceivedWarranties = (): WarrantyItem[] => {
+  try {
+    const raw = localStorage.getItem(RECEIVED_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+};
+
+export const cacheReceivedWarranty = (item: WarrantyItem): void => {
+  try {
+    const list = getReceivedWarranties().filter((w) => w.warrantyNo !== item.warrantyNo);
+    list.unshift(item);
+    localStorage.setItem(RECEIVED_KEY, JSON.stringify(list.slice(0, 50)));
+  } catch (err) {
+    console.error('Failed to cache received warranty:', err);
+  }
+};
+
+// 이 기기에서 알 수 있는 모든 보증서 (관리자 등록분 + 링크로 받은 것), 보증번호 기준 중복 제거
+export const getAllKnownWarranties = (): WarrantyItem[] => {
+  const map = new Map<string, WarrantyItem>();
+  [...getReceivedWarranties(), ...getWarranties()].forEach((w) => map.set(w.warrantyNo, w));
+  return Array.from(map.values());
+};
+
 // 단건 조회 (ID 또는 보증번호)
 export const getWarrantyById = (idOrNo: string): WarrantyItem | null => {
   const list = getWarranties();
@@ -196,10 +286,14 @@ export const exportWarrantiesToCSV = () => {
 };
 
 // 보증서 열람 URL 생성 함수
-export const getWarrantyViewUrl = (warrantyNo: string): string => {
-  const origin = window.location.origin;
-  const pathname = window.location.pathname;
-  return `${origin}${pathname}#warranty?no=${encodeURIComponent(warrantyNo)}`;
+// - item을 넘기면 링크에 보증서 정보(d=)를 함께 담아, 고객 폰에서도 바로 확인·등록할 수 있습니다.
+// - 내 PC(localhost)에서 만든 링크는 고객이 열 수 없으므로 공식 사이트 주소를 사용합니다.
+const PUBLIC_SITE_URL = 'https://cautionsmartcenter-web.vercel.app';
+export const getWarrantyViewUrl = (warrantyNo: string, item?: WarrantyItem): string => {
+  const isLocal = /localhost|127\.0\.0\.1|192\.168\./.test(window.location.hostname);
+  const base = isLocal ? `${PUBLIC_SITE_URL}/` : `${window.location.origin}${window.location.pathname}`;
+  const data = item ? `&d=${encodeWarrantyPayload(item)}` : '';
+  return `${base}#warranty?no=${encodeURIComponent(warrantyNo)}${data}`;
 };
 
 // 카카오톡/문자 전송 메시지 생성 함수
@@ -209,7 +303,7 @@ export const createWarrantyShareMessage = (item: WarrantyItem): string => {
     item.hasColorPps ? `컬러PPS(${item.colorPpsDetail || '전체'})` : ''
   ].filter(Boolean).join(', ') || '독일 정품 CARDIP PPS';
 
-  const viewUrl = getWarrantyViewUrl(item.warrantyNo);
+  const viewUrl = getWarrantyViewUrl(item.warrantyNo, item);
 
   return `[코션스마트센터] PPS 시공 보증서 발급 안내
 

@@ -1,4 +1,20 @@
-import { type WarrantyItem, getWarranties } from './warrantyStorage';
+import { type WarrantyItem, getAllKnownWarranties, cacheReceivedWarranty } from './warrantyStorage';
+
+// 서버(Firestore)에서 차량번호 + 연락처로 보증서 조회 (서버 미설정/로컬 개발 중이면 null)
+const lookupWarrantyOnServer = async (plate: string, verify: string): Promise<WarrantyItem | null> => {
+  try {
+    const res = await fetch('/api/warranty-lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plate, verify })
+    });
+    if (!(res.headers.get('content-type') || '').includes('application/json')) return null;
+    const data = await res.json();
+    return res.ok && data?.warranty ? (data.warranty as WarrantyItem) : null;
+  } catch {
+    return null;
+  }
+};
 
 export interface CustomerUser {
   id: string;
@@ -122,24 +138,35 @@ export const logoutCustomer = (): void => {
 };
 
 // 고객 계정에 보증서 번호 영구 등록/연동
-export const linkWarrantyToCustomer = (
+export const linkWarrantyToCustomer = async (
   customer: CustomerUser,
   carPlate: string,
   verificationCode: string // 휴대폰 번호 또는 뒷 4자리 또는 보증서 번호
-): { success: boolean; message: string; warranty?: WarrantyItem } => {
-  const allWarranties = getWarranties();
+): Promise<{ success: boolean; message: string; warranty?: WarrantyItem }> => {
+  const allWarranties = getAllKnownWarranties();
   const cleanPlate = carPlate.replace(/\s+/g, '');
   const cleanVerify = verificationCode.replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
 
-  // 1. 차량번호로 해당 차량의 보증서 찾기
+  // 1. 차량번호로 해당 차량의 보증서 찾기 (이 기기에 없으면 서버에서 조회)
   const matching = allWarranties.filter(
     (w) => w.carPlate.replace(/\s+/g, '') === cleanPlate
   );
 
   if (matching.length === 0) {
+    const fromServer = cleanPlate ? await lookupWarrantyOnServer(cleanPlate, cleanVerify) : null;
+    if (fromServer) {
+      cacheReceivedWarranty(fromServer);
+      const updatedNos = Array.from(new Set([...(customer.savedWarrantyNos || []), fromServer.warrantyNo]));
+      setCurrentCustomer({ ...customer, savedWarrantyNos: updatedNos });
+      return {
+        success: true,
+        message: `${fromServer.carPlate} (${fromServer.carModel}) 정품 보증서가 고객님 계정에 안전하게 등록되었습니다.`,
+        warranty: fromServer
+      };
+    }
     return {
       success: false,
-      message: '입력하신 차량번호로 발급된 정품 보증서가 없습니다. 차량번호를 다시 확인해 주세요.'
+      message: '입력하신 차량번호로 발급된 정품 보증서를 찾지 못했습니다. 카카오톡으로 받으신 [전자 보증서 확인하기] 버튼을 먼저 눌러 주시거나, 차량번호를 다시 확인해 주세요.'
     };
   }
 
@@ -181,7 +208,7 @@ export const linkWarrantyToCustomer = (
 
 // 현재 고객이 열람 가능한 보증서 목록 조회 (본인 것만 필터링)
 export const getCustomerVerifiedWarranties = (customer: CustomerUser): WarrantyItem[] => {
-  const all = getWarranties();
+  const all = getAllKnownWarranties();
   const cleanPhone = (customer.phone || '').replace(/[^0-9]/g, '');
 
   return all.filter((w) => {
