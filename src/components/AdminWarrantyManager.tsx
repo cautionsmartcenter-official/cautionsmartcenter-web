@@ -36,6 +36,7 @@ import {
   type CloudStatus
 } from '../lib/warrantyCloud';
 import { WarrantyViewer } from './WarrantyViewer';
+import { AdminWorkPhotoModal } from './AdminWorkPhotoModal';
 
 // 솔라피에 승인 신청할 알림톡 템플릿 본문 (변수 이름은 서버 api/_lib/solapi.ts 와 반드시 일치)
 const ALIMTALK_TEMPLATE_TEXT = `[코션스마트센터] PPS 시공 보증서 발급 안내
@@ -101,6 +102,15 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
     cloudStatus && cloudStatus.firestore.ok && Object.values(cloudStatus.alimtalk).every(Boolean)
   );
   const [isDownloading, setIsDownloading] = useState(false);
+
+  // 시공/작업 사진 전송 모달 상태
+  const [isWorkPhotoModalOpen, setIsWorkPhotoModalOpen] = useState(false);
+  const [workPhotoTargetWarranty, setWorkPhotoTargetWarranty] = useState<WarrantyItem | null>(null);
+
+  const handleOpenWorkPhoto = (item?: WarrantyItem) => {
+    setWorkPhotoTargetWarranty(item || null);
+    setIsWorkPhotoModalOpen(true);
+  };
 
   // 알림 토스트
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -706,6 +716,16 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
             </button>
           )}
 
+          {/* 차량 시공/작업 사진 전송 버튼 */}
+          <button
+            onClick={() => handleOpenWorkPhoto()}
+            className="px-3.5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            title="고객님께 실시간 차량 작업 현황 사진을 솔라피 문자/카톡으로 전송합니다"
+          >
+            <i className="ri-camera-3-fill text-base text-white" />
+            <span>작업사진 전송</span>
+          </button>
+
           {/* + 신규 보증서 발급 버튼 */}
           <button
             onClick={handleOpenCreateModal}
@@ -829,8 +849,16 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 </button>
               </div>
 
-              {/* 하단 보조 액션 (링크복사, 수정, 삭제) */}
+              {/* 하단 보조 액션 (작업사진, 링크복사, 수정, 삭제) */}
               <div className="flex items-center justify-end gap-1 pt-1 border-t border-slate-100 text-slate-500 text-xs">
+                <button
+                  onClick={() => handleOpenWorkPhoto(item)}
+                  className="px-2 py-1 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg flex items-center gap-1 transition-colors cursor-pointer font-bold"
+                  title="이 고객님께 실시간 작업사진 전송"
+                >
+                  <i className="ri-camera-3-fill text-xs" />
+                  <span>사진전송</span>
+                </button>
                 <button
                   onClick={() => handleCopyLink(item)}
                   className="px-2.5 py-1 hover:text-blue-600 hover:bg-slate-100 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
@@ -1017,6 +1045,16 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     {/* 전송 & 액션 버튼들 (한 화면 콤팩트 핏: 슬라이더 없이 완전 노출) */}
                     <td className="py-2.5 px-2 whitespace-nowrap text-center">
                       <div className="inline-flex items-center gap-1 p-0.5 bg-slate-50 rounded-lg border border-slate-200 shadow-2xs">
+                        {/* 📷 작업사진 전송 */}
+                        <button
+                          onClick={() => handleOpenWorkPhoto(item)}
+                          className="px-1.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded text-[11px] flex items-center gap-0.5 shadow-2xs cursor-pointer transition-all active:scale-95"
+                          title="이 고객님께 실시간 시공/작업 사진 전송"
+                        >
+                          <i className="ri-camera-3-fill text-xs" />
+                          <span>사진전송</span>
+                        </button>
+
                         {/* 💬 카카오톡 전송 모달 열기 */}
                         <button
                           onClick={() => setSendingKakaoWarranty(item)}
@@ -2243,6 +2281,20 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
           onClose={() => setViewingWarranty(null)}
         />
       )}
+
+      {/* ─────────────────────────────────────────────────────────────
+         9. 시공/작업 사진 전송 모달 (AdminWorkPhotoModal)
+      ───────────────────────────────────────────────────────────── */}
+      <AdminWorkPhotoModal
+        isOpen={isWorkPhotoModalOpen}
+        onClose={() => {
+          setIsWorkPhotoModalOpen(false);
+          setWorkPhotoTargetWarranty(null);
+        }}
+        warranties={warranties}
+        preselectedWarranty={workPhotoTargetWarranty}
+        onSuccessToast={showToast}
+      />
     </div>
   );
 };

@@ -20,6 +20,7 @@ import { ReaddyPartners } from './components/ReaddyPartners';
 import { ReaddyLocationSection } from './components/ReaddyLocationSection';
 import { InlineTextEditor } from './components/InlineTextEditor';
 import { PublicWarrantyPage } from './components/PublicWarrantyPage';
+import { WorkStatusViewer } from './components/WorkStatusViewer';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -108,6 +109,9 @@ export default function App() {
       } else if (hash.startsWith('#warranty')) {
         setActiveTab('warranty');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash.startsWith('#work-status') || hash.startsWith('#workphoto')) {
+        setActiveTab('work-status');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
     checkHash();
@@ -138,6 +142,19 @@ export default function App() {
         />
         <InlineTextEditor />
       </>
+    );
+  }
+
+  /* ── 0-A-2. Customer Work Status Viewer (실시간 시공/작업 사진 갤러리) ── */
+  if (activeTab === 'work-status') {
+    return (
+      <WorkStatusViewer
+        onBackToHome={() => {
+          window.location.hash = '';
+          setActiveTab('home');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
     );
   }
 
