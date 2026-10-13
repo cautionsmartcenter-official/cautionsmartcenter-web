@@ -698,20 +698,20 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
         </div>
       </div>
 
-      {/* ── 3. 보증서 목록 테이블 (가독성 & 관리 편의성 극대화) ── */}
+      {/* ── 3. 보증서 목록 테이블 (한 화면에 슬라이드 없이 100% 표시) ── */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+          <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] uppercase tracking-wider font-bold">
-                <th className="py-4 px-4 whitespace-nowrap">보증번호</th>
-                <th className="py-4 px-4 whitespace-nowrap">발급일 / 보증기간</th>
-                <th className="py-4 px-4 whitespace-nowrap">고객정보</th>
-                <th className="py-4 px-4 min-w-[220px]">시공 차량정보</th>
-                <th className="py-4 px-4 min-w-[190px]">시공 제품 및 상세</th>
-                <th className="py-4 px-4 whitespace-nowrap text-right">시공가격 (VAT별도)</th>
-                <th className="py-4 px-4 whitespace-nowrap text-center">상태</th>
-                <th className="py-4 px-4 whitespace-nowrap text-center">전송 &amp; 관리</th>
+                <th className="py-3 px-2.5 whitespace-nowrap">보증번호</th>
+                <th className="py-3 px-2.5 whitespace-nowrap">발급일/보증기간</th>
+                <th className="py-3 px-2.5 whitespace-nowrap">고객정보</th>
+                <th className="py-3 px-2.5 whitespace-nowrap">시공 차량정보</th>
+                <th className="py-3 px-2.5 whitespace-nowrap">시공 제품/상세</th>
+                <th className="py-3 px-2.5 whitespace-nowrap text-right">시공가격(VAT별도)</th>
+                <th className="py-3 px-2.5 whitespace-nowrap text-center">상태</th>
+                <th className="py-3 px-2.5 whitespace-nowrap text-center">전송 &amp; 관리</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 font-sans">
@@ -727,47 +727,47 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                 filteredWarranties.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
                     {/* 보증번호 (클릭 시 즉시 보증서 열람) */}
-                    <td className="py-4 px-4 whitespace-nowrap">
+                    <td className="py-2.5 px-2 whitespace-nowrap">
                       <button
                         type="button"
                         onClick={() => setViewingWarranty(item)}
-                        className="group inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 hover:bg-red-100/90 text-red-600 rounded-lg border border-red-200/80 font-mono font-bold text-xs transition-all cursor-pointer shadow-2xs hover:scale-105"
+                        className="group inline-flex items-center gap-1 px-2 py-0.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-md border border-red-200 font-mono font-bold text-[11px] transition-all cursor-pointer shadow-2xs hover:scale-102"
                         title="클릭 시 정품 보증서 원본 열람"
                       >
-                        <i className="ri-shield-check-fill text-red-500 group-hover:scale-110 transition-transform" />
+                        <i className="ri-shield-check-fill text-red-500 text-xs group-hover:scale-110 transition-transform" />
                         <span>{item.warrantyNo}</span>
                       </button>
                     </td>
 
                     {/* 발급일 / 보증기간 */}
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      <div className="font-bold text-slate-800 font-mono text-xs">{item.issueDate}</div>
-                      <div className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 mt-0.5">
+                    <td className="py-2.5 px-2 whitespace-nowrap">
+                      <div className="font-bold text-slate-800 font-mono text-[11px] leading-tight">{item.issueDate}</div>
+                      <div className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 mt-0.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                         <span>{item.warrantyPeriodYears}년 정품 보증</span>
                       </div>
                     </td>
 
                     {/* 고객 정보 */}
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      <div className="font-black text-slate-900 text-sm flex items-center gap-1.5">
+                    <td className="py-2.5 px-2 whitespace-nowrap">
+                      <div className="font-bold text-slate-900 text-xs flex items-center gap-1 leading-tight">
                         <span>{item.customerName}</span>
-                        <span className="text-[11px] font-medium text-slate-400">고객님</span>
+                        <span className="text-[10px] font-normal text-slate-400">고객님</span>
                       </div>
                       <a
                         href={`tel:${item.customerPhone}`}
-                        className="text-xs font-mono font-semibold text-slate-600 hover:text-blue-600 flex items-center gap-1 mt-0.5 transition-colors"
+                        className="text-[11px] font-mono font-medium text-slate-600 hover:text-blue-600 flex items-center gap-1 mt-0.5 transition-colors"
                         title="고객에게 전화 걸기"
                       >
-                        <i className="ri-phone-line text-[11px] text-slate-400" />
+                        <i className="ri-phone-line text-[10px] text-slate-400" />
                         <span>{item.customerPhone}</span>
                       </a>
                       {item.customerEmail && (
-                        <div className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5" title={item.customerEmail}>
-                          <i className="ri-mail-line text-slate-400 text-xs" />
-                          <span className="truncate max-w-[140px] font-mono text-[10px]">{item.customerEmail}</span>
+                        <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5" title={item.customerEmail}>
+                          <i className="ri-mail-line text-slate-400 text-[10px]" />
+                          <span className="truncate max-w-[110px] font-mono text-[9.5px]">{item.customerEmail}</span>
                           {item.emailStatus === 'sent' && (
-                            <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1 py-0.2 rounded font-bold whitespace-nowrap">
+                            <span className="text-[8.5px] bg-blue-50 text-blue-700 border border-blue-200 px-1 rounded font-bold whitespace-nowrap">
                               발송됨
                             </span>
                           )}
@@ -775,52 +775,51 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                       )}
                     </td>
 
-                    {/* 차량 정보 (실제 번호판 뱃지 + 모델명 찌그러짐 100% 방지) */}
-                    <td className="py-4 px-4 min-w-[220px]">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {/* 대한민국 번호판 스타일의 화이트/블랙 뱃지 */}
-                        <span className="inline-block px-2.5 py-0.5 bg-white text-slate-900 font-mono font-black text-xs tracking-wider rounded-md border-2 border-slate-300 shadow-xs whitespace-nowrap">
+                    {/* 차량 정보 (실제 번호판 뱃지 + 모델명) */}
+                    <td className="py-2.5 px-2 whitespace-nowrap">
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-block px-1.5 py-0.5 bg-white text-slate-900 font-mono font-black text-[11px] tracking-tight rounded border border-slate-300 shadow-2xs">
                           {item.carPlate}
                         </span>
-                        <span className="font-black text-slate-900 text-sm whitespace-nowrap">
+                        <span className="font-black text-slate-900 text-xs">
                           {item.carModel}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-1.5 flex-wrap">
+                      <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-1">
                         {item.carColor && (
-                          <span className="inline-flex items-center gap-1 bg-slate-100 px-1.5 py-0.5 rounded text-slate-700 whitespace-nowrap">
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                            색상: <strong className="font-semibold">{item.carColor}</strong>
+                          <span className="inline-flex items-center gap-1 bg-slate-100 px-1 py-0.2 rounded text-slate-700">
+                            <span className="w-1 h-1 rounded-full bg-slate-400" />
+                            <span>{item.carColor}</span>
                           </span>
                         )}
                         {item.vin && (
-                          <span className="inline-flex items-center gap-1 font-mono text-[10px] text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200 whitespace-nowrap" title={`차대번호(VIN): ${item.vin}`}>
-                            VIN: {item.vin}
+                          <span className="inline-flex items-center gap-0.5 font-mono text-[9.5px] text-slate-500 bg-slate-50 px-1 py-0.2 rounded border border-slate-200" title={`차대번호(VIN): ${item.vin}`}>
+                            VIN:{item.vin.length > 8 ? `${item.vin.slice(0, 8)}…` : item.vin}
                           </span>
                         )}
                       </div>
                     </td>
 
-                    {/* 시공 제품 및 상세 (깔끔한 캡슐형 뱃지) */}
-                    <td className="py-4 px-4 min-w-[190px]">
-                      <div className="flex flex-col gap-1.5">
+                    {/* 시공 제품 및 상세 */}
+                    <td className="py-2.5 px-2 whitespace-nowrap">
+                      <div className="flex flex-col gap-1">
                         {item.hasClearPps && (
-                          <div className="inline-flex items-center gap-1.5 text-xs bg-blue-50 border border-blue-200/80 px-2.5 py-1 rounded-lg whitespace-nowrap w-fit">
-                            <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />
-                            <strong className="text-blue-900 font-bold">투명PPS</strong>
+                          <div className="inline-flex items-center gap-1 text-[11px] bg-blue-50 border border-blue-200/80 px-1.5 py-0.5 rounded text-blue-900 font-bold w-fit">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                            <span>투명PPS</span>
                             {item.clearPpsDetail && (
-                              <span className="text-blue-700 text-[11px] pl-1 border-l border-blue-200 font-medium">
+                              <span className="text-blue-700 text-[10px] pl-1 border-l border-blue-200 font-medium">
                                 {item.clearPpsDetail}
                               </span>
                             )}
                           </div>
                         )}
                         {item.hasColorPps && (
-                          <div className="inline-flex items-center gap-1.5 text-xs bg-purple-50 border border-purple-200/80 px-2.5 py-1 rounded-lg whitespace-nowrap w-fit">
-                            <span className="w-2 h-2 rounded-full bg-purple-600 shrink-0" />
-                            <strong className="text-purple-900 font-bold">컬러PPS</strong>
+                          <div className="inline-flex items-center gap-1 text-[11px] bg-purple-50 border border-purple-200/80 px-1.5 py-0.5 rounded text-purple-900 font-bold w-fit">
+                            <span className="w-1.5 h-1.5 rounded-full bg-purple-600 shrink-0" />
+                            <span>컬러PPS</span>
                             {item.colorPpsDetail && (
-                              <span className="text-purple-700 text-[11px] pl-1 border-l border-purple-200 font-medium">
+                              <span className="text-purple-700 text-[10px] pl-1 border-l border-purple-200 font-medium">
                                 {item.colorPpsDetail}
                               </span>
                             )}
@@ -833,11 +832,11 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     </td>
 
                     {/* 시공가격 */}
-                    <td className="py-4 px-4 font-mono font-black text-slate-900 text-sm whitespace-nowrap text-right">
+                    <td className="py-2.5 px-2 font-mono font-black text-slate-900 text-xs whitespace-nowrap text-right">
                       {item.price ? (
                         <div>
                           <span>{formatPriceWithCommas(item.price)}</span>
-                          <span className="text-xs font-bold text-slate-500 ml-1">원</span>
+                          <span className="text-[10px] font-bold text-slate-500 ml-0.5">원</span>
                         </div>
                       ) : (
                         <span className="text-slate-400 font-normal">-</span>
@@ -845,63 +844,63 @@ export const AdminWarrantyManager: React.FC<AdminWarrantyManagerProps> = ({
                     </td>
 
                     {/* 상태 */}
-                    <td className="py-4 px-4 whitespace-nowrap text-center">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+                    <td className="py-2.5 px-2 whitespace-nowrap text-center">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         <span>정상 유효</span>
                       </span>
                     </td>
 
-                    {/* 전송 & 액션 버튼들 (핵심 액션 분리 & 직관적 관리) */}
-                    <td className="py-4 px-4 whitespace-nowrap text-center">
-                      <div className="inline-flex items-center gap-1.5 p-1 bg-slate-50 rounded-xl border border-slate-200 shadow-2xs">
-                        {/* 💬 카카오톡 전송 모달 열기 (시그니처 버튼) */}
+                    {/* 전송 & 액션 버튼들 (한 화면 콤팩트 핏: 슬라이더 없이 완전 노출) */}
+                    <td className="py-2.5 px-2 whitespace-nowrap text-center">
+                      <div className="inline-flex items-center gap-1 p-0.5 bg-slate-50 rounded-lg border border-slate-200 shadow-2xs">
+                        {/* 💬 카카오톡 전송 모달 열기 */}
                         <button
                           onClick={() => setSendingKakaoWarranty(item)}
-                          className="px-3 py-1.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-black rounded-lg text-xs flex items-center gap-1 shadow-xs cursor-pointer transition-all active:scale-95"
+                          className="px-2 py-1 bg-[#FEE500] hover:bg-[#FDD835] text-[#3c1e1e] font-black rounded text-[11px] flex items-center gap-1 shadow-2xs cursor-pointer transition-all active:scale-95"
                           title="카카오톡 또는 이메일로 고객에게 보증서 전송"
                         >
-                          <i className="ri-kakao-talk-fill text-sm" />
+                          <i className="ri-kakao-talk-fill text-xs" />
                           <span>카톡전송</span>
                         </button>
 
                         {/* 👁️ 보증서 전체 열람 & 인쇄 */}
                         <button
                           onClick={() => setViewingWarranty(item)}
-                          className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg text-xs flex items-center gap-1 shadow-xs cursor-pointer transition-all active:scale-95"
+                          className="px-1.5 py-1 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded text-[11px] flex items-center gap-0.5 shadow-2xs cursor-pointer transition-all active:scale-95"
                           title="공식 정품 보증서 1·2면 확인 및 A4 인쇄"
                         >
                           <i className="ri-file-text-line text-emerald-400 text-xs" />
                           <span>열람</span>
                         </button>
 
-                        <div className="h-4 w-[1px] bg-slate-200 my-auto" />
+                        <div className="h-3.5 w-[1px] bg-slate-200 my-auto" />
 
                         {/* 🔗 링크 복사 */}
                         <button
                           onClick={() => handleCopyLink(item)}
-                          className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-white rounded-lg text-xs cursor-pointer transition-colors"
+                          className="p-1 text-slate-500 hover:text-blue-600 hover:bg-white rounded text-xs cursor-pointer transition-colors"
                           title="고객 열람용 웹 보증서 링크 복사"
                         >
-                          <i className="ri-file-copy-line text-sm" />
+                          <i className="ri-file-copy-line text-xs" />
                         </button>
 
                         {/* ✏️ 정보 수정 */}
                         <button
                           onClick={() => handleOpenEditModal(item)}
-                          className="p-1.5 text-slate-600 hover:text-indigo-600 hover:bg-white rounded-lg text-xs cursor-pointer transition-colors"
+                          className="p-1 text-slate-500 hover:text-indigo-600 hover:bg-white rounded text-xs cursor-pointer transition-colors"
                           title="보증서 정보 수정"
                         >
-                          <i className="ri-edit-line text-sm" />
+                          <i className="ri-edit-line text-xs" />
                         </button>
 
                         {/* 🗑️ 보증서 삭제 */}
                         <button
                           onClick={() => handleDelete(item.id, item.warrantyNo, item.customerName)}
-                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg text-xs cursor-pointer transition-colors"
+                          className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded text-xs cursor-pointer transition-colors"
                           title="보증서 삭제"
                         >
-                          <i className="ri-delete-bin-line text-sm" />
+                          <i className="ri-delete-bin-line text-xs" />
                         </button>
                       </div>
                     </td>
