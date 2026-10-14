@@ -364,7 +364,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
               >
                 <i className="ri-inbox-line" />
                 <span>상담 접수</span>
-                <span className="px-1.5 py-0.2 bg-white/20 rounded-full text-[10px]">{stats.total}</span>
               </button>
 
               <button
@@ -492,11 +491,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
               >
                 <i className="ri-inbox-line text-sm shrink-0" />
                 <span className="truncate">상담 접수</span>
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                  adminSection === 'consultations' ? 'bg-white/25 text-white' : 'bg-slate-700 text-slate-300'
-                }`}>
-                  {stats.total}
-                </span>
               </button>
 
               <button
@@ -877,24 +871,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                         <div className="flex items-center gap-1.5">
                           <button
                             onClick={() => {
-                              setCalendarPrefill({
-                                customerName: item.name,
-                                customerPhone: item.phone,
-                                carModel: [item.brand, item.model, item.codeName].filter(Boolean).join(' '),
-                                serviceType: item.service || '',
-                                notes: `상담 접수 번호(${item.id}) 연계: ${item.message || ''}`
-                              });
-                              setAdminSection('calendar');
-                            }}
-                            className="px-2.5 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer"
-                            title="시공 예약 캘린더 등록"
-                          >
-                            <i className="ri-calendar-event-line" />
-                            <span>예약</span>
-                          </button>
-
-                          <button
-                            onClick={() => {
                               setWarrantyPrefill({
                                 customerName: item.name,
                                 customerPhone: item.phone,
@@ -1053,24 +1029,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit }) => {
                                   title="상담 상세 및 메모"
                                 >
                                   <i className="ri-file-list-3-line text-base" />
-                                </button>
-
-                                {/* 캘린더 시공 일정 등록 단축 버튼 */}
-                                <button
-                                  onClick={() => {
-                                    setCalendarPrefill({
-                                      customerName: item.name,
-                                      customerPhone: item.phone,
-                                      carModel: [item.brand, item.model, item.codeName].filter(Boolean).join(' '),
-                                      serviceType: item.service || '',
-                                      notes: `상담 접수 번호(${item.id}) 연계: ${item.message || ''}`
-                                    });
-                                    setAdminSection('calendar');
-                                  }}
-                                  className="p-1.5 rounded-lg text-blue-600 hover:bg-white transition-colors cursor-pointer"
-                                  title="시공 예약 캘린더 등록"
-                                >
-                                  <i className="ri-calendar-event-line text-base" />
                                 </button>
 
                                 {/* 보증서 바로 발급 단축 버튼 */}
