@@ -430,6 +430,131 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
 
   // ── 3. 판금도색 (사고수리 & 보험복원) ──
   {
+    id: 'paint-benz-e300',
+    category: 'paint',
+    categoryName: '판금도색',
+    title: '메르세데스-벤츠 E300 전면 범퍼 파손 정밀 판금도색 & 단차 0% 복원',
+    carModel: 'Mercedes-Benz E 300 (W213)',
+    image: '/images/portfolio/paint_benz_e300/01.jpg',
+    images: [
+      '/images/portfolio/paint_benz_e300/01.jpg', // [1. 정면 메인] 코션스마트센터 사옥 앞 입고 정면 풀샷
+      '/images/portfolio/paint_benz_e300/02.jpg', // [2. 사고부위] 프론트 범퍼 하단 립 스크래치 및 휀더 파손 부위
+      '/images/portfolio/paint_benz_e300/03.jpg', // [3. 전과 후] 범퍼 탈거 후 판금 샌딩 및 하지 교정 공정
+      '/images/portfolio/paint_benz_e300/04.jpg', // [4. 작업완료] 전용 열처리 도색 부스 내 신차급 광택 도장 복원 완료
+      '/images/portfolio/paint_benz_e300/05.jpg'  // [5. 전경 사진] 코션스마트센터 매장 앞 출고 대기 전체 전경 쿼터뷰
+    ],
+    tags: ['벤츠 E300', '사고수리', '판금도색', '자차보험수리', '수용성 조색', '단차 0%'],
+    summary: '주행 중 충돌로 파손된 전면 범퍼와 휀더를 정밀 계측 판금 및 독일 정품 수용성 도료로 이색감 없이 100% 원복 출고',
+    details: [
+      '독일 바스프 글라슈리트 친환경 수용성 도료 조색 매칭으로 백색 펄 특유의 황변 및 이색 제로 구현',
+      '범퍼와 휀더 체결부 클립 및 브라켓 정품 교체로 순정 출고선 단차 0% 정밀 복원',
+      '최신 원적외선 열처리 전용 부스 규정 온도 베이킹을 거쳐 오리지널 클리어코트 경도 확보'
+    ],
+    linkType: 'blog',
+    linkUrl: OFFICIAL_LINKS.blog,
+    linkText: '네이버 블로그 복원 스토리'
+  },
+  {
+    id: 'paint-taycan4s',
+    category: 'paint',
+    categoryName: '판금도색',
+    title: '포르쉐 타이칸 4S 바디 파손 정밀 판금 복원 & 전용 열처리 도색',
+    carModel: 'Porsche Taycan 4S Electric',
+    image: '/images/portfolio/paint_taycan4s/01.jpg',
+    images: [
+      '/images/portfolio/paint_taycan4s/01.jpg', // [1. 정면 메인] 제트 블랙 메탈릭 타이칸 4S 정면 로우앵글 풀샷
+      '/images/portfolio/paint_taycan4s/02.jpg', // [2. 사고부위] 범퍼 에어커튼 및 휀더 접촉 충돌 손상 부위
+      '/images/portfolio/paint_taycan4s/03.jpg', // [3. 전과 후] 차체 정밀 계측 지그 인장 판금 교정 및 하체 정렬 공정
+      '/images/portfolio/paint_taycan4s/04.jpg', // [4. 작업완료] 전용 부스 특수 조명 아래 완벽 복원된 정면 완료 샷
+      '/images/portfolio/paint_taycan4s/05.jpg'  // [5. 전경 사진] 코션스마트센터 사옥 앞 출고 준비 사이드 전경 풀샷
+    ],
+    tags: ['포르쉐 사고수리', '타이칸 4S', '알루미늄 바디 판금', '전기차 전용정비', '보험복원'],
+    summary: '고전압 배터리 안전 절차를 준수한 상태에서 알루미늄 복합 바디를 정밀 지그 인장 판금 복원 및 열처리 도색 완료',
+    details: [
+      '전기차 전문 안전 가이드라인에 따른 고전압 배터리 차단 후 알루미늄 전용 판금 장비 시공',
+      '포르쉐 순정 제트 블랙(Jet Black Metallic) 펄 입자 밀도까지 100% 디지털 측색 조색',
+      '초미립자 도장 스프레이 및 최고급 클리어코트로 신차 출고 오렌지필 질감 완벽 재현'
+    ],
+    linkType: 'blog',
+    linkUrl: OFFICIAL_LINKS.blog,
+    linkText: '네이버 블로그 복원 스토리'
+  },
+  {
+    id: 'paint-bmw-x4',
+    category: 'paint',
+    categoryName: '판금도색',
+    title: 'BMW X4 xDrive M 스포츠 프론트 범퍼 및 휀더 정밀 판금도색 복원',
+    carModel: 'BMW X4 xDrive20d M Sport (G02)',
+    image: '/images/portfolio/paint_bmw_x4/01.jpg',
+    images: [
+      '/images/portfolio/paint_bmw_x4/01.jpg', // [1. 정면 메인] M 키드니 그릴 및 입체적 프론트 뷰 정면 풀샷
+      '/images/portfolio/paint_bmw_x4/02.jpg', // [2. 사고부위] 코너 접촉사고로 긁힌 범퍼 하단 및 휠하우스 아치 몰딩 손상
+      '/images/portfolio/paint_bmw_x4/03.jpg', // [3. 전과 후] 범퍼 통탈거 후 내부 서포트 프레임 판금 및 샌딩 공정
+      '/images/portfolio/paint_bmw_x4/04.jpg', // [4. 작업완료] 굴곡진 에어커튼 엣지까지 단차 0% 신차급 복원 완료 디테일
+      '/images/portfolio/paint_bmw_x4/05.jpg'  // [5. 전경 사진] 코션스마트센터 전면 야외 전경 풀샷
+    ],
+    tags: ['BMW X4', 'M스포츠', '프론트 범퍼 복원', '대물보험처리', '판금도색'],
+    summary: '측면 접촉사고로 손상된 M 에어로다이내믹 범퍼와 휀더를 통탈거 정밀 교정 및 수용성 도색으로 원형 100% 리스토어',
+    details: [
+      'BMW 공식 지정 도료 조색 데이터베이스를 기반으로 블랙 사파이어 메탈릭 1:1 완벽 매칭',
+      '내부 레이더 센서 및 초음파 파킹 센서 브라켓 정위치 재정렬 및 주행 보조 캘리브레이션',
+      '정밀 샌딩과 서페이서 하지 공정을 통한 단차 0% 매끄러운 굴곡 라인 재건'
+    ],
+    linkType: 'blog',
+    linkUrl: OFFICIAL_LINKS.blog,
+    linkText: '네이버 블로그 복원 스토리'
+  },
+  {
+    id: 'paint-rangerover-lwb',
+    category: 'paint',
+    categoryName: '판금도색',
+    title: '랜드로버 올 뉴 레인지로버 리어 휀더 & 도어 바투미 골드 특수 판금도색',
+    carModel: 'Land Rover All-New Range Rover (Batumi Gold)',
+    image: '/images/portfolio/paint_rangerover/01.jpg',
+    images: [
+      '/images/portfolio/paint_rangerover/01.jpg', // [1. 정면 메인] 바투미 골드 럭셔리 대형 SUV 정면 풀샷
+      '/images/portfolio/paint_rangerover/02.jpg', // [2. 사고부위] 휠하우스 상단 리어 휀더 찌그러짐 및 도어 하단 긁힘 손상
+      '/images/portfolio/paint_rangerover/03.jpg', // [3. 전과 후] 특수 부스 풀 마스킹 및 고난도 판금 교정 공정
+      '/images/portfolio/paint_rangerover/04.jpg', // [4. 작업완료] 이색감 제로로 매끄럽게 복원된 휀더 바디라인 디테일
+      '/images/portfolio/paint_rangerover/05.jpg'  // [5. 전경 사진] 코션스마트센터 실내 프리미엄 쇼룸 전경 풀샷
+    ],
+    tags: ['레인지로버', '바투미 골드', '알루미늄 판금', '자차보험수리', '특수 도색'],
+    summary: '초고가 럭셔리 플래그십 SUV의 거대한 알루미늄 리어 쿼터 패널 손상을 정밀 스폿 판금 및 특수 조색으로 무결점 복원',
+    details: [
+      '골드 펄 입자가 고르게 분산되도록 멀티 레이어 수용성 분무 도포 기술 적용',
+      '차체 패널 교환 없이 본래의 알루미늄 판넬을 100% 살려내는 장인 판금 공법',
+      '도어 전동 사이드스텝 및 센서류 정밀 탈부착으로 순정 메커니즘 무결점 유지'
+    ],
+    linkType: 'blog',
+    linkUrl: OFFICIAL_LINKS.blog,
+    linkText: '네이버 블로그 복원 스토리'
+  },
+  {
+    id: 'paint-bmw-x7',
+    category: 'paint',
+    categoryName: '판금도색',
+    title: 'BMW X7 M 스포츠 대형 범퍼 및 휀더 정밀 판금도색 복원',
+    carModel: 'BMW X7 xDrive40i M Sport (G07)',
+    image: '/images/portfolio/paint_bmw_x7/01.jpg',
+    images: [
+      '/images/portfolio/paint_bmw_x7/01.jpg', // [1. 정면 메인] 웅장한 키드니 그릴과 아이코닉 글로우 M 퍼포먼스 정면 풀샷
+      '/images/portfolio/paint_bmw_x7/02.jpg', // [2. 사고부위] 프론트 범퍼 하단 립 및 코너 패널 파손 스크래치 클로즈업
+      '/images/portfolio/paint_bmw_x7/03.jpg', // [3. 전과 후] 대형 범퍼 탈거 후 정밀 패널 성형 및 수용성 도색 마스킹 공정
+      '/images/portfolio/paint_bmw_x7/04.jpg', // [4. 작업완료] 깊이 있는 카본블랙 광택과 단차 없는 완벽 복원 정면 샷
+      '/images/portfolio/paint_bmw_x7/05.jpg'  // [5. 전경 사진] 코션 사옥 앞 롱바디 측면 및 야외 출고 전경 샷
+    ],
+    tags: ['BMW X7', 'M스포츠', '플래그십 SUV', '자차보험수리', '판금도색 전문'],
+    summary: '대형 프론트 범퍼 복합 패널의 찢김과 긁힘을 정밀 용접 판금 및 카본블랙 100% 조색으로 신차 컨디션 출고',
+    details: [
+      'BMW 특유의 빛에 따라 남색과 흑색이 공존하는 카본블랙(Carbon Black) 정밀 조색',
+      '대형 키드니 그릴 및 액티브 에어 플랩과의 체결 단차 0.1mm 단위 오차 없이 조립',
+      '스톤칩 방지용 고내구성 클리어코트 마감 및 원적외선 열처리로 도막 내구성 극대화'
+    ],
+    linkType: 'blog',
+    linkUrl: OFFICIAL_LINKS.blog,
+    linkText: '네이버 블로그 복원 스토리'
+  },
+  {
     id: 'paint-cayenne',
     category: 'paint',
     categoryName: '판금도색',
