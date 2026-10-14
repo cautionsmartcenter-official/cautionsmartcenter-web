@@ -151,12 +151,6 @@ export const ReaddyPartners: React.FC = () => {
                     <Building2 className="w-7 h-7 sm:w-8 sm:h-8 text-red-500" />
                   </div>
                   <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="px-3 py-1 rounded-full text-xs font-black bg-red-600 text-white shadow-sm">
-                        {HEADQUARTER_INFO.badge}
-                      </span>
-                      <span className="text-xs font-bold text-gray-500">{HEADQUARTER_INFO.region}</span>
-                    </div>
                     <h3 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
                       {HEADQUARTER_INFO.name}
                     </h3>
