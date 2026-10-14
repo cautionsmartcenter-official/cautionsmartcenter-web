@@ -287,18 +287,6 @@ export const ReaddyPortfolio: React.FC<ReaddyPortfolioProps> = ({ onNavigateToCo
               <br className="hidden sm:inline" />
               <strong>사진을 클릭하시면 한 장씩 다음 시공 컷으로 넘겨보실 수 있습니다.</strong>
             </p>
-
-            {/* 3D 슈퍼카 쇼룸 열기 버튼 */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mt-7">
-              <button
-                onClick={() => setIsShowroomOpen(true)}
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-xs sm:text-sm shadow-xl shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-              >
-                <i className="ri-cube-line text-lg" />
-                <span>3D 슈퍼카 쇼룸 & 360° 뷰어 체험하기</span>
-                <i className="ri-arrow-right-line text-sm" />
-              </button>
-            </div>
           </motion.div>
         </div>
       </section>
