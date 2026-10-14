@@ -483,22 +483,22 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'paint-bmw-x4',
     category: 'paint',
     categoryName: '판금도색',
-    title: 'BMW X4 xDrive M 스포츠 프론트 범퍼 및 휀더 정밀 판금도색 복원',
-    carModel: 'BMW X4 xDrive20d M Sport (G02)',
+    title: 'BMW X4 xDrive 프론트 범퍼 코너 및 휀더 정밀 판금도색 복원',
+    carModel: 'BMW X4 xDrive (G02 LCI)',
     image: '/images/portfolio/paint_bmw_x4/01.jpg',
     images: [
-      '/images/portfolio/paint_bmw_x4/01.jpg', // [1. 정면 메인] M 키드니 그릴 및 입체적 프론트 뷰 정면 풀샷
-      '/images/portfolio/paint_bmw_x4/02.jpg', // [2. 사고부위] 코너 접촉사고로 긁힌 범퍼 하단 및 휠하우스 아치 몰딩 손상
-      '/images/portfolio/paint_bmw_x4/03.jpg', // [3. 전과 후] 범퍼 통탈거 후 내부 서포트 프레임 판금 및 샌딩 공정
-      '/images/portfolio/paint_bmw_x4/04.jpg', // [4. 작업완료] 굴곡진 에어커튼 엣지까지 단차 0% 신차급 복원 완료 디테일
-      '/images/portfolio/paint_bmw_x4/05.jpg'  // [5. 전경 사진] 코션스마트센터 전면 야외 전경 풀샷
+      '/images/portfolio/paint_bmw_x4/01.jpg', // [1. 정면 메인] 작업 완료 후 센터 앞 정면 풀샷
+      '/images/portfolio/paint_bmw_x4/02.jpg', // [2. 사고부위] 입고 당시 우측 범퍼 에어커튼 엣지 도장 깨짐·크랙 클로즈업
+      '/images/portfolio/paint_bmw_x4/03.jpg', // [3. 전과 후] 동일 각도 BEFORE(입고) | AFTER(출고) 비교
+      '/images/portfolio/paint_bmw_x4/04.jpg', // [4. 작업완료] 같은 에어커튼 엣지 부위 복원 완료 클로즈업
+      '/images/portfolio/paint_bmw_x4/05.jpg'  // [5. 전경 사진] 코션스마트센터 건물 앞 출고 전경
     ],
-    tags: ['BMW X4', 'M스포츠', '프론트 범퍼 복원', '대물보험처리', '판금도색'],
-    summary: '측면 접촉사고로 손상된 M 에어로다이내믹 범퍼와 휀더를 통탈거 정밀 교정 및 수용성 도색으로 원형 100% 리스토어',
+    tags: ['BMW X4', '프론트 범퍼 복원', '휀더 도색', '대물보험처리', '판금도색'],
+    summary: '접촉사고로 우측 프론트 범퍼 코너(에어커튼 엣지)의 도장이 깨지고 휀더 라인까지 긁힌 차량을, 손상부 정밀 보수와 블랙 사파이어 조색 도장으로 원래 모습 그대로 복원',
     details: [
-      'BMW 공식 지정 도료 조색 데이터베이스를 기반으로 블랙 사파이어 메탈릭 1:1 완벽 매칭',
-      '내부 레이더 센서 및 초음파 파킹 센서 브라켓 정위치 재정렬 및 주행 보조 캘리브레이션',
-      '정밀 샌딩과 서페이서 하지 공정을 통한 단차 0% 매끄러운 굴곡 라인 재건'
+      '입고 진단: 우측 범퍼 에어커튼 하단 엣지 도장 깨짐·크랙, 범퍼-휀더 경계 라인 긁힘 확인 (KB 대물보험 처리)',
+      '손상부 샌딩 → 퍼티·서페이서 하지 작업으로 에어커튼 엣지 굴곡 라인 재성형 후 블랙 사파이어 메탈릭 1:1 조색 도장',
+      '출고 전 동일 각도 비교 촬영으로 색상 차이·단차 없이 복원된 것을 확인 후 고객 인도'
     ],
     linkType: 'blog',
     linkUrl: OFFICIAL_LINKS.blog,
