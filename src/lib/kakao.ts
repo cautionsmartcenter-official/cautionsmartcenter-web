@@ -168,7 +168,8 @@ export const sendKakaoWarranty = async (
         itemContent: {
           profileText: '코션스마트센터 · 독일 CARDIP 정품',
           items: [
-            { item: '차량번호', itemOp: cut(`${item.carPlate} (${item.carModel})`, 25) },
+            { item: '차종', itemOp: cut(item.carModel, 25) },
+            { item: '차량번호', itemOp: cut(item.carPlate, 25) },
             { item: '시공내역', itemOp: cut(ppsType, 25) },
             { item: '보증기간', itemOp: cut(`${item.issueDate}부터 ${item.warrantyPeriodYears || 6}년`, 25) },
             { item: '보증번호', itemOp: cut(item.warrantyNo, 25) }

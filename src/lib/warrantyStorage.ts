@@ -452,12 +452,13 @@ export const createWarrantyShareMessage = (item: WarrantyItem): string => {
 
 고객님의 차량에 PPS 시공 보증서가 정상 발급되었습니다.
 
-■ 차량번호 : ${item.carPlate} (${item.carModel})
+■ 차    종 : ${item.carModel}
+■ 차량번호 : ${item.carPlate}
 ■ 시공내역 : ${ppsType}
 ■ 보증기간 : 시공일(${item.issueDate})로부터 ${item.warrantyPeriodYears}년
 ■ 보증번호 : ${item.warrantyNo}
 
-📎 함께 보내드린 정품 보증서(PDF)를 꼭 [다운로드]하여 보관해 주세요.
+◇ 함께 보내드린 정품 보증서(PDF)를 꼭 [다운로드]하여 보관해 주세요.
 (PDF 파일은 화면을 길게 눌러서 저장되지 않으므로, 첨부파일의 [다운로드] 또는 [저장] 버튼을 눌러 보관해 두시면 사고·보험 처리 시 공식 제출용으로 사용하실 수 있습니다.)
 
 🔗 모바일 전자보증서 바로 확인:

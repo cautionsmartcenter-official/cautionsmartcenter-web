@@ -99,7 +99,8 @@ export const generateAlimtalkBody = (item: WarrantyItem, viewUrl: string): strin
 
 고객님의 차량에 PPS 시공 보증서가 정상 발급되었습니다.
 
-■ 차량번호 : ${item.carPlate} (${item.carModel})
+■ 차    종 : ${item.carModel}
+■ 차량번호 : ${item.carPlate}
 ■ 시공내역 : ${serviceText}
 ■ 보증기간 : 시공일(${item.issueDate})로부터 ${item.warrantyPeriodYears}년
 ■ 보증번호 : ${item.warrantyNo}
