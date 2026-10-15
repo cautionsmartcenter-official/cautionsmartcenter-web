@@ -1,0 +1,213 @@
+/* CAUTION / CINEMATIC PRECISION
+   Presentation is scoped to the public website; original fonts, images and business modules remain intact. */
+.caution-renewal {
+  --renewal-ink:#101114;
+  --renewal-paper:#f5f5f3;
+  --renewal-line:rgba(16,17,20,.14);
+  --renewal-ease:cubic-bezier(.2,.75,.25,1);
+  --renewal-gutter:clamp(24px,4.5vw,80px);
+}
+.caution-renewal :is(button,a,input,select,textarea):focus-visible { outline:3px solid #E11D48; outline-offset:5px; }
+.caution-renewal :is(section,[id]) {scroll-margin-top:100px;}
+.caution-renewal main {animation:renewal-page-in .5s var(--renewal-ease);}
+.caution-renewal main h2 {text-wrap:balance;word-break:keep-all;}
+.caution-renewal main p {word-break:keep-all;overflow-wrap:break-word;}
+.caution-renewal main section:not(.signature-hero) p {font-size:max(1rem,1.12em);line-height:1.85;}
+.caution-renewal main section:not(.signature-hero) h2 {letter-spacing:-.045em;line-height:1.22;}
+.caution-renewal main :is(button,a) {transition-timing-function:var(--renewal-ease);}
+.caution-renewal header {background:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.06));}
+.caution-renewal header[class*="backdrop-blur"] {background:rgba(12,13,15,.94);box-shadow:none;}
+.caution-renewal header nav {padding-inline:var(--renewal-gutter);max-width:1800px;margin:auto;}
+.caution-renewal header nav button {min-height:44px;}
+.renewal-reading-progress {position:fixed;left:0;right:0;top:0;height:2px;background:#E11D48;transform-origin:left;z-index:80;pointer-events:none;}
+/* Full image stage, caption below: readable copy never covers the vehicle. */
+.signature-hero {background:#101114;color:#fff;position:relative;}
+.signature-stage {height:clamp(590px,77svh,950px);position:relative;overflow:hidden;touch-action:pan-y;}
+.signature-images,.signature-image,.signature-shade {position:absolute;inset:0;}
+.signature-image {opacity:0;transition:opacity 1.1s var(--renewal-ease);overflow:hidden;}
+.signature-image.is-active {opacity:1;}
+.signature-image img {width:100%;height:100%;object-fit:cover;object-position:50% 56%;will-change:transform;}
+.signature-image.is-active img {animation:signature-camera 14s linear both;}
+.signature-hero[data-playing="false"] .signature-image img {animation-play-state:paused;}
+.signature-shade {background:linear-gradient(180deg,rgba(0,0,0,.58) 0%,rgba(0,0,0,.18) 32%,transparent 52%,rgba(0,0,0,.08) 83%,rgba(16,17,20,.7) 100%);pointer-events:none;}
+.signature-headline {position:absolute;z-index:1;top:clamp(124px,15svh,168px);left:var(--renewal-gutter);right:var(--renewal-gutter);text-shadow:0 2px 28px rgba(0,0,0,.23);}
+.signature-eyebrow {display:flex;align-items:center;gap:12px;font-family:Roboto,sans-serif;font-size:12px;letter-spacing:.22em;font-weight:500;margin-bottom:16px;}
+.signature-eyebrow>span {width:24px;height:2px;background:#E11D48;flex-shrink:0;}
+.signature-title {font-size:clamp(38px,4.8vw,78px);line-height:1.13;letter-spacing:-.055em;font-weight:700;max-width:1100px;margin:0 0 13px;}
+.caption-mask {display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.13em;margin-bottom:-.13em;}
+.caption-word {display:inline-block;white-space:pre;animation:signature-caption-in 900ms var(--renewal-ease) both;}
+.signature-subtitle {font-family:Roboto,sans-serif;font-size:clamp(12px,1.05vw,16px);font-weight:400;letter-spacing:.18em;color:rgba(255,255,255,.88);}
+.signature-controls {position:absolute;bottom:24px;right:var(--renewal-gutter);display:flex;align-items:center;background:rgba(16,17,20,.48);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.22);padding:4px 8px 4px 18px;border-radius:4px;gap:2px;}
+.signature-controls button {width:44px;height:44px;display:grid;place-items:center;border-radius:2px;transition:background .2s;}
+.signature-controls button:hover {background:rgba(255,255,255,.16);}
+.signature-controls button:disabled {opacity:.4;}
+.signature-count {display:flex;gap:10px;align-items:center;font-family:Roboto,sans-serif;font-size:13px;margin-right:14px;}
+.signature-count b {font-size:20px;font-weight:500;}
+.signature-count>span {color:#c4c4c8;}
+.signature-caption {padding:30px var(--renewal-gutter);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:48px;border-bottom:1px solid rgba(255,255,255,.13);}
+.signature-description {max-width:780px;font-size:17px;line-height:1.8;color:#d5d5d8;animation:renewal-page-in .55s ease;}
+.signature-actions {display:flex;gap:12px;}
+.signature-actions :is(a,button) {display:inline-flex;align-items:center;justify-content:center;gap:20px;padding:18px 22px;min-height:56px;font-size:15px;font-weight:600;border:1px solid rgba(255,255,255,.25);transition:background .25s, transform .25s;white-space:nowrap;border-radius:3px;}
+.signature-primary {background:#E11D48;border-color:#E11D48!important;}
+.signature-primary:hover {background:#BE123C;transform:translateY(-2px);}
+.signature-secondary:hover {background:#fff;color:#101114;transform:translateY(-2px);}
+.signature-index {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:0 var(--renewal-gutter);}
+.signature-index button {position:relative;display:flex;gap:15px;align-items:center;padding:25px 20px 25px 0;text-align:left;min-width:0;color:#a2a3a8;transition:color .2s;}
+.signature-index button:hover,.signature-index button.is-active {color:#fff;}
+.signature-index-number {font-size:12px;font-family:Roboto,sans-serif;color:#a2a3a8;}
+.signature-index-title {font-size:14px;line-height:1.5;}
+.signature-track {position:absolute;top:0;left:0;right:24px;height:2px;background:transparent;}
+.signature-index .is-active .signature-track {background:rgba(255,255,255,.25);}
+.signature-track>span {display:block;height:100%;background:#E11D48;transform-origin:left;}
+/* Existing five services, made into a clean image-led selection. */
+.caution-renewal .renewal-services {padding-block:clamp(80px,9vw,144px);background:var(--renewal-paper);border:0;}
+.caution-renewal .renewal-services>div {padding-inline:var(--renewal-gutter);max-width:1800px;}
+.caution-renewal .renewal-services>div>div:first-child {text-align:left;max-width:none;margin-bottom:64px;}
+.caution-renewal .renewal-services>div>div:first-child>div {background:none;box-shadow:none;padding:0;margin-bottom:20px;border-radius:0;}
+.caution-renewal .renewal-services>div>div:first-child>div span {color:#b20e33;letter-spacing:.18em;font-weight:600;}
+.caution-renewal .renewal-services h2 {font-size:clamp(32px,4.4vw,64px);font-weight:700;}
+.caution-renewal .renewal-service-card {border-radius:6px;}
+.caution-renewal .renewal-service-card>div {border:none;border-radius:6px;background:transparent;box-shadow:none;transform:none;}
+.caution-renewal .renewal-service-card>div>div:first-child {border-radius:6px;}
+.caution-renewal .renewal-service-card img {transition:transform 900ms var(--renewal-ease);}
+.caution-renewal .renewal-service-card:hover img {transform:scale(1.045);}
+.caution-renewal .renewal-service-card>div>div:last-child {padding:25px 0 0;}
+.caution-renewal .renewal-service-card h3 {font-size:24px;font-weight:700;}
+.caution-renewal .renewal-service-card li {font-size:15px;line-height:1.65;align-items:flex-start;}
+.caution-renewal .renewal-service-card li>span:first-child {margin-top:10px;width:3px;height:3px;background:#8e9097;}
+.caution-renewal .renewal-service-card>div>div:last-child>div:last-child {border-color:var(--renewal-line);justify-content:flex-start;}
+.caution-renewal .renewal-service-card>div>div:last-child>div:last-child>div {border:1px solid #c8c9cc;box-shadow:none;background:transparent;color:#111;}
+.caution-renewal .renewal-service-card:hover>div>div:last-child>div:last-child>div {background:#101114;color:#fff;border-color:#101114;}
+/* Technical narrative: a large image and clear text on a quiet white surface. */
+.caution-renewal #ai-tech {padding-block:clamp(90px,10vw,160px);}
+.caution-renewal #ai-tech>div {max-width:1600px;padding-inline:var(--renewal-gutter);}
+.caution-renewal #ai-tech>div>div {gap:clamp(40px,7vw,120px);}
+.caution-renewal #ai-tech h2 {font-weight:700;font-size:clamp(32px,3vw,48px);}
+.caution-renewal #ai-tech>div>div>div:first-child>div:first-child {border-radius:8px;box-shadow:none;aspect-ratio:4/5;max-height:740px;}
+.caution-renewal #ai-tech>div>div>div:first-child>div:last-child {border-radius:4px;right:-14px;box-shadow:0 20px 50px #0002;}
+.caution-renewal #ai-tech .space-y-4>div {border-bottom:1px solid var(--renewal-line);padding-block:12px;}
+.caution-renewal #ai-tech .space-y-4>div>span {font-size:16px;line-height:1.6;}
+/* An editorial quote, retaining every original review and its portrait. */
+.caution-renewal .renewal-reviews {background:#efefed;padding-block:clamp(80px,10vw,160px);}
+.caution-renewal .renewal-reviews>div {max-width:1500px;padding-inline:var(--renewal-gutter);}
+.caution-renewal .renewal-reviews>div>div:first-child {text-align:left;max-width:620px;margin-bottom:52px;}
+.caution-renewal .renewal-reviews h2 {font-size:clamp(32px,4vw,58px);font-weight:700;}
+.caution-renewal .renewal-reviews>div>div:first-child>div {margin-left:0;width:40px;height:2px;border-radius:0;}
+.caution-renewal .renewal-reviews>div>div:nth-child(2)>div:first-child {background:transparent;box-shadow:none;border:0;border-top:1px solid #c9c9c6;border-radius:0;padding:42px 0 0;}
+.caution-renewal .renewal-reviews p {font-size:clamp(20px,2.4vw,34px)!important;line-height:1.75!important;color:#27282d;letter-spacing:-.035em;max-width:1130px;}
+.caution-renewal .renewal-reviews [class*="ri-double-quotes"] {color:#b10e32;font-size:54px;}
+.caution-renewal .renewal-reviews .border-t {border-color:#c9c9c6;padding-top:28px;}
+.caution-renewal .renewal-reviews .mt-8 button {min-width:32px;min-height:8px;border-radius:1px;}
+.caution-renewal .renewal-cta {background:#101114;padding-block:clamp(90px,10vw,160px);}
+.caution-renewal .renewal-cta>div:first-child {display:none;}
+.caution-renewal .renewal-cta h2 {font-weight:600;}
+.caution-renewal .renewal-cta a {border-radius:4px;box-shadow:none;}
+.caution-renewal .renewal-cta p {color:#c4c5ca;}
+.caution-renewal .renewal-cta img {border-radius:4px;}
+.caution-renewal #location {background:#f5f5f3;}
+.caution-renewal #contact {padding-block:clamp(80px,9vw,140px);}
+.caution-renewal #contact :is(input,select,textarea) {font-size:16px;min-height:52px;border-radius:6px;}
+.caution-renewal #contact label {font-size:15px;}
+.caution-renewal #contact form button[type="submit"] {border-radius:4px;min-height:58px;}
+.caution-renewal #contact>div {max-width:1500px;padding-inline:var(--renewal-gutter);}
+/* Existing film is additive to the original brand image, muted and offscreen-paused. */
+.renewal-brand-film {position:absolute;inset:0;}
+.renewal-brand-film video {width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s;}
+.renewal-brand-film video.is-ready {opacity:.8;}
+.renewal-film-control {position:absolute;z-index:25;right:24px;bottom:24px;display:flex;align-items:center;gap:10px;min-height:44px;padding:10px 16px;background:#101114b3;backdrop-filter:blur(12px);border:1px solid #ffffff55;border-radius:4px;color:#fff;font-size:13px;}
+.caution-renewal .renewal-contact-dock {right:16px;bottom:84px;gap:14px;}
+.caution-renewal .renewal-contact-dock a>div:first-child {width:42px;height:42px;box-shadow:0 3px 12px #0002!important;}
+.caution-renewal .renewal-contact-dock svg {width:24px;height:24px;}
+.caution-renewal .renewal-contact-dock a>div:nth-child(2) {font-size:10px;box-shadow:none!important;margin-top:4px;border:0;background:rgba(16,17,20,.88)!important;color:white!important;}
+.renewal-loading {min-height:100svh;display:grid;place-items:center;background:#101114;}
+.renewal-loading span {width:36px;height:36px;border:2px solid #ffffff22;border-top-color:#E11D48;border-radius:50%;animation:renewal-spin .8s linear infinite;}
+@media (prefers-reduced-motion:no-preference) {
+  .caution-renewal main h2[data-revealed="true"]:not(.signature-subtitle) {animation:renewal-heading-in .8s var(--renewal-ease) both;}
+  .caution-renewal main section:not(.signature-hero) img[data-revealed="true"] {animation:renewal-image-in 1.2s var(--renewal-ease) both;}
+}
+@media (min-width:1024px) {
+  .caution-renewal #ai-tech>div>div {align-items:start;}
+  .caution-renewal #ai-tech>div>div>div:first-child {position:sticky;top:130px;}
+}
+@media (min-width:1280px) {
+  .caution-renewal .renewal-services .grid {gap:24px;}
+  .caution-renewal .renewal-service-card .h-64 {height:clamp(240px,20vw,360px);}
+}
+@media (max-width:1100px) {
+  .signature-caption {grid-template-columns:1fr;gap:20px;}
+  .signature-title {font-size:clamp(36px,5vw,60px);}
+  .signature-index-title {font-size:12px;}
+}
+@media (max-width:1023px) {
+  .signature-stage {height:auto;min-height:0;display:flex;flex-direction:column;padding-top:92px;}
+  .signature-headline {position:relative;top:auto;left:auto;right:auto;order:0;padding:24px 24px 20px;min-height:180px;}
+  .signature-title {font-size:34px;line-height:1.23;margin-bottom:12px;letter-spacing:-.05em;}
+  .signature-eyebrow {font-size:10px;letter-spacing:.12em;margin-bottom:14px;}
+  .signature-subtitle {font-size:10px;line-height:1.7;letter-spacing:.14em;}
+  .signature-images {position:relative;order:1;aspect-ratio:16/10;width:100%;}
+  .signature-image img {object-fit:cover;object-position:center;}
+  .signature-shade {display:none;}
+  .signature-controls {position:relative;order:2;bottom:auto;right:auto;align-self:flex-end;margin:12px 24px 0;padding:0;border:0;background:transparent;}
+  .signature-caption {display:flex;flex-direction:column;align-items:stretch;padding:16px 24px 26px;gap:22px;}
+  .signature-description {font-size:16px;line-height:1.85;min-height:118px;}
+  .signature-actions {display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .signature-actions :is(a,button) {font-size:13px;padding:15px 10px;gap:8px;min-height:54px;}
+  .signature-index {padding:0 24px;gap:12px;}
+  .signature-index button {padding:20px 0;flex-direction:column;gap:7px;align-items:flex-start;}
+  .signature-index-title {font-size:10px;line-height:1.6;word-break:keep-all;}
+  .signature-track {right:0;}
+  .caution-renewal .renewal-services>div>div:first-child {margin-bottom:32px;}
+  .caution-renewal .renewal-services .grid {grid-template-columns:1fr;gap:40px;}
+  .caution-renewal .renewal-service-card .h-64 {height:auto;aspect-ratio:4/3;}
+  .caution-renewal .renewal-service-card li {font-size:16px;}
+  .caution-renewal #ai-tech>div>div>div:first-child>div:last-child {right:0;}
+  .caution-renewal #ai-tech .space-y-4>div>span {font-size:15px;}
+  .caution-renewal .renewal-reviews>div>div:first-child {margin-bottom:32px;}
+  .caution-renewal .renewal-contact-dock {flex-direction:row;bottom:max(12px,env(safe-area-inset-bottom));right:12px;gap:5px;padding:8px;border:1px solid #ffffff33;background:#101114e8;backdrop-filter:blur(16px);border-radius:12px;}
+  .caution-renewal .renewal-contact-dock a {width:60px;}
+  .caution-renewal .renewal-contact-dock a>div:first-child {width:32px;height:32px;box-shadow:none!important;}
+  .caution-renewal .renewal-contact-dock svg {width:20px;height:20px;}
+  .caution-renewal .renewal-contact-dock a>div:nth-child(2) {background:transparent!important;font-size:10px;padding:0;}
+  .caution-renewal footer {padding-bottom:110px;}
+}
+@media (max-width:359px) {
+  .signature-title {font-size:29px;}
+  .signature-actions {grid-template-columns:1fr;}
+  .signature-eyebrow {font-size:9px;gap:8px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  .caution-renewal *, .renewal-loading * {animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+  .signature-image img {transform:none!important;}
+}
+@media print {
+  .renewal-reading-progress,.renewal-brand-film,.signature-controls,.signature-index {display:none!important;}
+}
+@keyframes signature-camera {from {transform:scale(1.035) translateX(-.3%);} to {transform:scale(1) translateX(0);}}
+@keyframes signature-caption-in {from {transform:translateY(105%);} to {transform:translateY(0);}}
+@keyframes renewal-heading-in {from {clip-path:inset(0 0 100% 0);translate:0 16px;} to {clip-path:inset(0);translate:0 0;}}
+@keyframes renewal-image-in {from {filter:brightness(.9);} to {filter:brightness(1);}}
+@keyframes renewal-page-in {from {opacity:.5;} to {opacity:1;}}
+@keyframes renewal-spin {to {transform:rotate(360deg);}}
+
+.caution-renewal header nav img {width:clamp(180px,24vw,290px);height:auto;max-width:100%;}
+@media (max-width:1023px) {.caution-renewal header nav img {width:clamp(180px,38vw,270px);} .signature-images {max-height:600px;} }
+/* Keep the editing tool, Kakao/phone/YouTube and the original AI widget in separate mobile lanes. */
+@media (max-width:767px) {
+  .caution-renewal .renewal-contact-dock {left:50%;right:auto;transform:translateX(-50%);bottom:12px;padding:6px;gap:0;border-radius:10px;}
+  .caution-renewal .renewal-contact-dock a {width:52px;}
+  .caution-renewal #inline-text-editor-root>.fixed.bottom-6 {left:12px;bottom:18px;}
+  .caution-renewal #inline-text-editor-root button[title^="문구 편집"] {width:44px;height:44px;padding:0;justify-content:center;}
+  .caution-renewal #inline-text-editor-root button[title^="문구 편집"] span {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+  .caution-renewal #inline-text-editor-root button[title^="문구 편집"] i {font-size:18px;}
+}
+.renewal-brand-film video.is-ready {opacity:1;}
+/* Reserve space for the longest existing title/caption to avoid slide-induced layout jumps. */
+.signature-caption {min-height:124px;}
+@media (max-width:1023px) {
+  .signature-headline {min-height:218px;}
+  .signature-description {min-height:148px;}
+}
+@media (max-width:359px) {
+  .signature-headline {min-height:244px;}
+  .signature-description {min-height:178px;}
+}

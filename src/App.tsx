@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { ReaddyNavbar } from './components/ReaddyNavbar';
 import { ReaddyFooter } from './components/ReaddyFooter';
 import { ReaddyServicesSection } from './components/ReaddyServicesSection';
@@ -6,23 +6,29 @@ import { ReaddyAiTechSection } from './components/ReaddyAiTechSection';
 import { ReaddyReviewsSection } from './components/ReaddyReviewsSection';
 import { ReaddyCtaSection } from './components/ReaddyCtaSection';
 import { ReaddyContactSection } from './components/ReaddyContactSection';
-import { ReaddyBrandStory } from './components/ReaddyBrandStory';
-import { ReaddyServices } from './components/ReaddyServices';
-import { ReaddyServiceDetail } from './components/ReaddyServiceDetail';
-import { ReaddyPortfolio } from './components/ReaddyPortfolio';
-import { ReaddyNotice } from './components/ReaddyNotice';
-import { ReaddyFaq } from './components/ReaddyFaq';
+const ReaddyBrandStory = lazy(() => import('./components/ReaddyBrandStory').then(module => ({ default: module.ReaddyBrandStory })));
+const ReaddyServices = lazy(() => import('./components/ReaddyServices').then(module => ({ default: module.ReaddyServices })));
+const ReaddyServiceDetail = lazy(() => import('./components/ReaddyServiceDetail').then(module => ({ default: module.ReaddyServiceDetail })));
+const ReaddyPortfolio = lazy(() => import('./components/ReaddyPortfolio').then(module => ({ default: module.ReaddyPortfolio })));
+const ReaddyNotice = lazy(() => import('./components/ReaddyNotice').then(module => ({ default: module.ReaddyNotice })));
+const ReaddyFaq = lazy(() => import('./components/ReaddyFaq').then(module => ({ default: module.ReaddyFaq })));
 import { FloatingContactBar } from './components/FloatingContactBar';
-import { AdminDashboard } from './components/AdminDashboard';
-import { CustomerWarrantyPortal } from './components/CustomerWarrantyPortal';
+const AdminDashboard = lazy(() => import('./components/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
+const CustomerWarrantyPortal = lazy(() => import('./components/CustomerWarrantyPortal').then(module => ({ default: module.CustomerWarrantyPortal })));
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
-import { ReaddyPartners } from './components/ReaddyPartners';
+const ReaddyPartners = lazy(() => import('./components/ReaddyPartners').then(module => ({ default: module.ReaddyPartners })));
 import { ReaddyLocationSection } from './components/ReaddyLocationSection';
 import { InlineTextEditor } from './components/InlineTextEditor';
-import { PublicWarrantyPage } from './components/PublicWarrantyPage';
-import { WorkStatusViewer } from './components/WorkStatusViewer';
+const PublicWarrantyPage = lazy(() => import('./components/PublicWarrantyPage').then(module => ({ default: module.PublicWarrantyPage })));
+const WorkStatusViewer = lazy(() => import('./components/WorkStatusViewer').then(module => ({ default: module.WorkStatusViewer })));
+
+import { RenewalMotion } from './components/renewal/RenewalMotion';
 
 export default function App() {
+  return <Suspense fallback={<div className="renewal-loading" role="status" aria-label="페이지 불러오는 중"><span /></div>}><CautionSite /></Suspense>;
+}
+
+function CautionSite() {
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedServiceId, setSelectedServiceId] = useState<string>('repair');
   const [contactInitialService, setContactInitialService] = useState<string>('');
@@ -172,7 +178,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans text-dark antialiased">
+    <div className="caution-renewal min-h-screen bg-white font-sans text-dark antialiased">
+      <RenewalMotion page={activeTab} />
       {/* ── 1. Readdy Global Header & Navigation ── */}
       <ReaddyNavbar
         activeTab={activeTab === 'service-detail' ? 'services' : activeTab}
@@ -293,6 +300,8 @@ export default function App() {
         onSelectTab={(tab) => {
           if (tab === 'repair' || tab === 'paint' || tab === 'detailing' || tab === 'ai-tech') {
             handleOpenServiceDetail(tab);
+          } else if (tab === 'contact') {
+            handleNavigateToContact();
           } else if (tab === 'location') {
             handleNavigateToLocation();
           } else {

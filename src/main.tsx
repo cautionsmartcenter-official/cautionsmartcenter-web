@@ -5,6 +5,8 @@ import { AuthProvider } from './contexts/AuthContext'
 import { PAYPAL_CONFIG } from './lib/paypal'
 import App from './App.tsx'
 import './index.css'
+import './renewal.css'
+import { MotionConfig } from 'framer-motion'
 
 const paypalOptions = {
   clientId: PAYPAL_CONFIG.clientId,
@@ -16,7 +18,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <PayPalScriptProvider options={paypalOptions}>
       <AuthProvider>
-        <App />
+        <MotionConfig reducedMotion="user"><App /></MotionConfig>
       </AuthProvider>
     </PayPalScriptProvider>
   </StrictMode>,

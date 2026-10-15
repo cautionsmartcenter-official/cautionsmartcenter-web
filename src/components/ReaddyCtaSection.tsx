@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export const ReaddyCtaSection: React.FC = () => {
   return (
-    <section className="relative py-20 sm:py-32 bg-dark overflow-hidden text-white">
+    <section className="renewal-cta relative py-20 sm:py-32 bg-dark overflow-hidden text-white">
       {/* Background Dot Pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div
@@ -46,7 +46,7 @@ export const ReaddyCtaSection: React.FC = () => {
         >
           {/* Mercedes-Benz E-Class */}
           <div className="flex-1 max-w-[280px] sm:max-w-[340px] rounded-2xl overflow-hidden group">
-            <img
+            <img loading="lazy" decoding="async"
               src="/images/cars/german3_benz.jpg"
               alt="Mercedes-Benz E-Class White Studio Render"
               className="w-full h-auto object-cover rounded-xl sm:rounded-2xl transition-transform duration-500 group-hover:scale-105"
@@ -55,7 +55,7 @@ export const ReaddyCtaSection: React.FC = () => {
 
           {/* BMW 5 Series Metallic Blue */}
           <div className="flex-1 max-w-[280px] sm:max-w-[340px] rounded-2xl overflow-hidden group">
-            <img
+            <img loading="lazy" decoding="async"
               src="/images/cars/german3_bmw.jpg"
               alt="BMW 5 Series Blue Studio Render"
               className="w-full h-auto object-cover rounded-xl sm:rounded-2xl transition-transform duration-500 group-hover:scale-105"
@@ -64,7 +64,7 @@ export const ReaddyCtaSection: React.FC = () => {
 
           {/* Audi RS7 Nardo Grey */}
           <div className="flex-1 max-w-[280px] sm:max-w-[340px] rounded-2xl overflow-hidden group">
-            <img
+            <img loading="lazy" decoding="async"
               src="/images/cars/german3_audi.jpg"
               alt="Audi RS7 Nardo Grey Studio Render"
               className="w-full h-auto object-cover rounded-xl sm:rounded-2xl transition-transform duration-500 group-hover:scale-105"

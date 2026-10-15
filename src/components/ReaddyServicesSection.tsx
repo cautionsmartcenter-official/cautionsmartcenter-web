@@ -67,7 +67,7 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
   ];
 
   return (
-    <section id="services" className="py-24 lg:py-32 bg-gray-50 text-dark relative border-t border-gray-200">
+    <section id="services" className="renewal-services py-24 lg:py-32 bg-gray-50 text-dark relative border-t border-gray-200">
       <div className="mx-auto px-4 sm:px-6 lg:px-10 max-w-[1600px]">
         {/* Section Header */}
         <motion.div
@@ -96,7 +96,9 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08 }}
-              className="group cursor-pointer"
+              className="renewal-service-card group cursor-pointer"
+              role="button" tabIndex={0} aria-label={service.title}
+              onKeyDown={(event) => { if(event.key === 'Enter' || event.key === ' ') {event.preventDefault();event.currentTarget.click();} }}
               onClick={() => {
                 if (onSelectServiceDetail) {
                   onSelectServiceDetail(service.id);
@@ -110,7 +112,7 @@ export const ReaddyServicesSection: React.FC<ReaddyServicesSectionProps> = ({ on
                 <div className={`relative ${service.bgColor} overflow-hidden`}>
                   <div className="w-full h-64 sm:h-72">
                     <img
-                      src={service.image}
+                      src={service.image} loading="lazy" decoding="async"
                       alt={service.title}
                       className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
                     />

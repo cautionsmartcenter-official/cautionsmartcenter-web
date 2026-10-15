@@ -42,7 +42,7 @@ export const ReaddyReviewsSection: React.FC = () => {
   const current = reviews[currentIndex];
 
   return (
-    <section className="py-24 lg:py-32 bg-gray-50 text-dark">
+    <section id="reviews" className="renewal-reviews py-24 lg:py-32 bg-gray-50 text-dark">
       <div className="mx-auto px-6 lg:px-12 max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -84,7 +84,7 @@ export const ReaddyReviewsSection: React.FC = () => {
               <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/20 bg-gray-100 shrink-0">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={current.image}
                       alt={current.name}
                       className="w-full h-full object-cover object-center"

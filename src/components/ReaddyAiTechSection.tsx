@@ -25,7 +25,7 @@ export const ReaddyAiTechSection: React.FC<ReaddyAiTechSectionProps> = ({ onNavi
             className="relative"
           >
             <div className="relative rounded-3xl sm:rounded-[40px] overflow-hidden shadow-2xl bg-black aspect-square max-h-[500px]">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/images/readdy/ai-tech-main-001.jpg"
                 alt="CurveRobot Technology"
                 className="w-full h-full object-cover object-center"

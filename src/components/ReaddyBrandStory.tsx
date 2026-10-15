@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { ExistingBrandFilm } from './renewal/ExistingBrandFilm';
 
 interface ReaddyBrandStoryProps {
   onNavigateToContact?: (serviceName?: string) => void;
@@ -67,7 +68,8 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
             alt="Brand Story"
             className="w-full h-full object-cover object-center opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-black/75" />
+          <ExistingBrandFilm />
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/50 via-black/35 to-black/75" />
         </div>
 
         <div className="relative z-10 mx-auto px-6 lg:px-12 max-w-5xl text-center pt-32 sm:pt-40 pb-20 sm:pb-28">

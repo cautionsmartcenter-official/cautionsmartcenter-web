@@ -15,7 +15,7 @@ export const FloatingContactBar: React.FC = () => {
   return (
     <aside 
       aria-label="빠른 상담 및 전화 연결"
-      className="fixed right-3 sm:right-6 bottom-20 sm:bottom-24 z-50 flex flex-col items-center gap-3 select-none pointer-events-auto print:hidden"
+      className="renewal-contact-dock fixed right-3 sm:right-6 bottom-20 sm:bottom-24 z-50 flex flex-col items-center gap-3 select-none pointer-events-auto print:hidden"
     >
       {/* ── 1. 카카오톡 빠른 상담 버튼 ── */}
       <motion.div
