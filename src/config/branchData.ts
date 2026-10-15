@@ -55,21 +55,21 @@ export const PARTNER_BENEFITS = [
     number: '01',
     highlight: '권역별 파트너 운영',
     title: '권역별 파트너 운영 및 공식 인증',
-    description: '한국 공식 디스트리뷰터인 (주)코션스마트센터의 공식 파트너로서, 계약 조건에 따라 해당 권역의 시공 파트너로 운영할 수 있는 권한과 공식 인증을 제공합니다.',
+    image: '/images/partner/benefit_01_certified.jpg',
     summaryPoint: '공식 인증 현판 제공 및 권역별 시공 파트너 운영'
   },
   {
     number: '02',
     highlight: '정품 소재 공급',
     title: '독일 CARDIP® 정품 PPS 소재 공급',
-    description: '독일 본사 직수입 정품 독일 CARDIP® PPS 소재를 안정적인 한국 총판 직공급 체계로 독점 공급받아 시공 완성도와 마진 경쟁력을 확보합니다.',
+    image: '/images/partner/benefit_02_material.jpg',
     summaryPoint: '독일 CARDIP® 정품 PPS 소재 100% 직수입 공급'
   },
   {
     number: '03',
     highlight: '시공 문의 연계',
     title: '본사 마케팅 및 시공 문의 연계',
-    description: '본사 공식 웹사이트와 SNS, 브랜드 마케팅을 통해 유입되는 시공 문의를 지역 및 운영 조건에 따라 파트너점과 연계합니다.',
+    image: '/images/partner/benefit_03_leads.jpg',
     summaryPoint: '본사 유입 고객 시공 문의 연계'
   }
 ];

@@ -330,32 +330,48 @@ export const ReaddyPartners: React.FC = () => {
 
               </div>
 
-              {/* 3대 핵심 혜택 (제목 한 줄 완벽 유지) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+              {/* 3대 핵심 혜택 (이미지 및 체크 포인트 중심의 모던 카드 UI) */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-20">
                 {PARTNER_BENEFITS.map((benefit, idx) => (
                   <div
                     key={idx}
-                    className="bg-gray-50 rounded-3xl p-6 sm:p-7 xl:p-8 border-2 border-gray-100 hover:border-red-500/30 hover:bg-white hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                    className="bg-white rounded-3xl border border-gray-200/90 shadow-sm hover:shadow-xl hover:border-red-500/40 transition-all duration-300 overflow-hidden flex flex-col group"
                   >
-                    <div>
-                      <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 font-roboto font-black text-xl mb-6">
-                        {benefit.number}
+                    {/* 카드 상단 이미지 영역 */}
+                    <div className="relative w-full h-48 sm:h-52 bg-neutral-900 overflow-hidden">
+                      <img
+                        src={benefit.image}
+                        alt={benefit.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                      {/* 넘버링 및 카테고리 뱃지 */}
+                      <div className="absolute top-4 left-4 flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-xl bg-red-600 text-white font-roboto font-black text-sm flex items-center justify-center shadow-md">
+                          {benefit.number}
+                        </span>
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-black/60 backdrop-blur-md text-white border border-white/20">
+                          {benefit.highlight}
+                        </span>
                       </div>
-                      <span className="text-xs font-bold text-red-600 tracking-wider block mb-2">
-                        {benefit.highlight}
-                      </span>
-                      {/* whitespace-nowrap 적용으로 한 줄 완벽 유지 */}
-                      <h3 className="text-base sm:text-lg md:text-[16px] lg:text-[17px] xl:text-[20px] font-black text-gray-900 tracking-tight mb-4 whitespace-nowrap">
-                        {benefit.title}
-                      </h3>
-                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-keep">
-                        {benefit.description}
-                      </p>
                     </div>
 
-                    <div className="pt-6 mt-6 border-t border-gray-200/60 flex items-center gap-2 text-xs font-bold text-gray-800 break-keep">
-                      <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0" />
-                      <span>{benefit.summaryPoint}</span>
+                    {/* 카드 본문 영역: 글 많은 설명 제거 및 체크포인트 강조 */}
+                    <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between gap-5">
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight leading-snug group-hover:text-red-600 transition-colors">
+                          {benefit.title}
+                        </h3>
+                      </div>
+
+                      {/* 체크표시 핵심 혜택 하이라이트 박스 */}
+                      <div className="bg-red-50/70 border border-red-200/80 rounded-2xl p-4 flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                        <span className="text-sm sm:text-[15px] font-bold text-gray-900 leading-snug break-keep">
+                          {benefit.summaryPoint}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}
