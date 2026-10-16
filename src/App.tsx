@@ -59,14 +59,27 @@ export default function App() {
     }
     setActiveTab('home');
     setTimeout(() => {
-      const el = document.getElementById('contact');
-      if (el) {
+      const getTargetY = () => {
+        const el = document.getElementById('contact-name-field') ||
+                   document.getElementById('contact-form') ||
+                   document.getElementById('contact');
+        if (!el) return null;
         const isMobile = window.innerWidth < 768;
         const headerHeight = isMobile ? 64 : 80;
-        const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        return el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+      };
+
+      const y = getTargetY();
+      if (y !== null) {
         window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+        setTimeout(() => {
+          const y2 = getTargetY();
+          if (y2 !== null && Math.abs(window.pageYOffset - y2) > 15) {
+            window.scrollTo({ top: Math.max(0, y2), behavior: 'smooth' });
+          }
+        }, 250);
       }
-    }, 150);
+    }, 180);
   };
 
   /* ── Navigate to Location Section ── */

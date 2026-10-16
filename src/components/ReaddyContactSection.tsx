@@ -204,9 +204,9 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <form onSubmit={handleSubmit} className="space-y-5" id="contact-form">
+            <form onSubmit={handleSubmit} className="space-y-5 scroll-mt-20 sm:scroll-mt-24" id="contact-form">
               {/* Customer Name */}
-              <div>
+              <div id="contact-name-field" className="scroll-mt-20 sm:scroll-mt-24 pt-1">
                 <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
                   이름 *
                 </label>

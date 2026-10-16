@@ -27,13 +27,23 @@ export const ReaddyCtaSection: React.FC = () => {
           <p className="text-sm sm:text-lg text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto">
             전문가 상담부터 AI 시공까지, 원스톱 서비스
           </p>
-          <a
-            href="#contact"
+          <button
+            onClick={() => {
+              const el = document.getElementById('contact-name-field') ||
+                         document.getElementById('contact-form') ||
+                         document.getElementById('contact');
+              if (el) {
+                const isMobile = window.innerWidth < 768;
+                const headerHeight = isMobile ? 64 : 80;
+                const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+                window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+              }
+            }}
             className="inline-flex items-center gap-2 sm:gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-primary text-white text-sm sm:text-base font-bold rounded-full hover:bg-primary-dark transition-all shadow-lg hover:shadow-xl whitespace-nowrap cursor-pointer group"
           >
             <span>무료 상담 신청하기</span>
             <i className="ri-arrow-right-line text-lg sm:text-xl group-hover:translate-x-1 transition-transform" />
-          </a>
+          </button>
         </motion.div>
 
         {/* 3 German Big 3 Realistic 4K Studio Renders (Mercedes-Benz, BMW, Audi) */}
