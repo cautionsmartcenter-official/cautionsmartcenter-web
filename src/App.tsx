@@ -40,10 +40,12 @@ export default function App() {
     setTimeout(() => {
       const el = document.getElementById(serviceId);
       if (el) {
-        // Adjust for header offset + extra padding
-        const yOffset = -140; 
+        // 모바일(64px) 및 데스크톱(80px) 고정 헤더 높이에 정확히 맞춘 스크롤 오프셋
+        const isMobile = window.innerWidth < 768;
+        const headerHeight = isMobile ? 64 : 80;
+        const yOffset = -headerHeight;
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -76,9 +78,12 @@ export default function App() {
       setTimeout(() => {
         const el = document.getElementById(targetId);
         if (el) {
-          const yOffset = -140;
+          // 모바일(64px) 및 데스크톱(80px) 고정 헤더 높이에 정확히 맞춘 스크롤 오프셋
+          const isMobile = window.innerWidth < 768;
+          const headerHeight = isMobile ? 64 : 80;
+          const yOffset = -headerHeight;
           const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
+          window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }

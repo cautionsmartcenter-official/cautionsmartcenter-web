@@ -140,7 +140,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="absolute -bottom-8 -left-8 bg-primary rounded-2xl p-8 shadow-xl text-white"
+                className="absolute -bottom-6 left-4 sm:-bottom-8 sm:-left-8 bg-primary rounded-2xl p-5 sm:p-8 shadow-xl text-white"
               >
                 <div className="text-5xl font-black mb-2">24+</div>
                 <div className="text-sm text-white/90 font-medium">Years of Excellence</div>
@@ -151,19 +151,19 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
       </section>
 
       {/* 2.5 CARDIP Official Technical Partnership & Korean Distributor Section */}
-      <section id="distributor" className="py-24 lg:py-32 bg-white text-gray-900 relative overflow-hidden border-y border-gray-200">
+      <section id="distributor" className="scroll-mt-16 sm:scroll-mt-20 pt-12 sm:pt-20 pb-16 sm:pb-24 lg:py-32 bg-white text-gray-900 relative overflow-hidden border-y border-gray-200">
         {/* Subtle Brand Ambient Lighting */}
         <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#C2181C]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#0F1C25]/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
           {/* Section Header */}
-          <div className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+          <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-16 lg:mb-20">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-red-50 border border-red-200 rounded-full mb-6 shadow-sm"
+              className="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-red-50 border border-red-200 rounded-full mb-5 sm:mb-6 shadow-sm"
             >
               <span className="w-2.5 h-2.5 rounded-full bg-cardip-red animate-pulse" />
               <span className="text-xs sm:text-sm font-bold font-roboto text-cardip-red tracking-wider">
@@ -423,7 +423,7 @@ export const ReaddyBrandStory: React.FC<ReaddyBrandStoryProps> = ({ onNavigateTo
       </section>
 
       {/* 3. Technology Section */}
-      <section id="technology" className="py-24 lg:py-32 bg-gray-50">
+      <section id="technology" className="scroll-mt-16 sm:scroll-mt-20 py-16 sm:py-24 lg:py-32 bg-gray-50">
         <div className="mx-auto px-6 lg:px-12 max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
