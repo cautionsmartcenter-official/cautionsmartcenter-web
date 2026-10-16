@@ -129,13 +129,13 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     categoryName: '마이바흐 투톤',
     title: '마이바흐 S580 노틱 블루 & 라이트 로즈골드 비스포크 투톤PPS',
     carModel: 'Mercedes-Maybach S 580 (Rose Gold Two-Tone)',
-    image: '/images/portfolio/maybach_rosegold/01.jpg',
+    image: '/images/portfolio/maybach_rosegold/02.jpg',
     images: [
-      '/images/portfolio/maybach_rosegold/01.jpg', // [전면] 코션 번호판 정면 풀샷 (DSC07023)
-      '/images/portfolio/maybach_rosegold/02.jpg', // [전측면] 얼짱 전측면 쿼터뷰 (DSC07018)
+      '/images/portfolio/maybach_rosegold/02.jpg', // [대표/전측면] 마이바흐 얼짱 전측면 풀샷 (DSC07018)
       '/images/portfolio/maybach_rosegold/03.jpg', // [측면] 롱바디 측면 사이드뷰 (DSC07020)
-      '/images/portfolio/maybach_rosegold/04.jpg', // [뒷면] 코션 번호판 리어 쿼터뷰 (DSC07035)
-      '/images/portfolio/maybach_rosegold/05.jpg'  // [디테일] 투톤 분할 라인 디테일 (DSC07022)
+      '/images/portfolio/maybach_rosegold/01.jpg', // [디테일] 전면 그릴 & 본넷 엠블럼 클로즈업 (DSC07023)
+      '/images/portfolio/maybach_rosegold/04.jpg', // [뒷면] C필러 마이바흐 엠블럼 & 루프라인 (DSC07035)
+      '/images/portfolio/maybach_rosegold/05.jpg'  // [디테일] V12 엠블럼 & 프론트 휠 (DSC07022)
     ],
     tags: ['노틱 블루', '로즈골드 투톤', '비스포크 에디션', '마이바흐 세단', 'CARDIP 정품'],
     summary: '상단 노틱 블루와 하단 라이트 로즈골드의 환상적인 색감 조화로 세상에 단 하나뿐인 마이바흐 비스포크 아트를 완성',
