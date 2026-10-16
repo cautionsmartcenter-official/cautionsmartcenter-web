@@ -377,13 +377,21 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
             {/* Red Oval CTA Button (일반 방문자 상담 신청 메인 버튼) */}
             <button
               onClick={() => {
+                const performScroll = () => {
+                  const el = document.getElementById('contact');
+                  if (el) {
+                    const isMobile = window.innerWidth < 768;
+                    const headerHeight = isMobile ? 64 : 80;
+                    const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+                  }
+                };
+
                 if (activeTab !== 'home') {
                   onSelectTab('home');
-                  setTimeout(() => {
-                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                  }, 100);
+                  setTimeout(performScroll, 150);
                 } else {
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                  performScroll();
                 }
               }}
               className="px-7 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-full transition-all whitespace-nowrap cursor-pointer shadow-[0_2px_12px_rgba(225,29,72,0.4)] hover:shadow-[0_4px_16px_rgba(225,29,72,0.6)] active:scale-95 ml-1"
@@ -619,13 +627,21 @@ export const ReaddyNavbar: React.FC<ReaddyNavbarProps> = ({ activeTab, onSelectT
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
+                  const performScroll = () => {
+                    const el = document.getElementById('contact');
+                    if (el) {
+                      const isMobile = window.innerWidth < 768;
+                      const headerHeight = isMobile ? 64 : 80;
+                      const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+                    }
+                  };
+
                   if (activeTab !== 'home') {
                     onSelectTab('home');
-                    setTimeout(() => {
-                      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
+                    setTimeout(performScroll, 200);
                   } else {
-                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(performScroll, 120);
                   }
                 }}
                 className="block w-full mt-2.5 py-3.5 bg-red-600 hover:bg-red-700 active:scale-98 text-white text-base font-bold rounded-xl text-center cursor-pointer shadow-lg shadow-red-600/30 transition-all"

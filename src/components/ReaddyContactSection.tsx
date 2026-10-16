@@ -113,7 +113,7 @@ export const ReaddyContactSection: React.FC<ReaddyContactSectionProps> = ({ init
   };
 
   return (
-    <section id="contact" className="py-24 lg:py-32 bg-white text-dark">
+    <section id="contact" className="scroll-mt-16 sm:scroll-mt-20 pt-10 sm:pt-16 pb-20 sm:pb-24 lg:py-32 bg-white text-dark">
       <div className="mx-auto px-6 lg:px-12 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Left Info Column */}

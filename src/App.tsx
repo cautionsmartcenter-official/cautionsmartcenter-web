@@ -59,16 +59,28 @@ export default function App() {
     }
     setActiveTab('home');
     setTimeout(() => {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+      const el = document.getElementById('contact');
+      if (el) {
+        const isMobile = window.innerWidth < 768;
+        const headerHeight = isMobile ? 64 : 80;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      }
+    }, 150);
   };
 
   /* ── Navigate to Location Section ── */
   const handleNavigateToLocation = () => {
     setActiveTab('home');
     setTimeout(() => {
-      document.getElementById('location')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+      const el = document.getElementById('location');
+      if (el) {
+        const isMobile = window.innerWidth < 768;
+        const headerHeight = isMobile ? 64 : 80;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      }
+    }, 150);
   };
 
   /* ── Navigate to Brand Story (Optional Section Anchor) ── */
