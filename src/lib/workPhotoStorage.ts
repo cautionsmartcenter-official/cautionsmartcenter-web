@@ -124,7 +124,7 @@ export const compressImageFile = (file: File, maxWidth = 1280, maxHeight = 1280,
   });
 };
 
-const PUBLIC_SITE_URL = 'https://cautionsmartcenter-web.vercel.app';
+const PUBLIC_SITE_URL = 'https://cautionsmartcenter.com';
 
 /**
  * 고객 모바일 시공 현황 앨범 열람 URL 생성

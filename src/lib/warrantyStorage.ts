@@ -427,7 +427,7 @@ export const exportWarrantiesToCSV = () => {
 // 보증서 열람 URL 생성 함수
 // - item을 넘기면 링크에 보증서 정보(d=)를 함께 담아, 고객 폰에서도 바로 확인·등록할 수 있습니다.
 // - 내 PC(localhost)에서 만든 링크는 고객이 열 수 없으므로 공식 사이트 주소를 사용합니다.
-const PUBLIC_SITE_URL = 'https://cautionsmartcenter-web.vercel.app';
+const PUBLIC_SITE_URL = 'https://cautionsmartcenter.com';
 export const getWarrantyViewUrl = (warrantyNo: string, item?: WarrantyItem): string => {
   const isLocal = /localhost|127\.0\.0\.1|192\.168\./.test(window.location.hostname);
   const base = isLocal ? `${PUBLIC_SITE_URL}/` : `${window.location.origin}${window.location.pathname}`;

@@ -53,7 +53,7 @@ export const initKakao = (customKey?: string): boolean => {
   }
 };
 
-export const PRODUCTION_URL = 'https://cautionsmartcenter-web.vercel.app';
+export const PRODUCTION_URL = 'https://cautionsmartcenter.com';
 
 // 고객용 공개 링크: item을 넘기면 보증서 정보(d=)를 담아 고객 폰에서도 바로 조회·등록 가능
 export const getPublicWarrantyViewUrl = (warrantyNo: string, item?: WarrantyItem): string => {

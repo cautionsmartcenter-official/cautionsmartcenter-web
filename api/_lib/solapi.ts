@@ -27,7 +27,7 @@ export function getSiteUrl(): string {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  return 'https://cautionsmartcenter-web.vercel.app';
+  return 'https://cautionsmartcenter.com';
 }
 
 export function alimtalkConfigStatus() {
