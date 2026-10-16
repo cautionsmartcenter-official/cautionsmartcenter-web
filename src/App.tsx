@@ -18,7 +18,7 @@ import { CustomerWarrantyPortal } from './components/CustomerWarrantyPortal';
 import { ReaddyHeroSlider } from './components/ReaddyHeroSlider';
 import { ReaddyPartners } from './components/ReaddyPartners';
 import { ReaddyLocationSection } from './components/ReaddyLocationSection';
-import { InlineTextEditor } from './components/InlineTextEditor';
+// import { InlineTextEditor } from './components/InlineTextEditor';
 import { PublicWarrantyPage } from './components/PublicWarrantyPage';
 import { WorkStatusViewer } from './components/WorkStatusViewer';
 
@@ -140,7 +140,7 @@ export default function App() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         />
-        <InlineTextEditor />
+        {/* <InlineTextEditor /> */}
       </>
     );
   }
@@ -305,8 +305,8 @@ export default function App() {
       {/* ── 9. Right Floating Quick Contact Bar (카카오톡 채널 & 전화 상담) ── */}
       <FloatingContactBar />
 
-      {/* ── 10. Visual Inline Text Editor (마우스 클릭으로 문구 즉시 수정 & AI 복사 기능) ── */}
-      <InlineTextEditor />
+      {/* ── 10. Visual Inline Text Editor (필요시 주석 해제) ── */}
+      {/* <InlineTextEditor /> */}
     </div>
   );
 }
